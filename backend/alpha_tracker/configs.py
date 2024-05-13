@@ -1,0 +1,17 @@
+from os import environ as env
+from dotenv import load_dotenv
+
+load_dotenv()
+
+ALPHA_TRACKER_HOST = env.get("ALPHA_TRACKER_HOST")
+ALPHA_TRACKER_PORT = int(env.get("ALPHA_TRACKER_PORT"))
+
+HASH_SECRET_KEY = env.get("HASH_SECRET_KEY")
+HASH_ALGORITHM = env.get("HASH_ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(env.get("ACCESS_TOKEN_EXPIRE_MINUTES"))
+
+POSTGRES_USER = env.get("POSTGRES_USER")
+POSTGRES_PASSWORD = env.get("POSTGRES_PASSWORD")
+POSTGRES_HOST = env.get("POSTGRES_HOST")
+POSTGRES_PORT = int(env.get("POSTGRES_PORT"))
+POSTGRES_DB = env.get("POSTGRES_DB")

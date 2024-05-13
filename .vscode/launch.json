@@ -1,0 +1,35 @@
+{
+    "version": "0.0.0",
+    "configurations": [
+        {
+            "name": "AlphaTracker Backend",
+            "type": "python",
+            "request": "launch",
+            "module": "uvicorn",
+            "cwd": "${workspaceFolder}/backend",
+            "args": [
+                "alpha_tracker.main:app",
+                "--reload",
+                "--port",
+                "8080"
+            ]
+        },
+        {
+            "name": "AlphaTracker Web",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceRoot}/web",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run", "dev"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "node-terminal",
+            "name": "AlphaTracker Database",
+            "request": "launch",
+            "command": "docker run --name alpha_tracker_db -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres",
+        }
+    ]
+}
