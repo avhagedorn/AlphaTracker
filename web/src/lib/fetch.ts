@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { INTERNAL_URL } from "./env";
 
 function buildUrl(path: string): string {
@@ -7,17 +8,48 @@ function buildUrl(path: string): string {
   return new URL(`/api${path}`, INTERNAL_URL).toString();
 }
 
-export default async function fetchServer(
+export async function fetchServer(
   url: string, 
   options?: RequestInit
-): Promise<Response> {
+): Promise<{ loading: boolean; data: any | null; error: Error | null }> {
   const init: RequestInit = {
     ...options,
     credentials: "include",
     headers: {
       ...options?.headers,
       "Content-Type": "application/json",
-    }
+    },
   };
-  return fetch(buildUrl(url), init);
+
+  const response = await fetch(buildUrl(url), init);
+  const data = await response.json();
+  if (response.ok) {
+    return { loading: false, data, error: null };
+  } else {
+    throw new Error(
+      data.detail 
+      || data.message 
+      || data.status
+    );
+  }
+}
+
+export default function useFetch(url: string, options?: RequestInit) {
+  const [state, setState] = useState<{
+    loading: boolean;
+    data: any | null;
+    error: Error | null;
+  }>({ loading: true, data: null, error: null });
+
+  useEffect(() => {
+    fetchServer(url, options)
+      .then((result) => {
+        setState({ loading: false, data: result.data, error: null });
+      })
+      .catch((error) => {
+        setState({ loading: false, data: null, error });
+      });
+  }, [url, options]);
+
+  return state;
 }

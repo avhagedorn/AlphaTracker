@@ -1,5 +1,5 @@
-import fetchServer from './fetch';
+import useFetch from './fetch';
 
-export default function getUser() {
-  return fetchServer('/user/me');
+export default function useGetUser() {
+  return useFetch('/user/me');
 }

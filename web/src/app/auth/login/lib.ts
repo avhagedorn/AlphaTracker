@@ -1,6 +1,6 @@
-import fetchServer from "@/lib/fetch";
+import { fetchServer } from "@/lib/fetch";
 
-export default async function login(
+export default function login(
     { 
       username, 
       password,
@@ -18,18 +18,5 @@ export default async function login(
     `/auth/token?${params}`, 
     {
         method: "POST"
-    })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error("Failed to register");
-      }
-    })
-    .then((_) => {
-      return true;
-    }).catch((error) => {
-      console.error(error);
-      return false;
     });
 }

@@ -1,5 +1,4 @@
-import fetchServer from "@/lib/fetch";
-import { cookies } from "next/headers";
+import { fetchServer } from "@/lib/fetch";
 
 export default async function register(
     { 
@@ -14,22 +13,16 @@ export default async function register(
         confirm_password: string 
     }
 ) {
-  return fetchServer("/auth/register", {
-    method: "POST",
-    body: JSON.stringify({ username, email, password, confirm_password }),
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error("Failed to register");
-      }
-    })
-    .then((data) => {
-      cookies().set("access_token", data.access_token);
-      return true;
-    }).catch((error) => {
-      console.error(error);
-      return false;
+  const params = new URLSearchParams({
+    username,
+    email,
+    password,
+    confirm_password
+  }).toString();
+
+  return fetchServer(
+    `/auth/register?${params}`, 
+    {
+        method: "POST"
     });
 }

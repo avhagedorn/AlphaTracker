@@ -1,4 +1,3 @@
-from fastapi import Form
 from pydantic import BaseModel
 
 from alpha_tracker.db.models import User

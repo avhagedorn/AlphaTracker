@@ -1,11 +1,14 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import login from './lib';
+import Button from '@/components/Button';
 
 export default function LoginPage() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setIsSubmitting(true);
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
@@ -13,9 +16,10 @@ export default function LoginPage() {
       username: data.get('username') as string,
       password: data.get('password') as string,
     });
-    if (response) {
+    if (response.data) {
       window.location.href = '/home';
     } else {
+      setIsSubmitting(false);
       alert('Invalid username or password');
     }
   }
@@ -54,12 +58,12 @@ export default function LoginPage() {
             />
           </div>
           <div className="flex items-center justify-between mb-4">
-            <button
+            <Button
               type="submit"
-              className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              isLoading={isSubmitting}
             >
               Login
-            </button>
+            </Button>
             <p>
                 No account?{" "}
                 <a href="/auth/register" className="text-emerald-500 hover:text-emerald-600">

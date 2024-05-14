@@ -1,16 +1,28 @@
+"use client";
+
+import Button from "@/components/Button";
 import register from "./lib";
+import { useState } from "react";
 
 export default function RegisterPage() {
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        setIsSubmitting(true);
         event.preventDefault();
         const form = event.currentTarget;
-        return register({
+        const result = await register({
             username: form.username.value,
             email: form.email.value,
             password: form.password.value,
             confirm_password: form.confirm_password.value,
         });
+        if (result.data) {
+            window.location.href = "/home";
+        } else {
+            setIsSubmitting(false);
+            alert("Failed to register");
+        }
     }
   
     return (
@@ -74,12 +86,18 @@ export default function RegisterPage() {
                         />
                     </div>
                     <div className="flex items-center justify-between">
-                        <button
+                        <Button
                             type="submit"
-                            className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            isLoading={isSubmitting}
                         >
                             Register
-                        </button>
+                        </Button>
+                        <p>
+                            Have an account?{" "}
+                            <a href="/auth/login" className="text-emerald-500 hover:text-emerald-600">
+                                Login
+                            </a>
+                        </p>
                     </div>
                 </form>
             </div>
