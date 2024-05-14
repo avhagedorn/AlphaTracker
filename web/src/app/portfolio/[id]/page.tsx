@@ -18,8 +18,6 @@ export default function PortfolioDetail(
 }) {
     const portfolio = useFetch(`/portfolio/${params.id}`);
 
-    console.log(portfolio);
-
     return (
         <main className="flex min-h-screen flex-col items-center p-24">
             <header className="flex flex-col items-center">

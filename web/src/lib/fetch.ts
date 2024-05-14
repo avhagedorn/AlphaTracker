@@ -26,11 +26,12 @@ export async function fetchServer(
   if (response.ok) {
     return { loading: false, data, error: null };
   } else {
-    throw new Error(
+    const errorMessage = (
       data.detail 
       || data.message 
       || data.status
     );
+    return { loading: false, data: null, error: errorMessage };
   }
 }
 
@@ -44,7 +45,7 @@ export default function useFetch(url: string, options?: RequestInit) {
   useEffect(() => {
     fetchServer(url, options)
       .then((result) => {
-        setState({ loading: false, data: result.data, error: null });
+        setState({ loading: false, data: result.data, error: result.error });
       })
       .catch((error) => {
         setState({ loading: false, data: null, error });

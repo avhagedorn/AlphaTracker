@@ -1,7 +1,7 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from requests import Session
+from sqlalchemy.orm import Session
 
 from alpha_tracker.db.models import Portfolio, User
 from alpha_tracker.utils.auth import get_current_user
@@ -18,7 +18,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @router.post("/new")
 async def create_portfolio(
-    data: Annotated[CreatePortfolioRequest, Depends()],
+    data: CreatePortfolioRequest,
     current_user: User = Depends(get_current_user)
 ):
     """

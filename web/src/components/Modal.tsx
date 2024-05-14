@@ -1,52 +1,67 @@
+"use client";
+
 import React from 'react';
+import Button from './Button';
 
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
     title: string;
-    content: React.ReactNode;
+    children: React.ReactNode;
+    size?: 'small' | 'medium' | 'large';
 }
 
 const Modal = ({ 
     isOpen, 
     onClose, 
-    title, 
-    content 
+    title,
+    children,
+    size = 'medium',
 }: ModalProps) => {
   if (!isOpen) return null;
 
+  const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      onClose();
+    }
+  };
+
+  const modalSize = {
+    small: 'w-1/4',
+    medium: 'w-1/3',
+    large: 'w-1/2',
+  }[size];
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
-      <div className="relative w-auto max-w-3xl mx-auto my-6">
-        {/* Content */}
-        <div className="relative flex flex-col w-full bg-white border-0 rounded-lg shadow-lg outline-none focus:outline-none">
-          {/* Header */}
-          <div className="flex items-start justify-between p-5 border-b border-solid rounded-t border-slate-200">
-            <h3 className="text-3xl font-semibold">{title}</h3>
-            <button
-              className="float-right p-1 ml-auto text-3xl font-semibold leading-none text-black bg-transparent border-0 outline-none opacity-5 focus:outline-none"
-              onClick={onClose}
-            >
-              <span className="block w-6 h-6 text-2xl text-black bg-transparent outline-none opacity-5 focus:outline-none">
-                ×
-              </span>
-            </button>
-          </div>
-          {/* Body */}
-          <div className="relative flex-auto p-6">{content}</div>
-          {/* Footer */}
-          <div className="flex items-center justify-end p-6 border-t border-solid rounded-b border-slate-200">
-            <button
-              className="px-6 py-2 mb-1 mr-1 text-sm font-bold text-red-500 uppercase transition-all duration-150 ease-linear outline-none background-transparent focus:outline-none"
-              type="button"
-              onClick={onClose}
-            >
-              Close
-            </button>
+    <>
+      <div 
+        className="fixed inset-0 z-40 bg-black opacity-50"
+        onClick={handleOverlayClick}
+      ></div>
+      <div className={`z-50 flex items-center justify-center ${modalSize} absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2`}>
+        <div className="w-full max-w-3xl mx-auto my-6">
+          <div className="flex flex-col bg-white rounded-lg">
+            <div className="flex items-start justify-between p-5 border-b border-slate-200">
+              <h3 className="text-3xl font-semibold">{title}</h3>
+              <button onClick={onClose} className="mt-auto mb-auto ml-4">
+                <svg
+                  className="w-6 h-6 text-slate-600"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+            <div className="p-6">{children}</div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

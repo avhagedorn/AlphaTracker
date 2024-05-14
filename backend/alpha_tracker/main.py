@@ -8,6 +8,7 @@ from alpha_tracker.configs import ALPHA_TRACKER_HOST, ALPHA_TRACKER_PORT
 from alpha_tracker.utils.logging import setup_logger
 from alpha_tracker.modules.auth.api import router as auth_router
 from alpha_tracker.modules.user.api import router as user_router
+from alpha_tracker.modules.portfolio.api import router as portfolio_router
 
 logger = setup_logger()
 
@@ -19,6 +20,7 @@ def get_application() -> FastAPI:
 
     application.include_router(auth_router)
     application.include_router(user_router)
+    application.include_router(portfolio_router)
 
     application.add_middleware(
         CORSMiddleware,

@@ -6,31 +6,35 @@ interface ButtonProps {
     children: React.ReactNode;
 }
 
-export default function Button({ 
+export default function     Button({ 
     children,
     onClick = undefined,
     isLoading = false,
     disabled = false,
-    type = "button"
+    type = "button",
+    color = "emerald",
+    className = "",
  }: {
     children: React.ReactNode;
     onClick?: (() => void) | undefined;
     isLoading?: boolean;
     disabled?: boolean;
     type?: "button" | "submit";
+    color?: "emerald" | "red" | "blue" | "gray" | "yellow";
+    className?: string;
  }) {
 
-    let color = "bg-emerald-500 hover:bg-emerald-700";
+    let colorClass = `bg-${color}-500 hover:bg-${color}-700`;
     if (disabled) {
-        color = "bg-gray-300 cursor-not-allowed";
+        colorClass = "bg-gray-300 cursor-not-allowed";
     }
     if (isLoading) {
-        color = "bg-emerald-700 cursor-wait";
+        colorClass = `bg-${color}-700 cursor-wait`;
     }
 
     return (
         <button
-            className={`${color} text-white font-bold py-2 px-4 rounded`}
+            className={`${className} ${colorClass} text-white font-bold py-2 px-4 rounded`}
             onClick={onClick}
             disabled={isLoading || disabled}
             type={type}

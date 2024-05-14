@@ -12,8 +12,7 @@ const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
 
 export default function Home() {
   const router = useRouter();
-  const { data, loading, error } = useGetUser();
-  console.log(data, loading, error)
+  const { data, loading } = useGetUser();
 
   if (loading) {
     return null;

@@ -1,11 +1,14 @@
 "use client";
 
 import Button from "@/components/Button";
+import CreatePortfolioModal from "@/components/CreatePortfolioModal";
+import PortfolioList from "@/components/PortfolioList";
 import Link from "next/link";
 import { useState } from "react";
 
+
 export default function Home() {
-  const [buttonLoading, setButtonLoading] = useState(false);
+  const [showCreatePortfolioModal, setShowCreatePortfolioModal] = useState(false);
 
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
@@ -16,14 +19,21 @@ export default function Home() {
         </p>
       </header>
       <Button
-        onClick={() => {console.log("Track your portfolio"); setButtonLoading(true);}}
-        isLoading={buttonLoading}
+        onClick={() => setShowCreatePortfolioModal(true)}
       >
-        Track your portfolio
+        Create a new portfolio
       </Button>
-      <Link href="/api/auth/logout">
+      <Link href="/api/auth/logout" className="mt-10 bg-blue-500 hover:bg-blue-700 p-3 rounded text-white font-bold">
         Logout
       </Link>
+
+      <CreatePortfolioModal 
+        isOpen={showCreatePortfolioModal}
+        setIsOpen={setShowCreatePortfolioModal}
+      />
+
+      <PortfolioList />
+
     </main>
   );
 }
