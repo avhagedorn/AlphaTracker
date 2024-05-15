@@ -35,22 +35,23 @@ export async function fetchServer(
   }
 }
 
-export default function useFetch(url: string, options?: RequestInit) {
-  const [state, setState] = useState<{
-    loading: boolean;
-    data: any | null;
-    error: Error | null;
-  }>({ loading: true, data: null, error: null });
+export async function fetchSS(
+  url: string, 
+  options?: RequestInit
+): Promise<any> {
+  const init: RequestInit = {
+    ...options,
+    credentials: "include",
+    headers: {
+      ...options?.headers,
+      "Content-Type": "application/json",
+    },
+  };
 
-  useEffect(() => {
-    fetchServer(url, options)
-      .then((result) => {
-        setState({ loading: false, data: result.data, error: result.error });
-      })
-      .catch((error) => {
-        setState({ loading: false, data: null, error });
-      });
-  }, [url, options]);
-
-  return state;
+  const response = await fetch(buildUrl(url), init);
+  if (response.ok) {
+    return response.json();
+  } else {
+    throw new Error(response.statusText);
+  }
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import useFetch from "@/lib/fetch";
+import { fetchSS } from "@/lib/fetch";
 import dynamic from "next/dynamic";
+import { useQuery } from "react-query";
 
 const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
   ssr: false,
@@ -16,15 +17,20 @@ export default function PortfolioDetail(
         id: number 
     }
 }) {
-    const portfolio = useFetch(`/portfolio/${params.id}`);
+    const { data, status, error, isFetching } = useQuery('portfolio', () => fetchSS(`/portfolio/${params.id}`));
+
+    if (isFetching) {
+        return null;
+    }
+
+    if (status === 'error') {
+        return <div>{String(error)}</div>;
+    }
 
     return (
         <main className="flex min-h-screen flex-col items-center p-24">
             <header className="flex flex-col items-center">
-                <h1 className="text-4xl font-bold">AlphaTracker</h1>
-                <p className="text-lg text-center">
-                    Track your portfolio against the market
-                </p>
+                <h1>{data.name}</h1>
             </header>
             <div className="flex flex-col items-center justify-center mt-16 h-96">
                 <CompareGraph

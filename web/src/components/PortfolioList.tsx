@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import CompareGraph from './CompareGraph';
-import useFetch from '@/lib/fetch';
+// import useFetch from '@/lib/fetch';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
+import { useQuery } from 'react-query';
+import { fetchSS } from '@/lib/fetch';
 
 interface DisplayPortfolio {
     id: number;
@@ -11,26 +13,32 @@ interface DisplayPortfolio {
 }
 
 function PortfolioList() {
-    const { data, loading, error } = useFetch('/portfolio/list');
+    const { data, status, error, isFetching, refetch } = useQuery('portfolios', () => fetchSS('/portfolio/list'));
+    console.log(data, status, isFetching);
     const [toDeletePortfolio, setToDeletePortfolio] = React.useState<DisplayPortfolio | null>(null);
 
     const handleDelete = (portfolio: DisplayPortfolio) => {
-        // TODO
+        fetchSS(`/portfolio/${portfolio.id}/delete`, {
+            method: 'POST',
+        }).then(() => {
+            setToDeletePortfolio(null);
+            refetch();
+        });
     }
 
-    if (loading) {
+    if (isFetching) {
         return null;
     }
 
-    if (error) {
-        return <h1>Error</h1>
+    if (status === 'error') {
+        return <h1>{String(error)}</h1>
     }
 
     return (
         <div className="flex flex-col items-center justify-center mt-16">
             {
-                (data as DisplayPortfolio[]).map((portfolio) => (
-                    <div key={portfolio.id}>
+                (data as DisplayPortfolio[]).map((portfolio, idx) => (
+                    <div key={`portfolio-${idx}`}>
                         <h1 
                             className='text-2xl font-bold'
                             onClick={() => setToDeletePortfolio(portfolio)}

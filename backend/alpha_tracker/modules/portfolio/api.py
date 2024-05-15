@@ -52,7 +52,7 @@ async def list_portfolios(
         return [DisplayPortfolio.from_db(portfolio) for portfolio in portfolios]
 
 
-@router.get("/get/{portfolio_id}")
+@router.get("/{portfolio_id}")
 async def get_portfolio(
     portfolio_id: int,
     current_user: User = Depends(get_current_user)
@@ -73,3 +73,27 @@ async def get_portfolio(
             )
 
         return DisplayPortfolio.from_db(portfolio)
+
+@router.post("/{portfolio_id}/delete")
+async def delete_portfolio(
+    portfolio_id: int,
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Delete a specific portfolio.
+    """
+    with Session(get_sqlalchemy_engine()) as db_session:
+        portfolio = db_session \
+                        .query(Portfolio) \
+                        .filter_by(id=portfolio_id, user_id=current_user.id) \
+                        .first()
+
+        if not portfolio:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Portfolio not found",
+            )
+
+        db_session.delete(portfolio)
+        db_session.commit()
+        return {"message": "Portfolio deleted successfully"}

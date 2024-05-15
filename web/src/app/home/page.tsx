@@ -5,10 +5,12 @@ import CreatePortfolioModal from "@/components/CreatePortfolioModal";
 import PortfolioList from "@/components/PortfolioList";
 import Link from "next/link";
 import { useState } from "react";
+import { useQueryClient } from 'react-query';
 
 
 export default function Home() {
   const [showCreatePortfolioModal, setShowCreatePortfolioModal] = useState(false);
+  const queryClient = useQueryClient();
 
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
@@ -30,6 +32,9 @@ export default function Home() {
       <CreatePortfolioModal 
         isOpen={showCreatePortfolioModal}
         setIsOpen={setShowCreatePortfolioModal}
+        onCreate={() => {
+          queryClient.invalidateQueries('portfolios');
+        }}
       />
 
       <PortfolioList />

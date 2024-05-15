@@ -6,6 +6,7 @@ class CreatePortfolioRequest(BaseModel):
     description: Optional[str] = None
 
 class DisplayPortfolio(BaseModel):
+    id: int
     name: str
     description: Optional[str] = None
     created_at: str
@@ -13,6 +14,7 @@ class DisplayPortfolio(BaseModel):
     @classmethod
     def from_db(cls, portfolio):
         return cls(
+            id=portfolio.id,
             name=portfolio.name,
             description=portfolio.description,
             created_at=str(portfolio.created_at)

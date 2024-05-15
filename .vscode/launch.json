@@ -29,7 +29,8 @@
             "type": "node-terminal",
             "name": "AlphaTracker Database",
             "request": "launch",
-            "command": "docker run --name alpha_tracker_db -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres",
+            "cwd": "${workspaceRoot}/backend",
+            "command": "docker run --name alpha_tracker_db -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres && sleep 1 && alembic upgrade head",
         }
     ]
 }

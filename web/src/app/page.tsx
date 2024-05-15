@@ -2,8 +2,9 @@
 
 import dynamic from "next/dynamic";
 import demoData from "../public/demo-data.json";
-import useGetUser from "@/lib/user";
 import { useRouter } from "next/navigation";
+import { useQuery } from "react-query";
+import { fetchSS } from "@/lib/fetch";
 
 const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
   ssr: false,
@@ -12,9 +13,9 @@ const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
 
 export default function Home() {
   const router = useRouter();
-  const { data, loading } = useGetUser();
+  const { data, isFetching } = useQuery("user", () => fetchSS("/user/me"));
 
-  if (loading) {
+  if (isFetching) {
     return null;
   }
 

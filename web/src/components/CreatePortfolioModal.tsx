@@ -3,15 +3,18 @@ import Button from "./Button";
 import Modal from "./Modal";
 import { useState } from "react";
 
+interface CreatePortfolioModalProps {
+  isOpen: boolean;
+  setIsOpen: (show: boolean) => void;
+  onCreate: () => void;
+}
+
 export default function CreatePortfolioModal(
-    { 
-      isOpen, 
-      setIsOpen 
-    } : { 
-      isOpen: boolean, 
-      setIsOpen: (show: boolean) => void 
-    }
-  ) {
+{ 
+  isOpen, 
+  setIsOpen,
+  onCreate
+} : CreatePortfolioModalProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
   
     const handleCreatePortfolio = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -30,6 +33,7 @@ export default function CreatePortfolioModal(
   
       if (response.data) {
         setIsOpen(false);
+        onCreate();
       } else {
         alert("Failed to create portfolio: " + response.error);
       }
