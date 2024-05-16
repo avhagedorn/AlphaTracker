@@ -13,8 +13,11 @@ export const ReactQueryClientProvider = ({
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 60 * 1000,
             retry: false,
+            keepPreviousData: true,
+            staleTime: 5 * 60 * 1000, // 5 minutes
+            cacheTime: 10 * 60 * 1000, // 10 minutes
+            refetchOnWindowFocus: false,
           },
         },
       })

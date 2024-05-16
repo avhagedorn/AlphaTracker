@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import CompareGraph from './CompareGraph';
-// import useFetch from '@/lib/fetch';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
 import { useQuery } from 'react-query';
 import { fetchSS } from '@/lib/fetch';
@@ -14,7 +13,6 @@ interface DisplayPortfolio {
 
 function PortfolioList() {
     const { data, status, error, isFetching, refetch } = useQuery('portfolios', () => fetchSS('/portfolio/list'));
-    console.log(data, status, isFetching);
     const [toDeletePortfolio, setToDeletePortfolio] = React.useState<DisplayPortfolio | null>(null);
 
     const handleDelete = (portfolio: DisplayPortfolio) => {

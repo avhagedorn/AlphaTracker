@@ -7,7 +7,7 @@ interface ButtonProps {
     isLoading?: boolean;
     disabled?: boolean;
     type?: "button" | "submit";
-    color?: "emerald" | "red" | "blue" | "gray" | "yellow";
+    color?: "emerald" | "red" | "blue" | "gray";
     className?: string;
 }
 
@@ -23,7 +23,7 @@ export default function Button({
 
     const getColors = () => {
         if (disabled) {
-            return "bg-gray-300 cursor-not-allowed";
+            return 'bg-gray-300 cursor-not-allowed';
         } else if (isLoading) {
             return `bg-${color}-700 cursor-wait`;
         } else {
@@ -33,7 +33,7 @@ export default function Button({
 
     return (
         <button
-            className={`${className} ${getColors()} text-white font-bold py-2 px-4 rounded`}
+            className={`${className} text-white font-bold py-2 px-4 rounded ${getColors()}`}
             onClick={onClick}
             disabled={disabled || isLoading}
             type={type}
