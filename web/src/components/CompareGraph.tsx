@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react';
-import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
+import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 
 interface GraphData {
     date: string;
@@ -12,7 +12,7 @@ interface GraphData {
 interface CompareGraphProps {
     width: number;
     height: number;
-    margin: {
+    margin?: {
         top: number;
         right: number;
         bottom: number;
@@ -20,6 +20,9 @@ interface CompareGraphProps {
     };
     data: GraphData[];
     ticks: number;
+    animationDuration?: number;
+    hideLegend?: boolean;
+    lineWidth?: number;
 }
 
 function getVisuallyAppealingRange(data: GraphData[], stepCount: number) {
@@ -43,7 +46,10 @@ export default function CompareGraph({
     width,
     height,
     margin,
-    ticks
+    ticks,
+    animationDuration = 1500,
+    hideLegend = false,
+    lineWidth = 2,
 }: CompareGraphProps) {
     const domain = getVisuallyAppealingRange(data, ticks);
 
@@ -57,33 +63,39 @@ export default function CompareGraph({
             <XAxis 
                 dataKey="date" 
                 className="text-sm"
+                tick={!hideLegend}
+                axisLine={!hideLegend}
+                height={hideLegend ? 0 : undefined}
             />
-            <YAxis 
+            <YAxis
                 domain={domain} 
                 allowDataOverflow={false}
                 className="text-sm"
                 tickCount={ticks}
                 tickFormatter={(value) => `$${value}`}
+                tick={!hideLegend}
+                axisLine={!hideLegend}
+                width={hideLegend ? 0 : undefined}
             />
             <Tooltip />
-            <Legend />
+            {!hideLegend && <Legend />}
             <Line 
                 type="monotone" 
                 dataKey="portfolio" 
                 stroke="#82ca9d" 
-                animationDuration={1500} 
+                animationDuration={animationDuration} 
                 name="Your Portfolio"
                 dot={false}
-                strokeWidth={2}
+                strokeWidth={lineWidth}
             />
             <Line 
                 type="monotone" 
                 dataKey="spy" 
                 stroke="#8884d8" 
-                animationDuration={1500} 
+                animationDuration={animationDuration} 
                 name="SP500"
                 dot={false}
-                strokeWidth={2}
+                strokeWidth={lineWidth}
             />
         </LineChart>
     );

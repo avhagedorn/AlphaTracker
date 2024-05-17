@@ -1,11 +1,18 @@
 import { ReactQueryClientProvider } from "@/components/ReactQueryClientProvider";
 import "./globals.css";
 import type { Metadata } from "next";
+import { Manrope } from '@next/font/google'
 
 export const metadata: Metadata = {
   title: "AlphaTracker",
   description: "Track your portfolio against the market",
 };
+
+const manrope = Manrope({
+  style: "normal",
+  weight: "400",
+  subsets: ["latin", "latin-ext"],
+});
 
 export default function RootLayout({
   children,
@@ -15,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ReactQueryClientProvider>
-        <body>{children}</body>
+        <body className={manrope.className}>{children}</body>
       </ReactQueryClientProvider>
     </html>
   );
