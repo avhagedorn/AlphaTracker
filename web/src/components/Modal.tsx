@@ -27,9 +27,9 @@ const Modal = ({
   };
 
   const modalSize = {
-    small: 'w-1/4',
-    medium: 'w-1/3',
-    large: 'w-1/2',
+    small: 'w-1/4 min-w-96',
+    medium: 'w-1/3 min-w-96',
+    large: 'w-1/2 min-w-96',
   }[size];
 
   return (
@@ -39,7 +39,7 @@ const Modal = ({
         onClick={handleOverlayClick}
       ></div>
       <div className={`z-50 flex items-center justify-center ${modalSize} absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2`}>
-        <div className="w-full max-w-3xl mx-auto my-6">
+        <div className="mx-auto my-6 w-full">
           <div className="flex flex-col bg-white rounded-lg">
             <div className="flex items-start justify-between p-5 border-b border-slate-200">
               <h3 className="text-3xl font-semibold">{title}</h3>

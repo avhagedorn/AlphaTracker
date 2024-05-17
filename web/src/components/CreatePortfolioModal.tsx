@@ -45,6 +45,7 @@ export default function CreatePortfolioModal(
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         title="Create a new portfolio"
+        size="small"
       >
         <form onSubmit={handleCreatePortfolio}>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -54,6 +55,7 @@ export default function CreatePortfolioModal(
             type="text"
             id="name"
             name="name"
+            placeholder="Enter a name (e.g. 'Riskmaxxing 🤑')"
             className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-emerald-500"
             minLength={3}
             maxLength={32}
@@ -65,6 +67,7 @@ export default function CreatePortfolioModal(
           <textarea
             id="description"
             name="description"
+            placeholder="Enter a description (e.g. '$TSLA and $GME only 🚀')"
             className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-emerald-500"
             maxLength={255}
           />
