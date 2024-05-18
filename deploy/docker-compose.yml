@@ -33,7 +33,7 @@ services:
       dockerfile: Dockerfile
     container_name: alpha-tracker-web
     depends_on:
-      - app
+      - backend
     ports:
       - "3000:3000"
     environment:

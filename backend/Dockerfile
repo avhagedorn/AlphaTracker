@@ -2,11 +2,7 @@ FROM python:3.11
 
 WORKDIR /app
 
-COPY .env .env
-COPY dependencies/requirements.txt requirements.txt
-COPY alpha_tracker /app/alpha_tracker
-COPY alembic /app/alembic
-COPY alembic.ini /app/alembic.ini
+COPY . .
 
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
