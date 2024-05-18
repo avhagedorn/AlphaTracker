@@ -6,27 +6,39 @@ interface PriceChangeProps {
     percentChange: number;
     valueChange: number;
     subText?: string;
+    hideIcon?: boolean;
+    hidePercent?: boolean;
+    hideDollars?: boolean;
 }
 
 export default function PriceChange({
     percentChange,
     valueChange,
     subText,
+    hideIcon = false,
+    hidePercent = false,
+    hideDollars = false,
 } : PriceChangeProps
 ) {
     const isPositive = percentChange > 0;
     const iconSize = 24;
     const textColor = isPositive ? 'text-emerald-500' : 'text-red-500';
 
+    const textDollars = hideDollars ? '' : fmtDollars(valueChange);
+    const textPercent = hidePercent ? '' : 
+                            hideDollars ? fmtPercent(percentChange) 
+                                        : `(${fmtPercent(percentChange)})`;
+
     return (
         <div>
             <div className="flex items-center">
-                {isPositive ? 
-                    <BsCaretUpFill className={textColor} size={iconSize}/> : 
-                    <BsCaretDownFill className={textColor} size={iconSize}
-                />}
+                {!hideIcon && (
+                    isPositive ? 
+                        <BsCaretUpFill className={textColor} size={iconSize}/> : 
+                        <BsCaretDownFill className={textColor} size={iconSize}/>
+                )}
                 <p className="text-xl">
-                    <span className={`font-bold ml-1 ${textColor}`}>{`${fmtDollars(valueChange)} (${fmtPercent(percentChange)})`}</span>
+                    <span className={`font-bold ml-1 ${textColor}`}>{`${textDollars} ${textPercent}`}</span>
                     <span className="text-gray-500 ml-1">{subText}</span>
                 </p>
             </div>

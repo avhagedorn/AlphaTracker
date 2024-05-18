@@ -21,35 +21,7 @@ export default function PositionsTable({
                     { name: 'Return', sort: (a: PositionRow, b: PositionRow) => a.returnValueDollars - b.returnValueDollars },
                     { name: 'Alpha', sort: (a: PositionRow, b: PositionRow) => a.alphaValueDollars - b.alphaValueDollars },
                 ]}
-                data={[
-                    { 
-                        ticker: 'AAPL', 
-                        equity: 1000, 
-                        equityValueDollars: 1000, 
-                        return: 0.1,
-                        returnValueDollars: 100, 
-                        alpha: 0.05, 
-                        alphaValueDollars: 50
-                    },
-                    { 
-                        ticker: 'GOOGL', 
-                        equity: 2000, 
-                        equityValueDollars: 2000,
-                        return: 0.2, 
-                        returnValueDollars: 400,
-                        alpha: 0.1, 
-                        alphaValueDollars: 200
-                    },
-                    { 
-                        ticker: 'MSFT', 
-                        equity: 1500, 
-                        equityValueDollars: 1500,
-                        return: 0.15, 
-                        returnValueDollars: 225,
-                        alpha: 0.075, 
-                        alphaValueDollars: 112.5
-                    },
-                ]}
+                data={data}
                 itemToRow={(item) => (
                     <>
                         <td className="px-4 py-2">{item.ticker}</td>

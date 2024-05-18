@@ -1,13 +1,8 @@
 "use client"
 
+import { GraphData } from '@/types';
 import React from 'react';
 import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
-
-interface GraphData {
-    date: string;
-    spy: number;
-    portfolio: number;
-}
 
 interface CompareGraphProps {
     width: number;
@@ -23,6 +18,7 @@ interface CompareGraphProps {
     animationDuration?: number;
     hideLegend?: boolean;
     lineWidth?: number;
+    hideTooltip?: boolean;
 }
 
 function getVisuallyAppealingRange(data: GraphData[], stepCount: number) {
@@ -50,6 +46,7 @@ export default function CompareGraph({
     animationDuration = 1500,
     hideLegend = false,
     lineWidth = 2,
+    hideTooltip = false
 }: CompareGraphProps) {
     const domain = getVisuallyAppealingRange(data, ticks);
 
@@ -77,7 +74,7 @@ export default function CompareGraph({
                 axisLine={!hideLegend}
                 width={hideLegend ? 0 : undefined}
             />
-            <Tooltip />
+            {!hideTooltip && <Tooltip />}
             {!hideLegend && <Legend />}
             <Line 
                 type="monotone" 

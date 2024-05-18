@@ -14,3 +14,26 @@ export interface PositionRow {
     alpha: number;
     alphaValueDollars: number;
 }
+
+export interface GraphData {
+    date: string;
+    spy: number;
+    portfolio: number;
+}
+
+export enum Timeframe {
+    DAY = "1D",
+    WEEK = "1W",
+    MONTH = "1M",
+    QUARTER = "3M",
+    YTD = "YTD",
+    YEAR = "1Y",
+    ALL = "ALL",
+}
+
+export interface Portfolio {
+    id: number;
+    name: string;
+    description?: string;
+    createdAt: string;
+}

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 const manrope = Manrope({
   style: "normal",
-  weight: "400",
+  weight: "variable",
   subsets: ["latin", "latin-ext"],
 });
 

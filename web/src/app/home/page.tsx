@@ -6,19 +6,22 @@ import PositionsTable from "@/components/PositionsTable";
 import PriceChange from "@/components/PriceChange";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQueryClient } from 'react-query';
 import demoData from "../../public/demo-data.json";
-
-const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
-  ssr: false,
-  loading: () => <div className="h-96 w-full shimmer"></div>,
-});
-
+import DateGraph from "@/components/DateGraph";
+import { Timeframe } from "@/types";
+import StrategyList from "@/components/StrategyList";
 
 export default function Home() {
   const [showCreatePortfolioModal, setShowCreatePortfolioModal] = useState(false);
+  const [timeframe, setTimeframe] = useState<Timeframe>(Timeframe.DAY);
+  const [data, setData] = useState(demoData);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    setData([...demoData]);
+  }, [timeframe]);
 
   return (
     <main className="flex min-h-screen flex-col items-center">
@@ -37,25 +40,49 @@ export default function Home() {
           <PriceChange percentChange={-0.05} valueChange={-500} subText="Alpha" />
 
           <div className="flex mt-8">
-            <CompareGraph
-              width={1400}
-              height={300}
-              data={demoData}
-              ticks={4}
-              animationDuration={500}
-              hideLegend
-              lineWidth={3}
+            <DateGraph 
+              data={data} 
+              selectedTimeframe={timeframe}
+              handleTimeframeChange={(timeframe) => setTimeframe(timeframe)}
             />
           </div>
 
-          <PositionsTable data={[]}/>
+          <PositionsTable 
+            data={[
+              { 
+                  ticker: 'AAPL', 
+                  equity: 1000, 
+                  equityValueDollars: 1000, 
+                  return: 0.1,
+                  returnValueDollars: 100, 
+                  alpha: 0.05, 
+                  alphaValueDollars: 50
+              },
+              { 
+                  ticker: 'GOOGL', 
+                  equity: 2000, 
+                  equityValueDollars: 2000,
+                  return: 0.2, 
+                  returnValueDollars: 400,
+                  alpha: 0.1, 
+                  alphaValueDollars: 200
+              },
+              { 
+                  ticker: 'MSFT', 
+                  equity: 1500, 
+                  equityValueDollars: 1500,
+                  return: 0.15, 
+                  returnValueDollars: 225,
+                  alpha: 0.075, 
+                  alphaValueDollars: 112.5
+              },
+          ]}/>
 
         </div>
         
         <div className="w-[500px] min-w-[500px] min-h-screen p-8 border-l-2 border-gray-300">
             <h1 className="text-3xl font-bold mb-4">Strategies</h1>
-            <p className="text-lg">This is the right part of the page with a fixed width of 500px.</p>
-            <Button className="mt-4" onClick={() => setShowCreatePortfolioModal(true)}>Create a new strategy</Button>
+            <StrategyList timeframe={timeframe} handleOpenCreatePortfolioModal={() => setShowCreatePortfolioModal(true)} />
         </div>
       </div>
 

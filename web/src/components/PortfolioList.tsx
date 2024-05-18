@@ -3,19 +3,13 @@ import CompareGraph from './CompareGraph';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
 import { useQuery } from 'react-query';
 import { fetchSS } from '@/lib/fetch';
-
-interface DisplayPortfolio {
-    id: number;
-    name: string;
-    description?: string;
-    createdAt: string;
-}
+import { Portfolio } from '@/types';
 
 function PortfolioList() {
     const { data, status, error, isFetching, refetch } = useQuery('portfolios', () => fetchSS('/portfolio/list'));
-    const [toDeletePortfolio, setToDeletePortfolio] = React.useState<DisplayPortfolio | null>(null);
+    const [toDeletePortfolio, setToDeletePortfolio] = React.useState<Portfolio | null>(null);
 
-    const handleDelete = (portfolio: DisplayPortfolio) => {
+    const handleDelete = (portfolio: Portfolio) => {
         fetchSS(`/portfolio/${portfolio.id}/delete`, {
             method: 'POST',
         }).then(() => {
@@ -35,7 +29,7 @@ function PortfolioList() {
     return (
         <div className="flex flex-col items-center justify-center mt-16">
             {
-                (data as DisplayPortfolio[]).map((portfolio, idx) => (
+                (data as Portfolio[]).map((portfolio, idx) => (
                     <div key={`portfolio-${idx}`}>
                         <h1 
                             className='text-2xl font-bold'
