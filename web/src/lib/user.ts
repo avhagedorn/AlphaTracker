@@ -1,5 +1,5 @@
-import { fetchSS } from './fetch';
+import { fetchSS } from "./fetch";
 
 export default function useGetUser() {
-  return fetchSS('/user/me');
+  return fetchSS("/user/me");
 }

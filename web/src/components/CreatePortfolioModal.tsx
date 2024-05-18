@@ -9,77 +9,81 @@ interface CreatePortfolioModalProps {
   onCreate: () => void;
 }
 
-export default function CreatePortfolioModal(
-{ 
-  isOpen, 
+export default function CreatePortfolioModal({
+  isOpen,
   setIsOpen,
-  onCreate
-} : CreatePortfolioModalProps) {
-    const [isSubmitting, setIsSubmitting] = useState(false);
-  
-    const handleCreatePortfolio = async (event: React.FormEvent<HTMLFormElement>) => {
-      setIsSubmitting(true);
-      event.preventDefault();
-  
-      const form = event.currentTarget;
-      const data = new FormData(form);
-      const response = await fetchServer("/portfolio/new", {
-        method: "POST",
-        body: JSON.stringify({
-          name: data.get('name') as string,
-          description: data.get('description') as string,
-        }),
-      });
-  
-      if (response.data) {
-        setIsOpen(false);
-        onCreate();
-      } else {
-        alert("Failed to create portfolio: " + response.error);
-      }
-      setIsSubmitting(false);
+  onCreate,
+}: CreatePortfolioModalProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleCreatePortfolio = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
+    setIsSubmitting(true);
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const response = await fetchServer("/portfolio/new", {
+      method: "POST",
+      body: JSON.stringify({
+        name: data.get("name") as string,
+        description: data.get("description") as string,
+      }),
+    });
+
+    if (response.data) {
+      setIsOpen(false);
+      onCreate();
+    } else {
+      alert("Failed to create portfolio: " + response.error);
     }
-  
-    return (
-      <Modal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        title="Create a new portfolio"
-        size="small"
-      >
-        <form onSubmit={handleCreatePortfolio}>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-            Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Enter a name (e.g. 'Riskmaxxing 🤑')"
-            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-emerald-500"
-            minLength={3}
-            maxLength={32}
-            required
-          />
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mt-4">
-            Description (optional)
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            placeholder="Enter a description (e.g. '$TSLA and $GME only 🚀')"
-            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-emerald-500"
-            maxLength={255}
-          />
-          <div className="flex justify-start mt-2">
-            <Button
-              type="submit"
-              isLoading={isSubmitting}
-            >
-              Create
-            </Button>
-          </div>
-        </form>
-      </Modal>
-    );
+    setIsSubmitting(false);
+  };
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={() => setIsOpen(false)}
+      title="Create a new portfolio"
+      size="small"
+    >
+      <form onSubmit={handleCreatePortfolio}>
+        <label
+          htmlFor="name"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Name
+        </label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Enter a name (e.g. 'Riskmaxxing 🤑')"
+          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-emerald-500"
+          minLength={3}
+          maxLength={32}
+          required
+        />
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700 mt-4"
+        >
+          Description (optional)
+        </label>
+        <textarea
+          id="description"
+          name="description"
+          placeholder="Enter a description (e.g. '$TSLA and $GME only 🚀')"
+          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-emerald-500"
+          maxLength={255}
+        />
+        <div className="flex justify-start mt-2">
+          <Button type="submit" isLoading={isSubmitting}>
+            Create
+          </Button>
+        </div>
+      </form>
+    </Modal>
+  );
 }

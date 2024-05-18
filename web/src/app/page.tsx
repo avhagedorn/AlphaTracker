@@ -17,13 +17,9 @@ export default function Home() {
 
   if (isFetching) {
     return null;
-  }
-
-  else if (data) {
+  } else if (data) {
     router.push("/home");
-  }
-
-  else {
+  } else {
     return (
       <main className="flex min-h-screen flex-col items-center p-24">
         <header className="flex flex-col items-center">
@@ -41,13 +37,13 @@ export default function Home() {
             ticks={4}
           />
         </div>
-        <a 
+        <a
           className="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 mt-4 rounded shadow-lg"
           href={"/auth/login"}
         >
           Track your portfolio
         </a>
       </main>
-    ); 
+    );
   }
 }
