@@ -1,9 +1,12 @@
 from typing import Optional
+
 from pydantic import BaseModel
+
 
 class CreatePortfolioRequest(BaseModel):
     name: str
     description: Optional[str] = None
+
 
 class DisplayPortfolio(BaseModel):
     id: int
@@ -17,5 +20,5 @@ class DisplayPortfolio(BaseModel):
             id=portfolio.id,
             name=portfolio.name,
             description=portfolio.description,
-            created_at=str(portfolio.created_at)
+            created_at=str(portfolio.created_at),
         )

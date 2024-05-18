@@ -1,12 +1,12 @@
-'use client'
+"use client";
 
-import { QueryClient, QueryClientProvider } from 'react-query'
-import { useState } from 'react'
+import { QueryClient, QueryClientProvider } from "react-query";
+import { useState } from "react";
 
 export const ReactQueryClientProvider = ({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) => {
   const [queryClient] = useState(
     () =>
@@ -20,9 +20,9 @@ export const ReactQueryClientProvider = ({
             refetchOnWindowFocus: false,
           },
         },
-      })
-  )
+      }),
+  );
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  )
-}
+  );
+};

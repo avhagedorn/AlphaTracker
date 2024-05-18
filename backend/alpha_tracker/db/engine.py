@@ -2,10 +2,11 @@ from sqlalchemy.engine import create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 
-from alpha_tracker.configs import (
-    POSTGRES_DB, POSTGRES_HOST, POSTGRES_PASSWORD, 
-    POSTGRES_PORT, POSTGRES_USER
-)
+from alpha_tracker.configs import POSTGRES_DB
+from alpha_tracker.configs import POSTGRES_HOST
+from alpha_tracker.configs import POSTGRES_PASSWORD
+from alpha_tracker.configs import POSTGRES_PORT
+from alpha_tracker.configs import POSTGRES_USER
 
 _ENGINE: Engine | None = None
 
@@ -26,5 +27,6 @@ def get_sqlalchemy_engine() -> Engine:
         connection_string = build_connection_string()
         _ENGINE = create_engine(connection_string, pool_size=50, max_overflow=25)
     return _ENGINE
+
 
 SessionFactory = sessionmaker(bind=get_sqlalchemy_engine())

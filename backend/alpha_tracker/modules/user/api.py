@@ -1,12 +1,15 @@
-from typing import Annotated, Union
-from fastapi import APIRouter, Cookie, Depends, HTTPException, status
+from fastapi import APIRouter
+from fastapi import Depends
+from fastapi import HTTPException
+from fastapi import status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
 from alpha_tracker.db.engine import get_sqlalchemy_engine
 from alpha_tracker.db.models import User
 from alpha_tracker.modules.auth.models import DisplayUser
-from alpha_tracker.utils.auth import get_current_admin_user, get_current_user
+from alpha_tracker.utils.auth import get_current_admin_user
+from alpha_tracker.utils.auth import get_current_user
 
 router = APIRouter(prefix="/user")
 
@@ -15,6 +18,7 @@ Handle user management.
 """
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 
 @router.get("/me")
 async def read_users_me(
@@ -27,12 +31,13 @@ async def read_users_me(
 Admin endpoints
 """
 
+
 @router.post("/promote/{username}")
 async def promote_user(
     username: str,
     _: User = Depends(get_current_admin_user),
 ):
-    
+
     with Session(get_sqlalchemy_engine()) as db_session:
 
         current_user = db_session.query(User).filter(User.username == username).first()
@@ -54,7 +59,7 @@ async def demote_user(
     username: str,
     _: User = Depends(get_current_admin_user),
 ):
-    
+
     with Session(get_sqlalchemy_engine()) as db_session:
         current_user = db_session.query(User).filter(User.username == username).first()
 
@@ -84,7 +89,7 @@ async def delete_user(
     username: str,
     _: User = Depends(get_current_admin_user),
 ):
-    
+
     with Session(get_sqlalchemy_engine()) as db_session:
         current_user = db_session.query(User).filter(User.username == username).first()
 
@@ -93,7 +98,7 @@ async def delete_user(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="User not found",
             )
-        
+
         if current_user.is_admin:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,

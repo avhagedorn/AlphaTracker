@@ -9,8 +9,8 @@ function buildUrl(path: string): string {
 }
 
 export async function fetchServer(
-  url: string, 
-  options?: RequestInit
+  url: string,
+  options?: RequestInit,
 ): Promise<{ loading: boolean; data: any | null; error: Error | null }> {
   const init: RequestInit = {
     ...options,
@@ -26,18 +26,14 @@ export async function fetchServer(
   if (response.ok) {
     return { loading: false, data, error: null };
   } else {
-    const errorMessage = (
-      data.detail 
-      || data.message 
-      || data.status
-    );
+    const errorMessage = data.detail || data.message || data.status;
     return { loading: false, data: null, error: errorMessage };
   }
 }
 
 export async function fetchSS(
-  url: string, 
-  options?: RequestInit
+  url: string,
+  options?: RequestInit,
 ): Promise<any> {
   const init: RequestInit = {
     ...options,

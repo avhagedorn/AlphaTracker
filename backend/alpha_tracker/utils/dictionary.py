@@ -1,4 +1,5 @@
 import time
+
 import requests
 
 URL_TEMPLATE = "https://api.dictionaryapi.dev/api/v2/entries/en/%s"
@@ -6,6 +7,7 @@ URL_TEMPLATE = "https://api.dictionaryapi.dev/api/v2/entries/en/%s"
 # Rate limiting parameters
 RATE_LIMIT = 450  # Maximum number of requests allowed per minute
 REQUEST_INTERVAL = 60 / RATE_LIMIT  # Interval between requests in seconds
+
 
 def _retry_with_backoff(word):
     delay = REQUEST_INTERVAL
@@ -26,6 +28,7 @@ def _retry_with_backoff(word):
 
         if max_retries == 0:
             return []
+
 
 def get_definition(word):
     word_json = _retry_with_backoff(word)

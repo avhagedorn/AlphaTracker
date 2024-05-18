@@ -1,22 +1,22 @@
 "use client";
 
-import React from 'react';
-import Button from './Button';
+import React from "react";
+import Button from "./Button";
 
 interface ModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    title: string;
-    children: React.ReactNode;
-    size?: 'small' | 'medium' | 'large';
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+  size?: "small" | "medium" | "large";
 }
 
-const Modal = ({ 
-    isOpen, 
-    onClose, 
-    title,
-    children,
-    size = 'medium',
+const Modal = ({
+  isOpen,
+  onClose,
+  title,
+  children,
+  size = "medium",
 }: ModalProps) => {
   if (!isOpen) return null;
 
@@ -27,18 +27,20 @@ const Modal = ({
   };
 
   const modalSize = {
-    small: 'w-1/4 min-w-96',
-    medium: 'w-1/3 min-w-96',
-    large: 'w-1/2 min-w-96',
+    small: "w-1/4 min-w-96",
+    medium: "w-1/3 min-w-96",
+    large: "w-1/2 min-w-96",
   }[size];
 
   return (
     <>
-      <div 
+      <div
         className="fixed inset-0 z-40 bg-black opacity-50"
         onClick={handleOverlayClick}
       ></div>
-      <div className={`z-50 flex items-center justify-center ${modalSize} absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2`}>
+      <div
+        className={`z-50 flex items-center justify-center ${modalSize} absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2`}
+      >
         <div className="mx-auto my-6 w-full">
           <div className="flex flex-col bg-white rounded-lg">
             <div className="flex items-start justify-between p-5 border-b border-slate-200">
