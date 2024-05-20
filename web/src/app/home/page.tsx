@@ -1,17 +1,15 @@
 "use client";
 
-import Button from "@/components/Button";
 import CreatePortfolioModal from "@/components/CreatePortfolioModal";
 import PositionsTable from "@/components/PositionsTable";
 import PriceChange from "@/components/PriceChange";
-import dynamic from "next/dynamic";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import demoData from "../../public/demo-data.json";
 import DateGraph from "@/components/DateGraph";
 import { Timeframe } from "@/types";
 import StrategyList from "@/components/StrategyList";
+import Navbar from "@/components/Navbar";
 
 export default function Home() {
   const [showCreatePortfolioModal, setShowCreatePortfolioModal] =
@@ -26,6 +24,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center">
+      <Navbar />
       <CreatePortfolioModal
         isOpen={showCreatePortfolioModal}
         setIsOpen={setShowCreatePortfolioModal}
@@ -95,13 +94,6 @@ export default function Home() {
           />
         </div>
       </div>
-
-      <Link
-        href="/api/auth/logout"
-        className="m-4 bg-blue-500 hover:bg-blue-700 p-2 rounded text-white font-bold"
-      >
-        Logout
-      </Link>
     </main>
   );
 }
