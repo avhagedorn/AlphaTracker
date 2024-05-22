@@ -8,12 +8,20 @@ const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
 
 interface DateGraphProps {
   data: GraphData[];
+  width: number;
+  height: number;
+  animationDuration: number;
+  lineWidth: number;
   selectedTimeframe: Timeframe;
   handleTimeframeChange: (timeframe: Timeframe) => void;
 }
 
 export default function DateGraph({
   data,
+  width,
+  height,
+  animationDuration,
+  lineWidth,
   selectedTimeframe,
   handleTimeframeChange,
 }: DateGraphProps) {
@@ -26,13 +34,13 @@ export default function DateGraph({
   return (
     <div className="flex flex-col w-full">
       <CompareGraph
-        width={1400}
-        height={300}
+        width={width}
+        height={height}
         data={data}
         ticks={4}
-        animationDuration={500}
+        animationDuration={animationDuration}
         hideLegend
-        lineWidth={3}
+        lineWidth={lineWidth}
       />
       <div className="flex space-x-4 w-full pt-2 pb-2 border-b-2 border-gray-300">
         {Object.values(Timeframe).map((timeframe, index) => (

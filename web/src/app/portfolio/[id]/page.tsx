@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWrapper from "@/components/ContentWrapper";
 import { fetchSS } from "@/lib/fetch";
 import dynamic from "next/dynamic";
 import { useQuery } from "react-query";
@@ -29,19 +30,21 @@ export default function PortfolioDetail({
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
-      <header className="flex flex-col items-center">
-        <h1>{data.name}</h1>
-      </header>
-      <div className="flex flex-col items-center justify-center mt-16 h-96">
-        <CompareGraph
-          width={1000}
-          height={300}
-          margin={{ top: 10, right: 30, left: 20, bottom: 10 }}
-          data={[]}
-          ticks={4}
-        />
+    <ContentWrapper userIsAuthenticated>
+      <div className="flex flex-col items-center p-24">
+        <header className="flex flex-col items-center">
+          <h1>{data.name}</h1>
+        </header>
+        <div className="flex flex-col items-center justify-center mt-16 h-96">
+          <CompareGraph
+            width={1000}
+            height={300}
+            margin={{ top: 10, right: 30, left: 20, bottom: 10 }}
+            data={[]}
+            ticks={4}
+          />
+        </div>
       </div>
-    </main>
+    </ContentWrapper>
   );
 }

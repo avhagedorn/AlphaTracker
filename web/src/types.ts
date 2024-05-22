@@ -37,3 +37,12 @@ export interface Portfolio {
   description?: string;
   createdAt: string;
 }
+
+export interface TransactionItem {
+  id: number;
+  date: string;
+  ticker: string;
+  shares: number;
+  price: number;
+  type: string;
+}

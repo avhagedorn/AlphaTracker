@@ -28,7 +28,7 @@ const Table = <T,>({ headers, data, itemToRow, className }: TableProps<T>) => {
       <thead>
         <tr>
           {headers.map((header, index) => (
-            <th key={index} className="px-4 py-2 text-left text-xl">
+            <th key={index} className="px-4 py-2 text-left text-l">
               <button
                 className={`flex items-center hover:text-black ${header.name === sort.key ? "text-black" : "text-gray-500"}`}
                 onClick={() => {

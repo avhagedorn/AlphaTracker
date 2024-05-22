@@ -73,7 +73,7 @@ export default function StockSearch() {
       <input
         type="text"
         placeholder="Search"
-        className="px-4 py-1 border border-gray-300 rounded-md w-1/5"
+        className="px-4 py-1 border border-gray-300 rounded-md w-1/5 focus:outline-none focus:border-emerald-500"
         value={searchTerm}
         onChange={handleInputChange}
       />
