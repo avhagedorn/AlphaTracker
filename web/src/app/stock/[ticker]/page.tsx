@@ -10,6 +10,7 @@ import ViewMore from "@/components/ViewMore";
 import Button from "@/components/Button";
 import Table from "@/components/Table";
 import { fmtDollars } from "@/lib/utils";
+import TransactionsTable from "@/components/TransactionsTable";
 
 const StatisticsCard = ({
   title,
@@ -121,25 +122,7 @@ export default function Stock({
               <h1 className="text-2xl font-bold">Transactions</h1>
               <Button onClick={() => {}}>Create</Button>
             </div>
-            <Table
-              headers={[
-                {
-                  name: "Date",
-                  sort: (a, b) => a.date.localeCompare(b.date),
-                },
-                {
-                  name: "Shares",
-                  sort: (a, b) => a.shares - b.shares,
-                },
-                {
-                  name: "Price",
-                  sort: (a, b) => a.price - b.price,
-                },
-                {
-                  name: "Type",
-                  sort: (a, b) => a.type.localeCompare(b.type),
-                },
-              ]}
+            <TransactionsTable
               data={[
                 {
                   id: 1,
@@ -166,14 +149,6 @@ export default function Stock({
                   type: "Buy",
                 },
               ]}
-              itemToRow={(item: TransactionItem) => (
-                <>
-                  <td className="px-4 py-2">{item.date}</td>
-                  <td className="px-4 py-2">{item.shares}</td>
-                  <td className="px-4 py-2">{fmtDollars(item.price)}</td>
-                  <td className="px-4 py-2">{item.type}</td>
-                </>
-              )}
             />
           </div>
         </div>

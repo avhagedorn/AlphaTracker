@@ -93,7 +93,6 @@ export default function Home() {
           </div>
 
           <div className="w-[500px] min-w-[500px] min-h-screen p-8 border-l-2 border-gray-300">
-            <h1 className="text-3xl font-bold mb-4">Strategies</h1>
             <StrategyList
               timeframe={timeframe}
               handleOpenCreatePortfolioModal={() =>
