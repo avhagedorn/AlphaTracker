@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "./Modal";
 import Button from "./Button";
 
@@ -15,7 +15,7 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
   onDelete,
   onCancel,
 }) => {
-  const [isDeleting, setIsDeleting] = React.useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = () => {
     setIsDeleting(true);
