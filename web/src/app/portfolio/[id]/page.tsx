@@ -53,7 +53,7 @@ export default function PortfolioDetail({
         <div className="w-1/2">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold">{data.name}</h1>
+              <h1 className="text-3xl font-bold mb-4">{data.name}</h1>
               <h1 className="text-6xl font-bold mb-4">$180.41</h1>
             </div>
             <div>
@@ -154,6 +154,7 @@ export default function PortfolioDetail({
               },
             ]}
             onDelete={(id) => console.log("delete", id)}
+            displayTicker
           />
         </div>
       </div>

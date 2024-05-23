@@ -66,19 +66,25 @@ export default function StockSearch() {
     debouncedSearch.current();
   };
 
-  console.log(searchTerm, searchResults);
+  const handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchResults.length > 0) {
+      // Redirect to the first search result
+      window.location.href = `/stock/${searchResults[0].ticker.toLowerCase()}`;
+    }
+  };
 
   return (
-    <div className="relative">
+    <div>
       <input
         type="text"
         placeholder="Search"
-        className="px-4 py-1 border border-gray-300 rounded-md w-1/5 focus:outline-none focus:border-emerald-500"
+        className="px-4 py-1 border w-full border-gray-300 rounded-md focus:outline-none focus:border-emerald-500"
         value={searchTerm}
         onChange={handleInputChange}
+        onKeyDown={handleSubmit}
       />
       {searchResults.length > 0 && (
-        <ul className="absolute left-1/2 transform -translate-x-1/2 z-10 w-1/5 mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
+        <ul className="absolute left-1/2 transform -translate-x-1/2 z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
           {searchResults.map(
             (result: { id: number; ticker: string; name: string }) => (
               <a href={`/stock/${result.ticker.toLowerCase()}`} key={result.id}>

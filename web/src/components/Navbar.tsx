@@ -27,16 +27,16 @@ export default function Navbar({ userIsAuthenticated }: NavbarProps) {
   } else {
     return (
       <div className="px-8 top-0 w-full">
-        <div className="flex justify-center items-center space-x-4 font-bold">
-          <div className="py-4 flex-none">
+        <div className="relative flex items-center justify-between font-bold">
+          <div className="py-4">
             <a href="/home" className="mr-4">
               [⍺T]
             </a>
           </div>
-          <div className="flex-auto text-center font-normal">
+          <div className="absolute w-1/5 left-1/2 transform -translate-x-1/2 font-normal">
             <StockSearch />
           </div>
-          <div className="py-4 flex-none">
+          <div className="py-4">
             <a href="/strategies" className="mr-4">
               Strategies
             </a>

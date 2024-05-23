@@ -6,33 +6,11 @@ import ContentWrapper from "@/components/ContentWrapper";
 import PriceChange from "@/components/PriceChange";
 import DateGraph from "@/components/DateGraph";
 import { Timeframe } from "@/types";
-import ViewMore from "@/components/ViewMore";
 import Button from "@/components/Button";
 import TransactionsTable from "@/components/TransactionsTable";
 import { FiPlus } from "react-icons/fi";
 import Statistics from "@/components/Statistics";
 import CreateTransactionModal from "@/components/CreateTransactionModal";
-
-const StatisticsCard = ({
-  title,
-  statistics,
-}: {
-  title: string;
-  statistics: {
-    title: string;
-    value: string;
-  }[];
-}) => (
-  <div className="flex flex-col flex-grow px-8 py-4 shadow-lg border border-gray-100">
-    <h1 className="text-2xl font-bold">{title}</h1>
-    {statistics.map(({ title, value }) => (
-      <div key={title} className="flex flex-row justify-between">
-        <h1 className="text-lg font-bold">{title}</h1>
-        <h1 className="text-lg">{value}</h1>
-      </div>
-    ))}
-  </div>
-);
 
 export default function Stock({
   params,
@@ -156,6 +134,7 @@ export default function Stock({
                   type: "Buy",
                 },
               ]}
+              onDelete={() => {}}
             />
           </div>
         </div>

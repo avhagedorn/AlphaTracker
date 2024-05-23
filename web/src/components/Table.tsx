@@ -19,7 +19,7 @@ interface SortState {
 const Table = <T,>({ headers, data, itemToRow, className }: TableProps<T>) => {
   const [orderedData, setOrderedData] = useState<T[]>(data);
   const [sort, setSort] = useState<SortState>({
-    key: "Ticker",
+    key: "",
     ascending: true,
   });
 

@@ -125,6 +125,42 @@ export default function CreateTransactionModal({
               <option value="SELL">SELL</option>
             </select>
           </div>
+          <div className="mb-4">
+            <label
+              htmlFor="portfolioId"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Portfolio
+            </label>
+            <select
+              id="portfolioId"
+              name="portfolioId"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-emerald-500"
+              required
+              defaultValue={portfolioId?.toString()}
+              disabled={!!portfolioId}
+            >
+              <option value="1">Portfolio 1</option>
+              <option value="2">Portfolio 2</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="ticker"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Ticker
+            </label>
+            <input
+              type="text"
+              id="ticker"
+              name="ticker"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-emerald-500"
+              maxLength={255}
+              defaultValue={ticker?.toUpperCase()}
+              disabled={!!ticker}
+            />
+          </div>
         </div>
         <div className="flex justify-start mt-2">
           <Button type="submit" isLoading={isSubmitting}>

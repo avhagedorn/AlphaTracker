@@ -6,11 +6,13 @@ import { FiTrash } from "react-icons/fi";
 interface TransactionsTableProps {
   data: TransactionItem[];
   onDelete?: (id: number) => void;
+  displayTicker?: boolean;
 }
 
 export default function TransactionsTable({
   data,
   onDelete,
+  displayTicker = false,
 }: TransactionsTableProps) {
   const headers: {
     name: string;
@@ -36,6 +38,14 @@ export default function TransactionsTable({
     },
   ];
 
+  if (displayTicker) {
+    headers.push({
+      name: "Ticker",
+      sort: (a: TransactionItem, b: TransactionItem) =>
+        a.ticker.localeCompare(b.ticker),
+    });
+  }
+
   if (onDelete) {
     headers.push({
       name: "Delete",
@@ -52,6 +62,7 @@ export default function TransactionsTable({
           <td className="px-4 py-2">{item.shares}</td>
           <td className="px-4 py-2">{fmtDollars(item.price)}</td>
           <td className="px-4 py-2">{item.type}</td>
+          {displayTicker && <td className="px-4 py-2">{item.ticker}</td>}
           {onDelete && (
             <td className="px-4 py-2">
               <button onClick={() => onDelete(item.id)}>
