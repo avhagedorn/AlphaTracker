@@ -6,7 +6,7 @@ import PriceChange from "./PriceChange";
 
 const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
   ssr: false,
-  loading: () => <div className="h-24 w-full shimmer"></div>,
+  loading: () => <div className="h-[100px] w-full shimmer"></div>,
 });
 
 interface StrategyPreviewProps {
@@ -21,7 +21,9 @@ export default function StrategyPreview({
   return (
     <div className={`${className}`}>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl">{portfolio.name}</h1>
+        <a href={`/portfolio/${portfolio.id}`}>
+          <h1 className="text-2xl">{portfolio.name}</h1>
+        </a>
         <PriceChange percentChange={1} valueChange={1} hideDollars />
       </div>
       <CompareGraph

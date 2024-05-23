@@ -67,6 +67,28 @@ async def get_portfolio(portfolio_id: int, current_user: User = Depends(get_curr
         return DisplayPortfolio.from_db(portfolio)
 
 
+@router.post("/{portfolio_id}/update")
+async def delete_portfolio(
+    portfolio_id: int, data: CreatePortfolioRequest, current_user: User = Depends(get_current_user)
+):
+    """
+    Update a specific portfolio.
+    """
+    with Session(get_sqlalchemy_engine()) as db_session:
+        portfolio = db_session.query(Portfolio).filter_by(id=portfolio_id, user_id=current_user.id).first()
+
+        if not portfolio:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Portfolio not found",
+            )
+
+        portfolio.name = data.name
+        portfolio.description = data.description
+        db_session.commit()
+        return DisplayPortfolio.from_db(portfolio)
+
+
 @router.post("/{portfolio_id}/delete")
 async def delete_portfolio(portfolio_id: int, current_user: User = Depends(get_current_user)):
     """

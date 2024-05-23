@@ -5,12 +5,13 @@ import demoData from "../../../public/demo-data.json";
 import ContentWrapper from "@/components/ContentWrapper";
 import PriceChange from "@/components/PriceChange";
 import DateGraph from "@/components/DateGraph";
-import { Timeframe, TransactionItem } from "@/types";
+import { Timeframe } from "@/types";
 import ViewMore from "@/components/ViewMore";
 import Button from "@/components/Button";
-import Table from "@/components/Table";
-import { fmtDollars } from "@/lib/utils";
 import TransactionsTable from "@/components/TransactionsTable";
+import { FiPlus } from "react-icons/fi";
+import Statistics from "@/components/Statistics";
+import CreateTransactionModal from "@/components/CreateTransactionModal";
 
 const StatisticsCard = ({
   title,
@@ -40,6 +41,8 @@ export default function Stock({
     ticker: string;
   };
 }) {
+  const [createTransactionModalOpen, setCreateTransactionModalOpen] =
+    useState(false);
   const [selectedTimeframe, setSelectedTimeframe] = useState<Timeframe>(
     Timeframe.DAY,
   );
@@ -78,49 +81,53 @@ export default function Stock({
 
             <div className="mt-8">
               <h1 className="text-2xl font-bold">Statistics</h1>
-              <div className="flex flex-row justify-evenly mt-4 space-x-4">
-                <StatisticsCard
-                  title="Financials"
-                  statistics={[
-                    { title: "Market Cap", value: "1.2T" },
-                    { title: "PE Ratio", value: "30.0" },
-                    { title: "Dividend Yield", value: "0.50%" },
-                  ]}
-                />
-                <StatisticsCard
-                  title="The Greeks"
-                  statistics={[
-                    { title: `Alpha (${selectedTimeframe})`, value: "0.8" },
-                    { title: `Beta (${selectedTimeframe})`, value: "1.2" },
-                  ]}
-                />
-              </div>
-              <ViewMore>
-                <div className="flex flex-row justify-evenly mt-4 space-x-4 w-full">
-                  <StatisticsCard
-                    title="Statistics"
-                    statistics={[
+              <Statistics
+                cards={[
+                  {
+                    title: "Financials",
+                    statistics: [
                       { title: "Market Cap", value: "1.2T" },
                       { title: "PE Ratio", value: "30.0" },
                       { title: "Dividend Yield", value: "0.50%" },
-                      { title: "52WK Range", value: "$150.00 - $200.00" },
-                    ]}
-                  />
-                  <StatisticsCard
-                    title="The Greeks"
-                    statistics={[
+                    ],
+                  },
+                  {
+                    title: "The Greeks",
+                    statistics: [
                       { title: `Alpha (${selectedTimeframe})`, value: "0.8" },
                       { title: `Beta (${selectedTimeframe})`, value: "1.2" },
-                    ]}
-                  />
-                </div>
-              </ViewMore>
+                    ],
+                  },
+                  {
+                    title: "Statistics",
+                    statistics: [
+                      { title: "Market Cap", value: "1.2T" },
+                      { title: "PE Ratio", value: "30.0" },
+                    ],
+                  },
+                  {
+                    title: "The Greeks",
+                    statistics: [
+                      { title: `Alpha (${selectedTimeframe})`, value: "0.8" },
+                      { title: `Beta (${selectedTimeframe})`, value: "1.2" },
+                    ],
+                  },
+                ]}
+              />
             </div>
           </div>
           <div className="mt-8">
-            <div className="flex flex-row justify-between">
-              <h1 className="text-2xl font-bold">Transactions</h1>
-              <Button onClick={() => {}}>Create</Button>
+            <div className="flex justify-between items-center mt-8">
+              <h2 className="text-2xl font-bold">Transactions</h2>
+              <Button
+                className="font-sm"
+                onClick={() => setCreateTransactionModalOpen(true)}
+              >
+                <div className="flex items-center justify-center">
+                  <FiPlus className="mr-2" size={24} />
+                  Add
+                </div>
+              </Button>
             </div>
             <TransactionsTable
               data={[
@@ -153,6 +160,12 @@ export default function Stock({
           </div>
         </div>
       </div>
+      <CreateTransactionModal
+        isOpen={createTransactionModalOpen}
+        setIsOpen={setCreateTransactionModalOpen}
+        onSubmit={() => {}}
+        ticker={params.ticker}
+      />
     </ContentWrapper>
   );
 }

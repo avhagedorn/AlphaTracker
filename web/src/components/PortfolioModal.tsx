@@ -2,29 +2,33 @@ import { fetchServer } from "@/lib/fetch";
 import Button from "./Button";
 import Modal from "./Modal";
 import { useState } from "react";
+import { Portfolio } from "@/types";
 
-interface CreatePortfolioModalProps {
+interface PortfolioModalProps {
   isOpen: boolean;
   setIsOpen: (show: boolean) => void;
-  onCreate: () => void;
+  onSubmit: () => void;
+  existingPortfolio?: Portfolio;
 }
 
-export default function CreatePortfolioModal({
+export default function PortfolioModal({
   isOpen,
   setIsOpen,
-  onCreate,
-}: CreatePortfolioModalProps) {
+  onSubmit,
+  existingPortfolio,
+}: PortfolioModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleCreatePortfolio = async (
-    event: React.FormEvent<HTMLFormElement>,
-  ) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setIsSubmitting(true);
     event.preventDefault();
 
     const form = event.currentTarget;
     const data = new FormData(form);
-    const response = await fetchServer("/portfolio/new", {
+    const url = existingPortfolio
+      ? `/portfolio/${existingPortfolio.id}/update`
+      : "/portfolio/new";
+    const response = await fetchServer(url, {
       method: "POST",
       body: JSON.stringify({
         name: data.get("name") as string,
@@ -34,9 +38,9 @@ export default function CreatePortfolioModal({
 
     if (response.data) {
       setIsOpen(false);
-      onCreate();
+      onSubmit();
     } else {
-      alert("Failed to create portfolio: " + response.error);
+      alert("Failed to submit: " + response.error);
     }
     setIsSubmitting(false);
   };
@@ -45,10 +49,10 @@ export default function CreatePortfolioModal({
     <Modal
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
-      title="Create a new portfolio"
+      title={existingPortfolio ? "Edit Portfolio" : "Create Portfolio"}
       size="small"
     >
-      <form onSubmit={handleCreatePortfolio}>
+      <form onSubmit={handleSubmit}>
         <label
           htmlFor="name"
           className="block text-sm font-medium text-gray-700"
@@ -59,28 +63,30 @@ export default function CreatePortfolioModal({
           type="text"
           id="name"
           name="name"
-          placeholder="Enter a name (e.g. 'Riskmaxxing 🤑')"
+          placeholder="Enter a name (e.g. 'Memestocks 🤑')"
           className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-emerald-500"
           minLength={3}
           maxLength={32}
           required
+          defaultValue={existingPortfolio ? existingPortfolio.name : ""}
         />
         <label
           htmlFor="description"
           className="block text-sm font-medium text-gray-700 mt-4"
         >
-          Description (optional)
+          Investment Thesis (optional)
         </label>
         <textarea
           id="description"
           name="description"
-          placeholder="Enter a description (e.g. '$TSLA and $GME only 🚀')"
+          placeholder="Your investment thesis for this strategy (e.g. '$TSLA and $GME only 🚀')"
           className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-emerald-500"
           maxLength={255}
+          defaultValue={existingPortfolio ? existingPortfolio.description : ""}
         />
         <div className="flex justify-start mt-2">
           <Button type="submit" isLoading={isSubmitting}>
-            Create
+            {existingPortfolio ? "Save" : "Create"}
           </Button>
         </div>
       </form>

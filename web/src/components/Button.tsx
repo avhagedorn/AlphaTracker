@@ -7,7 +7,7 @@ interface ButtonProps {
   isLoading?: boolean;
   disabled?: boolean;
   type?: "button" | "submit";
-  color?: "emerald" | "red" | "blue" | "gray";
+  color?: "emerald" | "red" | "blue" | "gray" | "transparent";
   className?: string;
 }
 

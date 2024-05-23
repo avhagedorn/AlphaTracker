@@ -3,10 +3,10 @@
 import ContentWrapper from "@/components/ContentWrapper";
 import React from "react";
 
-export default function Contact() {
+export default function Account() {
   return (
-    <ContentWrapper>
-      <h1 className="text-4xl font-bold mb-4">Contact</h1>
+    <ContentWrapper userIsAuthenticated>
+      <h1 className="text-4xl font-bold mb-4">Strategies</h1>
     </ContentWrapper>
   );
 }

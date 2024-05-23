@@ -24,7 +24,7 @@ export default function ContentWrapper({
               <div className="w-full md:w-1/3 mb-4 md:mb-0">
                 <h3 className="text-lg font-semibold mb-2">AlphaTracker</h3>
                 <p className="text-gray-600">
-                  &copy; {new Date().getFullYear()} AlphaTracker.
+                  &copy; {new Date().getFullYear()} AlphaTracker
                 </p>
               </div>
               <div className="w-full md:w-1/3 mb-4 md:mb-0">
@@ -51,11 +51,6 @@ export default function ContentWrapper({
               <div className="w-full md:w-1/3">
                 <h3 className="text-lg font-semibold mb-2">Contact Us</h3>
                 <ul className="text-gray-600">
-                  <li className="mb-1">
-                    <Link href="/help/contact" className="hover:text-gray-800">
-                      Contact
-                    </Link>
-                  </li>
                   <li className="mb-1">
                     <Link href="/help/support" className="hover:text-gray-800">
                       Support

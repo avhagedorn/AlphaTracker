@@ -1,32 +1,50 @@
 import { fmtDollars } from "@/lib/utils";
 import { TransactionItem } from "@/types";
 import Table from "./Table";
+import { FiTrash } from "react-icons/fi";
+
+interface TransactionsTableProps {
+  data: TransactionItem[];
+  onDelete?: (id: number) => void;
+}
 
 export default function TransactionsTable({
   data,
-}: {
-  data: TransactionItem[];
-}) {
+  onDelete,
+}: TransactionsTableProps) {
+  const headers: {
+    name: string;
+    sort?: (a: TransactionItem, b: TransactionItem) => number;
+  }[] = [
+    {
+      name: "Date",
+      sort: (a: TransactionItem, b: TransactionItem) =>
+        a.date.localeCompare(b.date),
+    },
+    {
+      name: "Shares",
+      sort: (a: TransactionItem, b: TransactionItem) => a.shares - b.shares,
+    },
+    {
+      name: "Price",
+      sort: (a: TransactionItem, b: TransactionItem) => a.price - b.price,
+    },
+    {
+      name: "Type",
+      sort: (a: TransactionItem, b: TransactionItem) =>
+        a.type.localeCompare(b.type),
+    },
+  ];
+
+  if (onDelete) {
+    headers.push({
+      name: "Delete",
+    });
+  }
+
   return (
     <Table
-      headers={[
-        {
-          name: "Date",
-          sort: (a, b) => a.date.localeCompare(b.date),
-        },
-        {
-          name: "Shares",
-          sort: (a, b) => a.shares - b.shares,
-        },
-        {
-          name: "Price",
-          sort: (a, b) => a.price - b.price,
-        },
-        {
-          name: "Type",
-          sort: (a, b) => a.type.localeCompare(b.type),
-        },
-      ]}
+      headers={headers}
       data={data}
       itemToRow={(item: TransactionItem) => (
         <>
@@ -34,6 +52,13 @@ export default function TransactionsTable({
           <td className="px-4 py-2">{item.shares}</td>
           <td className="px-4 py-2">{fmtDollars(item.price)}</td>
           <td className="px-4 py-2">{item.type}</td>
+          {onDelete && (
+            <td className="px-4 py-2">
+              <button onClick={() => onDelete(item.id)}>
+                <FiTrash />
+              </button>
+            </td>
+          )}
         </>
       )}
     />

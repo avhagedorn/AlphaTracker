@@ -37,6 +37,9 @@ export default function Navbar({ userIsAuthenticated }: NavbarProps) {
             <StockSearch />
           </div>
           <div className="py-4 flex-none">
+            <a href="/strategies" className="mr-4">
+              Strategies
+            </a>
             <a href="/account" className="mr-4">
               Account
             </a>

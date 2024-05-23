@@ -1,6 +1,6 @@
 "use client";
 
-import CreatePortfolioModal from "@/components/CreatePortfolioModal";
+import PortfolioModal from "@/components/PortfolioModal";
 import PositionsTable from "@/components/PositionsTable";
 import PriceChange from "@/components/PriceChange";
 import { useEffect, useState } from "react";
@@ -12,8 +12,7 @@ import StrategyList from "@/components/StrategyList";
 import ContentWrapper from "@/components/ContentWrapper";
 
 export default function Home() {
-  const [showCreatePortfolioModal, setShowCreatePortfolioModal] =
-    useState(false);
+  const [showPortfolioModal, setShowPortfolioModal] = useState(false);
   const [timeframe, setTimeframe] = useState<Timeframe>(Timeframe.DAY);
   const [data, setData] = useState(demoData);
   const queryClient = useQueryClient();
@@ -25,10 +24,10 @@ export default function Home() {
   return (
     <ContentWrapper userIsAuthenticated>
       <div className="flex min-h-screen flex-col items-center">
-        <CreatePortfolioModal
-          isOpen={showCreatePortfolioModal}
-          setIsOpen={setShowCreatePortfolioModal}
-          onCreate={() => {
+        <PortfolioModal
+          isOpen={showPortfolioModal}
+          setIsOpen={setShowPortfolioModal}
+          onSubmit={() => {
             queryClient.invalidateQueries("portfolios");
           }}
         />
@@ -95,9 +94,7 @@ export default function Home() {
           <div className="w-[500px] min-w-[500px] min-h-screen p-8 border-l-2 border-gray-300">
             <StrategyList
               timeframe={timeframe}
-              handleOpenCreatePortfolioModal={() =>
-                setShowCreatePortfolioModal(true)
-              }
+              handleOpenPortfolioModal={() => setShowPortfolioModal(true)}
             />
           </div>
         </div>

@@ -4,7 +4,7 @@ import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 interface TableProps<T> {
   headers: {
     name: string;
-    sort: (a: any, b: any) => number;
+    sort?: (a: any, b: any) => number;
   }[];
   data: T[];
   itemToRow: (item: T) => JSX.Element;
@@ -29,34 +29,37 @@ const Table = <T,>({ headers, data, itemToRow, className }: TableProps<T>) => {
         <tr>
           {headers.map((header, index) => (
             <th key={index} className="px-4 py-2 text-left text-l">
-              <button
-                className={`flex items-center hover:text-black ${header.name === sort.key ? "text-black" : "text-gray-500"}`}
-                onClick={() => {
-                  const isAscending =
-                    sort.key === header.name && sort.ascending;
-                  const sortFn = isAscending
-                    ? header.sort
-                    : (a: any, b: any) => -header.sort!!(a, b);
-                  setOrderedData([...data.sort(sortFn)]);
-                  setSort({
-                    key: header.name,
-                    ascending: !isAscending,
-                  });
-                }}
-              >
-                <span className="mr-2">{header.name}</span>
-                {header.name === sort.key ? (
-                  <span className="inline-flex items-center justify-center w-4 h-4">
-                    {sort.ascending ? (
-                      <FiChevronUp size={16} />
-                    ) : (
-                      <FiChevronDown size={16} />
-                    )}
-                  </span>
-                ) : (
-                  <span className="w-4" />
-                )}
-              </button>
+              {!header.sort && <p className="text-gray-500">{header.name}</p>}
+              {header.sort && (
+                <button
+                  className={`flex items-center hover:text-black ${header.name === sort.key ? "text-black" : "text-gray-500"}`}
+                  onClick={() => {
+                    const isAscending =
+                      sort.key === header.name && sort.ascending;
+                    const sortFn = isAscending
+                      ? header.sort
+                      : (a: any, b: any) => -header.sort!!(a, b);
+                    setOrderedData([...data.sort(sortFn)]);
+                    setSort({
+                      key: header.name,
+                      ascending: !isAscending,
+                    });
+                  }}
+                >
+                  <span className="mr-2">{header.name}</span>
+                  {header.name === sort.key ? (
+                    <span className="inline-flex items-center justify-center w-4 h-4">
+                      {sort.ascending ? (
+                        <FiChevronUp size={16} />
+                      ) : (
+                        <FiChevronDown size={16} />
+                      )}
+                    </span>
+                  ) : (
+                    <span className="w-4" />
+                  )}
+                </button>
+              )}
             </th>
           ))}
         </tr>

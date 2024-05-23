@@ -4,23 +4,6 @@ import { GraphData } from "@/types";
 import React from "react";
 import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 
-interface CompareGraphProps {
-  width: number;
-  height: number;
-  margin?: {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-  };
-  data: GraphData[];
-  ticks: number;
-  animationDuration?: number;
-  hideLegend?: boolean;
-  lineWidth?: number;
-  hideTooltip?: boolean;
-}
-
 function getVisuallyAppealingRange(data: GraphData[], stepCount: number) {
   const low = Math.min(
     ...data.map((d) => d.portfolio),
@@ -44,18 +27,45 @@ function getVisuallyAppealingRange(data: GraphData[], stepCount: number) {
   return [newLow, newHigh];
 }
 
+interface CompareGraphProps {
+  width: number;
+  height: number;
+  margin?: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
+  data: GraphData[];
+  ticks: number;
+  lineName?: string;
+  animationDuration?: number;
+  hideLegend?: boolean;
+  lineWidth?: number;
+  hideTooltip?: boolean;
+}
+
 export default function CompareGraph({
   data,
   width,
   height,
   margin,
   ticks,
+  lineName = "Your Portfolio",
   animationDuration = 1500,
   hideLegend = false,
   lineWidth = 2,
   hideTooltip = false,
 }: CompareGraphProps) {
   const domain = getVisuallyAppealingRange(data, ticks);
+
+  const getLineColor = (data: GraphData[]) => {
+    if (data.length === 0) return "#82ca9d";
+
+    const firstPrice = data[0].portfolio;
+    const lastPrice = data[data.length - 1].portfolio;
+    return firstPrice < lastPrice ? "#82ca9d" : "#ff7300";
+  };
 
   return (
     <LineChart width={width} height={height} data={data} margin={margin}>
@@ -81,9 +91,9 @@ export default function CompareGraph({
       <Line
         type="monotone"
         dataKey="portfolio"
-        stroke="#82ca9d"
+        stroke={getLineColor(data)}
         animationDuration={animationDuration}
-        name="Your Portfolio"
+        name={lineName}
         dot={false}
         strokeWidth={lineWidth}
       />

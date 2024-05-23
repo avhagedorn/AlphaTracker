@@ -73,12 +73,12 @@ function StrategyOptions({
 
 interface StrategyListProps {
   timeframe: Timeframe;
-  handleOpenCreatePortfolioModal: () => void;
+  handleOpenPortfolioModal: () => void;
 }
 
 export default function StrategyList({
   timeframe,
-  handleOpenCreatePortfolioModal,
+  handleOpenPortfolioModal,
 }: StrategyListProps) {
   const [showStrategyOptions, setShowStrategyOptions] = useState(false);
   const [selectedStrategyOption, setSelectedStrategyOption] =
@@ -93,7 +93,6 @@ export default function StrategyList({
     "Today's Alpha",
     "Total Alpha",
     "Equity",
-    "Edit Order",
   ];
 
   return (
@@ -127,7 +126,7 @@ export default function StrategyList({
           </div>
         ))}
       {status === "error" && <p>{String(error)}</p>}
-      <Button className="mt-4 w-full" onClick={handleOpenCreatePortfolioModal}>
+      <Button className="mt-4 w-full" onClick={handleOpenPortfolioModal}>
         Create a new strategy
       </Button>
     </div>
