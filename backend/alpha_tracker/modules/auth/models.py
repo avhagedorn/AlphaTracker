@@ -29,5 +29,8 @@ class DisplayUser(BaseModel):
     @staticmethod
     def from_db(user: User):
         return DisplayUser(
-            username=user.username, email=user.email, created_at=str(user.created_at), is_admin=user.is_admin
+            username=user.username,
+            email=user.email,
+            created_at=str(user.created_at),
+            is_admin=user.is_admin,
         )

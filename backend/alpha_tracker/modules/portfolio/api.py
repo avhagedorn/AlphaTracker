@@ -22,7 +22,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 @router.post("/new")
-async def create_portfolio(data: CreatePortfolioRequest, current_user: User = Depends(get_current_user)):
+async def create_portfolio(
+    data: CreatePortfolioRequest, current_user: User = Depends(get_current_user)
+):
     """
     Create a new portfolio.
     """
@@ -44,19 +46,28 @@ async def list_portfolios(current_user: User = Depends(get_current_user)):
     """
     with Session(get_sqlalchemy_engine()) as db_session:
         portfolios = (
-            db_session.query(Portfolio).filter_by(user_id=current_user.id).order_by(Portfolio.created_at.desc()).all()
+            db_session.query(Portfolio)
+            .filter_by(user_id=current_user.id)
+            .order_by(Portfolio.created_at.desc())
+            .all()
         )
 
         return [DisplayPortfolio.from_db(portfolio) for portfolio in portfolios]
 
 
 @router.get("/{portfolio_id}")
-async def get_portfolio(portfolio_id: int, current_user: User = Depends(get_current_user)):
+async def get_portfolio(
+    portfolio_id: int, current_user: User = Depends(get_current_user)
+):
     """
     Get a specific portfolio.
     """
     with Session(get_sqlalchemy_engine()) as db_session:
-        portfolio = db_session.query(Portfolio).filter_by(id=portfolio_id, user_id=current_user.id).first()
+        portfolio = (
+            db_session.query(Portfolio)
+            .filter_by(id=portfolio_id, user_id=current_user.id)
+            .first()
+        )
 
         if not portfolio:
             raise HTTPException(
@@ -69,13 +80,19 @@ async def get_portfolio(portfolio_id: int, current_user: User = Depends(get_curr
 
 @router.post("/{portfolio_id}/update")
 async def delete_portfolio(
-    portfolio_id: int, data: CreatePortfolioRequest, current_user: User = Depends(get_current_user)
+    portfolio_id: int,
+    data: CreatePortfolioRequest,
+    current_user: User = Depends(get_current_user),
 ):
     """
     Update a specific portfolio.
     """
     with Session(get_sqlalchemy_engine()) as db_session:
-        portfolio = db_session.query(Portfolio).filter_by(id=portfolio_id, user_id=current_user.id).first()
+        portfolio = (
+            db_session.query(Portfolio)
+            .filter_by(id=portfolio_id, user_id=current_user.id)
+            .first()
+        )
 
         if not portfolio:
             raise HTTPException(
@@ -90,12 +107,18 @@ async def delete_portfolio(
 
 
 @router.post("/{portfolio_id}/delete")
-async def delete_portfolio(portfolio_id: int, current_user: User = Depends(get_current_user)):
+async def delete_portfolio(
+    portfolio_id: int, current_user: User = Depends(get_current_user)
+):
     """
     Delete a specific portfolio.
     """
     with Session(get_sqlalchemy_engine()) as db_session:
-        portfolio = db_session.query(Portfolio).filter_by(id=portfolio_id, user_id=current_user.id).first()
+        portfolio = (
+            db_session.query(Portfolio)
+            .filter_by(id=portfolio_id, user_id=current_user.id)
+            .first()
+        )
 
         if not portfolio:
             raise HTTPException(

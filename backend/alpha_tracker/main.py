@@ -8,7 +8,9 @@ from fastapi.responses import JSONResponse
 from alpha_tracker.configs import ALPHA_TRACKER_HOST
 from alpha_tracker.configs import ALPHA_TRACKER_PORT
 from alpha_tracker.modules.auth.api import router as auth_router
+from alpha_tracker.modules.chart.api import router as chart_router
 from alpha_tracker.modules.portfolio.api import router as portfolio_router
+from alpha_tracker.modules.transactions.api import router as transactions_router
 from alpha_tracker.modules.user.api import router as user_router
 from alpha_tracker.utils.logging import setup_logger
 
@@ -21,6 +23,8 @@ def get_application() -> FastAPI:
     application.include_router(auth_router)
     application.include_router(user_router)
     application.include_router(portfolio_router)
+    application.include_router(transactions_router)
+    application.include_router(chart_router)
 
     application.add_middleware(
         CORSMiddleware,
@@ -31,7 +35,9 @@ def get_application() -> FastAPI:
     )
 
     @application.exception_handler(RequestValidationError)
-    async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    async def validation_exception_handler(
+        request: Request, exc: RequestValidationError
+    ):
         exc_str = f"{exc}".replace("\n", " ").replace("   ", " ")
         logger.exception(f"{request}: {exc_str}")
         return JSONResponse(
@@ -54,5 +60,7 @@ def get_application() -> FastAPI:
 app = get_application()
 
 if __name__ == "__main__":
-    logger.info(f"Starting AlphaTracker on http://{ALPHA_TRACKER_HOST}:{str(ALPHA_TRACKER_PORT)}/")
+    logger.info(
+        f"Starting AlphaTracker on http://{ALPHA_TRACKER_HOST}:{str(ALPHA_TRACKER_PORT)}/"
+    )
     uvicorn.run(app, host=ALPHA_TRACKER_HOST, port=ALPHA_TRACKER_PORT)

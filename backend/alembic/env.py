@@ -1,7 +1,10 @@
 from logging.config import fileConfig
 
 from alembic import context
-from alpha_tracker.db.engine import build_connection_string, get_sqlalchemy_engine
+from alpha_tracker.db.engine import (
+    build_connection_string,
+    get_sqlalchemy_engine,
+)
 from alpha_tracker.db.models import Base
 from sqlalchemy.engine import Connection
 

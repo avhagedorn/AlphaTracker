@@ -5,7 +5,7 @@ explicit_package_bases = true
 disallow_untyped_defs = true
 
 [tool.black]
-line-length = 120
+line-length = 88
 include = '\.pyi?$'
 exclude = '''
 /(
