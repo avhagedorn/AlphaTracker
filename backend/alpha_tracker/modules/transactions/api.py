@@ -5,7 +5,7 @@ from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import status
-from requests import Session
+from sqlalchemy.orm import Session
 
 from alpha_tracker.db.engine import get_sqlalchemy_engine
 from alpha_tracker.db.models import Portfolio
@@ -51,7 +51,7 @@ async def create_transaction(
             ticker=transaction.ticker,
             price=transaction.price,
             quantity=transaction.quantity,
-            transaction_type=transaction.transaction_type,
+            transaction_type=transaction.type,
             purchased_at=datetime.fromisoformat(transaction.purchased_at),
         )
         db_session.add(transaction)
@@ -59,7 +59,7 @@ async def create_transaction(
         return DisplayTransaction.from_db(transaction)
 
 
-@router.post("/delete/{transaction_id}")
+@router.post("/{transaction_id}/delete")
 async def create_transaction(
     transaction_id: int, current_user: User = Depends(get_current_user)
 ) -> DisplayTransaction:
@@ -84,7 +84,7 @@ async def create_transaction(
         return DisplayTransaction.from_db(transaction)
 
 
-@router.get("/stock/{ticker}/")
+@router.get("/stock/{ticker}")
 async def get_stock_transactions(
     ticker: str, page: int = 0, page_size: int = 50, _: User = Depends(get_current_user)
 ) -> GetTransactionsResponse:
@@ -114,7 +114,7 @@ async def get_stock_transactions(
         )
 
 
-@router.get("/portfolio/{portfolio_id}/")
+@router.get("/portfolio/{portfolio_id}")
 async def get_portfolio_transactions(
     portfolio_id: int,
     page_size: int = 50,
@@ -159,7 +159,7 @@ async def get_portfolio_transactions(
         )
 
 
-@router.get("/all/")
+@router.get("/all")
 async def get_all_transactions(
     page: int = 0, page_size: int = 50, current_user: User = Depends(get_current_user)
 ):

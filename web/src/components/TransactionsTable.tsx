@@ -1,19 +1,36 @@
 import { fmtDollars } from "@/lib/utils";
 import { TransactionItem } from "@/types";
 import Table from "./Table";
-import { FiTrash } from "react-icons/fi";
+import { FiPlus, FiTrash } from "react-icons/fi";
+import Button from "./Button";
+import { useState } from "react";
+import CreateTransactionModal from "./CreateTransactionModal";
+import { useQuery, useQueryClient } from "react-query";
+import { fetchSS } from "@/lib/fetch";
 
 interface TransactionsTableProps {
-  data: TransactionItem[];
-  onDelete?: (id: number) => void;
   displayTicker?: boolean;
+  displayDelete?: boolean;
+  className?: string;
+  portfolioId?: number;
+  ticker?: string;
 }
 
 export default function TransactionsTable({
-  data,
-  onDelete,
   displayTicker = false,
+  displayDelete = false,
+  className = "",
+  portfolioId,
+  ticker,
 }: TransactionsTableProps) {
+  const url = portfolioId
+    ? `/transactions/portfolio/${portfolioId}`
+    : `/transactions/stock/${ticker?.toUpperCase()}`;
+  const queryClient = useQueryClient();
+  const { data, status, error } = useQuery("transactions", () => fetchSS(url));
+  const [createTransactionModalOpen, setCreateTransactionModalOpen] =
+    useState(false);
+
   const headers: {
     name: string;
     sort?: (a: TransactionItem, b: TransactionItem) => number;
@@ -46,32 +63,60 @@ export default function TransactionsTable({
     });
   }
 
-  if (onDelete) {
+  if (displayDelete) {
     headers.push({
       name: "Delete",
     });
   }
+  const handleDelete = async (id: number) => {
+    await fetchSS(`/transactions/${id}/delete`, {
+      method: "POST",
+    });
+    queryClient.invalidateQueries("transactions");
+  };
 
   return (
-    <Table
-      headers={headers}
-      data={data}
-      itemToRow={(item: TransactionItem) => (
-        <>
-          <td className="px-4 py-2">{item.date}</td>
-          <td className="px-4 py-2">{item.shares}</td>
-          <td className="px-4 py-2">{fmtDollars(item.price)}</td>
-          <td className="px-4 py-2">{item.type}</td>
-          {displayTicker && <td className="px-4 py-2">{item.ticker}</td>}
-          {onDelete && (
-            <td className="px-4 py-2">
-              <button onClick={() => onDelete(item.id)}>
-                <FiTrash />
-              </button>
-            </td>
-          )}
-        </>
-      )}
-    />
+    <div className={className}>
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Transactions</h2>
+        <Button
+          className="font-sm"
+          onClick={() => setCreateTransactionModalOpen(true)}
+        >
+          <div className="flex items-center justify-center">
+            <FiPlus className="mr-2" size={24} />
+            Add
+          </div>
+        </Button>
+      </div>
+      <Table
+        headers={headers}
+        loading={status === "loading"}
+        data={data?.transactions || []}
+        itemToRow={(item: TransactionItem) => (
+          <>
+            <td className="px-4 py-2">{item.date}</td>
+            <td className="px-4 py-2">{item.shares}</td>
+            <td className="px-4 py-2">{fmtDollars(item.price)}</td>
+            <td className="px-4 py-2">{item.type}</td>
+            {displayTicker && <td className="px-4 py-2">{item.ticker}</td>}
+            {displayDelete && (
+              <td className="px-4 py-2">
+                <button onClick={() => handleDelete(item.id)}>
+                  <FiTrash />
+                </button>
+              </td>
+            )}
+          </>
+        )}
+      />
+      <CreateTransactionModal
+        isOpen={createTransactionModalOpen}
+        setIsOpen={setCreateTransactionModalOpen}
+        onSubmit={() => queryClient.invalidateQueries("transactions")}
+        portfolioId={portfolioId}
+        ticker={ticker}
+      />
+    </div>
   );
 }

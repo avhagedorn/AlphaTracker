@@ -95,47 +95,7 @@ export default function Stock({
             </div>
           </div>
           <div className="mt-8">
-            <div className="flex justify-between items-center mt-8">
-              <h2 className="text-2xl font-bold">Transactions</h2>
-              <Button
-                className="font-sm"
-                onClick={() => setCreateTransactionModalOpen(true)}
-              >
-                <div className="flex items-center justify-center">
-                  <FiPlus className="mr-2" size={24} />
-                  Add
-                </div>
-              </Button>
-            </div>
-            <TransactionsTable
-              data={[
-                {
-                  id: 1,
-                  ticker: params.ticker,
-                  date: "2021-01-01",
-                  shares: 10,
-                  price: 100,
-                  type: "Buy",
-                },
-                {
-                  id: 2,
-                  ticker: params.ticker,
-                  date: "2021-01-02",
-                  shares: 20,
-                  price: 200,
-                  type: "Sell",
-                },
-                {
-                  id: 3,
-                  ticker: params.ticker,
-                  date: "2021-01-03",
-                  shares: 30,
-                  price: 300,
-                  type: "Buy",
-                },
-              ]}
-              onDelete={() => {}}
-            />
+            <TransactionsTable ticker={params.ticker} displayDelete />
           </div>
         </div>
       </div>

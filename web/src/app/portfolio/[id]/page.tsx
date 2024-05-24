@@ -6,15 +6,13 @@ import dynamic from "next/dynamic";
 import { useQuery, useQueryClient } from "react-query";
 import demoData from "../../../public/demo-data.json";
 import PriceChange from "@/components/PriceChange";
-import Button from "@/components/Button";
-import { FiEdit2, FiPlus } from "react-icons/fi";
+import { FiEdit2 } from "react-icons/fi";
 import TransactionsTable from "@/components/TransactionsTable";
 import PortfolioModal from "@/components/PortfolioModal";
 import { useState } from "react";
 import Statistics from "@/components/Statistics";
 import { Timeframe } from "@/types";
 import DateGraph from "@/components/DateGraph";
-import CreateTransactionModal from "@/components/CreateTransactionModal";
 
 const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
   ssr: false,
@@ -35,8 +33,6 @@ export default function PortfolioDetail({
     Timeframe.DAY,
   );
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [createTransactionModalOpen, setCreateTransactionModalOpen] =
-    useState(false);
   const queryClient = useQueryClient();
 
   if (isFetching) {
@@ -122,39 +118,10 @@ export default function PortfolioDetail({
               ]}
             />
           </div>
-          <div className="flex justify-between items-center mt-8">
-            <h2 className="text-2xl font-bold">Transactions</h2>
-            <Button
-              className="font-sm"
-              onClick={() => setCreateTransactionModalOpen(true)}
-            >
-              <div className="flex items-center justify-center">
-                <FiPlus className="mr-2" size={24} />
-                Add
-              </div>
-            </Button>
-          </div>
           <TransactionsTable
-            data={[
-              {
-                id: 1,
-                date: "2021-09-01",
-                ticker: "AAPL",
-                shares: 10,
-                price: 150.0,
-                type: "BUY",
-              },
-              {
-                id: 2,
-                date: "2021-09-02",
-                ticker: "AAPL",
-                shares: 5,
-                price: 160.0,
-                type: "SELL",
-              },
-            ]}
-            onDelete={(id) => console.log("delete", id)}
+            portfolioId={params.id}
             displayTicker
+            displayDelete
           />
         </div>
       </div>
@@ -165,12 +132,6 @@ export default function PortfolioDetail({
           queryClient.invalidateQueries("portfolio");
         }}
         existingPortfolio={data}
-      />
-      <CreateTransactionModal
-        isOpen={createTransactionModalOpen}
-        setIsOpen={setCreateTransactionModalOpen}
-        onSubmit={() => {}}
-        portfolioId={params.id}
       />
     </ContentWrapper>
   );

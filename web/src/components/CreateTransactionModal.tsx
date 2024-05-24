@@ -26,16 +26,15 @@ export default function CreateTransactionModal({
 
     const form = event.currentTarget;
     const data = new FormData(form);
-    const url = ticker
-      ? `/stock/${ticker}/transactions/create`
-      : `/portfolio/${portfolioId}/transactions/create`;
-    const response = await fetchServer(url, {
+    const response = await fetchServer("/transactions/create", {
       method: "POST",
       body: JSON.stringify({
-        shares: data.get("shares"),
-        price: data.get("price"),
-        date: data.get("date"),
+        quantity: Number(data.get("shares")),
+        price: Number(data.get("price")),
+        purchased_at: data.get("date"),
         type: data.get("type"),
+        portfolio_id: Number(portfolioId || data.get("portfolioId")),
+        ticker: data.get("ticker"),
       }),
     });
 
@@ -137,7 +136,7 @@ export default function CreateTransactionModal({
               name="portfolioId"
               className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-emerald-500"
               required
-              defaultValue={portfolioId?.toString()}
+              value={portfolioId}
               disabled={!!portfolioId}
             >
               <option value="1">Portfolio 1</option>

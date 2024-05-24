@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import List
 
 from pydantic import BaseModel
@@ -5,13 +6,13 @@ from pydantic import BaseModel
 from alpha_tracker.db.models import Transaction
 
 
-class TransactionType(BaseModel):
+class TransactionType(str, Enum):
     BUY = "BUY"
     SELL = "SELL"
 
 
 class CreateTransactionRequest(BaseModel):
-    shares: float
+    quantity: float
     price: float
     ticker: str
     portfolio_id: int
@@ -26,25 +27,23 @@ class DisplayTransaction(BaseModel):
     ticker: str
     portfolio_id: int
     type: TransactionType
-    created_at: str
-    purchased_at: str
+    date: str
 
     @staticmethod
     def from_db(transaction: Transaction):
-        return Transaction(
+        return DisplayTransaction(
             id=transaction.id,
-            shares=transaction.shares,
+            shares=transaction.quantity,
             price=transaction.price,
             ticker=transaction.ticker,
             portfolio_id=transaction.portfolio_id,
-            type=transaction.type,
-            created_at=transaction.created_at,
-            purchased_at=transaction.purchased_at,
+            type=transaction.transaction_type,
+            date=transaction.purchased_at.strftime("%Y-%m-%d"),
         )
 
 
 class GetTransactionsResponse(BaseModel):
-    transactions: List[Transaction]
+    transactions: List[DisplayTransaction]
     page: int
     total_pages: int
     page_size: int

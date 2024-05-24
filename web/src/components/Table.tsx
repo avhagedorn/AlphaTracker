@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 
 interface TableProps<T> {
@@ -6,9 +6,10 @@ interface TableProps<T> {
     name: string;
     sort?: (a: any, b: any) => number;
   }[];
-  data: T[];
+  data?: T[];
   itemToRow: (item: T) => JSX.Element;
   className?: string;
+  loading?: boolean;
 }
 
 interface SortState {
@@ -16,12 +17,22 @@ interface SortState {
   ascending: boolean;
 }
 
-const Table = <T,>({ headers, data, itemToRow, className }: TableProps<T>) => {
-  const [orderedData, setOrderedData] = useState<T[]>(data);
+const Table = <T,>({
+  headers,
+  data = [],
+  itemToRow,
+  className,
+  loading = false,
+}: TableProps<T>) => {
+  const [orderedData, setOrderedData] = useState<T[]>([]);
   const [sort, setSort] = useState<SortState>({
     key: "",
     ascending: true,
   });
+
+  useEffect(() => {
+    setOrderedData(data);
+  }, [setOrderedData, data]);
 
   return (
     <table className={`table-auto border-collapse w-full ${className}`}>
@@ -45,6 +56,7 @@ const Table = <T,>({ headers, data, itemToRow, className }: TableProps<T>) => {
                       ascending: !isAscending,
                     });
                   }}
+                  disabled={loading}
                 >
                   <span className="mr-2">{header.name}</span>
                   {header.name === sort.key ? (
@@ -70,6 +82,17 @@ const Table = <T,>({ headers, data, itemToRow, className }: TableProps<T>) => {
             {itemToRow(item)}
           </tr>
         ))}
+        {!orderedData.length &&
+          loading &&
+          [...Array(5)].map((_, i) => (
+            <tr key={i} className="border-t border-gray-200">
+              {headers.map((_, index) => (
+                <td key={index} className="px-4 py-2">
+                  <div className="h-4 bg-gray-200 animate-pulse" />
+                </td>
+              ))}
+            </tr>
+          ))}
       </tbody>
     </table>
   );

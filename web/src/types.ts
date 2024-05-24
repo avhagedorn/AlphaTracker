@@ -45,4 +45,5 @@ export interface TransactionItem {
   shares: number;
   price: number;
   type: string;
+  portfolio_id: number;
 }

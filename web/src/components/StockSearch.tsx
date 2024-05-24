@@ -84,7 +84,7 @@ export default function StockSearch() {
         onKeyDown={handleSubmit}
       />
       {searchResults.length > 0 && (
-        <ul className="absolute left-1/2 transform -translate-x-1/2 z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
+        <ul className="absolute text-center left-1/2 transform -translate-x-1/2 z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
           {searchResults.map(
             (result: { id: number; ticker: string; name: string }) => (
               <a href={`/stock/${result.ticker.toLowerCase()}`} key={result.id}>
