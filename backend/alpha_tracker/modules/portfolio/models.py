@@ -22,3 +22,8 @@ class DisplayPortfolio(BaseModel):
             description=portfolio.description,
             created_at=str(portfolio.created_at),
         )
+
+
+class ListPortfoliosResponse(BaseModel):
+    portfolios: list[DisplayPortfolio]
+    strategy_display_option: int

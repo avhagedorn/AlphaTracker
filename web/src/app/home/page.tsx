@@ -1,10 +1,8 @@
 "use client";
 
-import PortfolioModal from "@/components/PortfolioModal";
 import PositionsTable from "@/components/PositionsTable";
 import PriceChange from "@/components/PriceChange";
 import { useEffect, useState } from "react";
-import { useQueryClient } from "react-query";
 import demoData from "../../public/demo-data.json";
 import DateGraph from "@/components/DateGraph";
 import { Timeframe } from "@/types";
@@ -12,10 +10,8 @@ import StrategyList from "@/components/StrategyList";
 import ContentWrapper from "@/components/ContentWrapper";
 
 export default function Home() {
-  const [showPortfolioModal, setShowPortfolioModal] = useState(false);
   const [timeframe, setTimeframe] = useState<Timeframe>(Timeframe.DAY);
   const [data, setData] = useState(demoData);
-  const queryClient = useQueryClient();
 
   useEffect(() => {
     setData([...demoData]);
@@ -24,14 +20,6 @@ export default function Home() {
   return (
     <ContentWrapper userIsAuthenticated>
       <div className="flex min-h-screen flex-col items-center">
-        <PortfolioModal
-          isOpen={showPortfolioModal}
-          setIsOpen={setShowPortfolioModal}
-          onSubmit={() => {
-            queryClient.invalidateQueries("portfolios");
-          }}
-        />
-
         <div className="flex w-screen">
           <div className="flex-1 p-8">
             <h1 className="text-6xl font-bold mb-4">$40,034.65</h1>
@@ -92,10 +80,7 @@ export default function Home() {
           </div>
 
           <div className="w-[500px] min-w-[500px] min-h-screen p-8 border-l-2 border-gray-300">
-            <StrategyList
-              timeframe={timeframe}
-              handleOpenPortfolioModal={() => setShowPortfolioModal(true)}
-            />
+            <StrategyList />
           </div>
         </div>
       </div>

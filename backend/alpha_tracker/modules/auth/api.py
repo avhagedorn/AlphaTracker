@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 from alpha_tracker.configs import ACCESS_TOKEN_EXPIRE_MINUTES
 from alpha_tracker.db.engine import get_sqlalchemy_engine
 from alpha_tracker.db.models import User
+from alpha_tracker.db.models import UserPreferences
 from alpha_tracker.modules.auth.models import CreateUserRequest
 from alpha_tracker.modules.auth.models import LoginRequest
 from alpha_tracker.modules.auth.models import Token
@@ -93,6 +94,13 @@ async def register_user(
             db_session.add(user)
             db_session.commit()
 
+            user_preferences = UserPreferences(
+                user_id=user.id, strategy_display_option=0
+            )
+
+            db_session.add(user_preferences)
+            db_session.commit()
+
             access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
             access_token = create_access_token(
                 data={"sub": user.username}, expires_delta=access_token_expires
@@ -104,6 +112,7 @@ async def register_user(
                 max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
             )
             return Token(access_token=access_token, token_type="bearer")
+
     except IntegrityError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

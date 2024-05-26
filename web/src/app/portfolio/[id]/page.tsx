@@ -118,11 +118,13 @@ export default function PortfolioDetail({
               ]}
             />
           </div>
-          <TransactionsTable
-            portfolioId={params.id}
-            displayTicker
-            displayDelete
-          />
+          <div className="mt-8">
+            <TransactionsTable
+              portfolioId={params.id}
+              displayTicker
+              displayDelete
+            />
+          </div>
         </div>
       </div>
       <PortfolioModal

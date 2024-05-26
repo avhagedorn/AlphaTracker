@@ -1,4 +1,4 @@
-import { fetchServer } from "@/lib/fetch";
+import { fetchSS, fetchServer } from "@/lib/fetch";
 import Button from "./Button";
 import Modal from "./Modal";
 import { useState } from "react";

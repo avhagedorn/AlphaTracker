@@ -8,8 +8,10 @@ from sqlalchemy.orm import Session
 from alpha_tracker.db.engine import get_sqlalchemy_engine
 from alpha_tracker.db.models import Portfolio
 from alpha_tracker.db.models import User
+from alpha_tracker.db.models import UserPreferences
 from alpha_tracker.modules.portfolio.models import CreatePortfolioRequest
 from alpha_tracker.modules.portfolio.models import DisplayPortfolio
+from alpha_tracker.modules.portfolio.models import ListPortfoliosResponse
 from alpha_tracker.utils.auth import get_current_user
 
 router = APIRouter(prefix="/portfolio")
@@ -52,7 +54,18 @@ async def list_portfolios(current_user: User = Depends(get_current_user)):
             .all()
         )
 
-        return [DisplayPortfolio.from_db(portfolio) for portfolio in portfolios]
+        user_preferences = (
+            db_session.query(UserPreferences).filter_by(user_id=current_user.id).first()
+        )
+
+        # TODO: Apply user preferences to the portfolios
+
+        return ListPortfoliosResponse(
+            portfolios=[
+                DisplayPortfolio.from_db(portfolio) for portfolio in portfolios
+            ],
+            strategy_display_option=user_preferences.strategy_display_option,
+        )
 
 
 @router.get("/{portfolio_id}")

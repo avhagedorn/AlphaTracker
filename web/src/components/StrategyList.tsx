@@ -1,18 +1,18 @@
-import { Portfolio, Timeframe } from "@/types";
+import { Portfolio } from "@/types";
 import React, { useEffect, useRef, useState } from "react";
 import StrategyPreview from "./StrategyPreview";
-import { fetchSS } from "@/lib/fetch";
-import { useQuery } from "react-query";
+import { fetchSS, fetchServer } from "@/lib/fetch";
+import { useQuery, useQueryClient } from "react-query";
 import Button from "./Button";
 import { BsThreeDots } from "react-icons/bs";
 import { FiCheck } from "react-icons/fi";
-import { set } from "lodash";
+import PortfolioModal from "./PortfolioModal";
 
 interface StrategyOptionsProps {
   setShowStrategyOptions: (show: boolean) => void;
-  setSelectedStrategyOption: (option: string) => void;
+  setSelectedStrategyOption: (option: number) => void;
   strategyDisplayOptions: string[];
-  selectedStrategyOption: string;
+  selectedStrategyOption: number;
 }
 
 function StrategyOptions({
@@ -39,9 +39,9 @@ function StrategyOptions({
     };
   }, [setShowStrategyOptions]);
 
-  const handleClickAndClose = (option: string) => {
+  const handleClickAndClose = (idx: number) => {
     setShowStrategyOptions(false);
-    setSelectedStrategyOption(option);
+    setSelectedStrategyOption(idx);
   };
 
   return (
@@ -57,10 +57,10 @@ function StrategyOptions({
           <div className="w-full" key={idx}>
             <button
               className="w-full rounded-md px-4 py-2 hover:bg-gray-100 cursor-pointer text-left flex flex-row items-center"
-              onClick={() => handleClickAndClose(optionName)}
+              onClick={() => handleClickAndClose(idx)}
             >
               <div className="w-[20px] mr-2">
-                {optionName === selectedStrategyOption && <FiCheck size={20} />}
+                {idx === selectedStrategyOption && <FiCheck size={20} />}
               </div>
               {optionName}
             </button>
@@ -71,21 +71,22 @@ function StrategyOptions({
   );
 }
 
-interface StrategyListProps {
-  timeframe: Timeframe;
-  handleOpenPortfolioModal: () => void;
-}
-
-export default function StrategyList({
-  timeframe,
-  handleOpenPortfolioModal,
-}: StrategyListProps) {
+export default function StrategyList() {
   const [showStrategyOptions, setShowStrategyOptions] = useState(false);
-  const [selectedStrategyOption, setSelectedStrategyOption] =
-    useState("Total Return");
+  const [showPortfolioModal, setShowPortfolioModal] = useState(false);
+  const [selectedStrategyOption, setSelectedStrategyOption] = useState(-1);
+  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
   const { data, status, error } = useQuery("portfolios", () =>
     fetchSS("/portfolio/list"),
   );
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (status === "success" && data) {
+      setSelectedStrategyOption(data.strategy_display_option);
+      setPortfolios(data.portfolios);
+    }
+  }, [status, data]);
 
   const strategyDisplayOptions = [
     "Total Return",
@@ -94,6 +95,16 @@ export default function StrategyList({
     "Total Alpha",
     "Equity",
   ];
+
+  const handleUpdatePreferences = async (option: number) => {
+    await fetchServer("/user/preferences/update", {
+      method: "POST",
+      body: JSON.stringify({
+        strategy_display_option: option,
+      }),
+    });
+    queryClient.invalidateQueries("portfolios");
+  };
 
   return (
     <div>
@@ -107,16 +118,16 @@ export default function StrategyList({
         <StrategyOptions
           selectedStrategyOption={selectedStrategyOption}
           setShowStrategyOptions={setShowStrategyOptions}
-          setSelectedStrategyOption={setSelectedStrategyOption}
+          setSelectedStrategyOption={handleUpdatePreferences}
           strategyDisplayOptions={strategyDisplayOptions}
         />
       )}
-      {status === "success" && (data as Portfolio[]).length === 0 && (
+      {status === "success" && portfolios.length === 0 && (
         <p>No strategies found</p>
       )}
       {status === "success" &&
-        (data as Portfolio[]).length > 0 &&
-        (data as Portfolio[]).map((strategy, index) => (
+        portfolios.length > 0 &&
+        portfolios.map((strategy, index) => (
           <StrategyPreview key={index} portfolio={strategy} className="mt-4" />
         ))}
       {status === "loading" &&
@@ -126,9 +137,19 @@ export default function StrategyList({
           </div>
         ))}
       {status === "error" && <p>{String(error)}</p>}
-      <Button className="mt-4 w-full" onClick={handleOpenPortfolioModal}>
+      <Button
+        className="mt-4 w-full"
+        onClick={() => setShowPortfolioModal(true)}
+      >
         Create a new strategy
       </Button>
+      <PortfolioModal
+        isOpen={showPortfolioModal}
+        setIsOpen={setShowPortfolioModal}
+        onSubmit={() => {
+          queryClient.invalidateQueries("portfolios");
+        }}
+      />
     </div>
   );
 }

@@ -27,8 +27,15 @@ class User(Base):
         DateTime, default=func.now(), nullable=False
     )
 
-    portfolios = relationship("Portfolio", back_populates="user")
-    preferences = relationship("UserPreferences", back_populates="user")
+    portfolios = relationship(
+        "Portfolio", back_populates="user", cascade="all, delete-orphan"
+    )
+    preferences = relationship(
+        "UserPreferences", back_populates="user", cascade="all, delete-orphan"
+    )
+    transactions = relationship(
+        "Transaction", back_populates="user", cascade="all, delete-orphan"
+    )
 
 
 class Portfolio(Base):
@@ -62,12 +69,15 @@ class Transaction(Base):
     purchased_at: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False)
 
     portfolio = relationship("Portfolio", back_populates="transactions")
+    user = relationship("User", back_populates="transactions")
 
 
 class UserPreferences(Base):
     __tablename__ = "user_preferences"
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"), nullable=False)
-    strategy_display_option: Mapped[str] = mapped_column(String, nullable=False)
+    strategy_display_option: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=0
+    )
 
     user = relationship("User", back_populates="preferences")

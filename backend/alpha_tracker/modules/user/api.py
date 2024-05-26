@@ -7,7 +7,10 @@ from sqlalchemy.orm import Session
 
 from alpha_tracker.db.engine import get_sqlalchemy_engine
 from alpha_tracker.db.models import User
+from alpha_tracker.db.models import UserPreferences
 from alpha_tracker.modules.auth.models import DisplayUser
+from alpha_tracker.modules.user.models import DisplayUserPreferences
+from alpha_tracker.modules.user.models import UpdateUserPreferencesRequest
 from alpha_tracker.utils.auth import get_current_admin_user
 from alpha_tracker.utils.auth import get_current_user
 
@@ -25,6 +28,34 @@ async def read_users_me(
     current_user: User = Depends(get_current_user),
 ):
     return DisplayUser.from_db(current_user)
+
+
+@router.get("/preferences")
+async def read_user_preferences(
+    current_user: User = Depends(get_current_user),
+):
+    with Session(get_sqlalchemy_engine()) as db_session:
+        preferences = (
+            db_session.query(UserPreferences).filter_by(user_id=current_user.id).first()
+        )
+
+        return DisplayUserPreferences.from_db(preferences)
+
+
+@router.post("/preferences/update")
+async def update_user_preferences(
+    request: UpdateUserPreferencesRequest,
+    current_user: User = Depends(get_current_user),
+):
+    with Session(get_sqlalchemy_engine()) as db_session:
+        preferences = (
+            db_session.query(UserPreferences).filter_by(user_id=current_user.id).first()
+        )
+
+        preferences.strategy_display_option = request.strategy_display_option
+        db_session.commit()
+
+        return DisplayUserPreferences.from_db(preferences)
 
 
 """
