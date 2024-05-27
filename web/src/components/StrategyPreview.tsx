@@ -1,22 +1,25 @@
 import { Portfolio } from "@/types";
-import dynamic from "next/dynamic";
 import React from "react";
 import demoData from "../public/demo-data.json";
 import PriceChange from "./PriceChange";
-
-const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
-  ssr: false,
-  loading: () => <div className="h-[100px] w-full shimmer"></div>,
-});
+import CompareGraphWrapper from "./CompareGraphWrapper";
 
 interface StrategyPreviewProps {
   portfolio: Portfolio;
   className?: string;
+  hidePriceChange?: boolean;
+  height: number;
+  width: number;
+  includeDescription?: boolean;
 }
 
 export default function StrategyPreview({
   portfolio,
   className,
+  height,
+  width,
+  hidePriceChange = false,
+  includeDescription = false,
 }: StrategyPreviewProps) {
   return (
     <div className={`${className}`}>
@@ -24,12 +27,15 @@ export default function StrategyPreview({
         <a href={`/portfolio/${portfolio.id}`}>
           <h1 className="text-2xl">{portfolio.name}</h1>
         </a>
-        <PriceChange percentChange={1} valueChange={1} hideDollars />
+        {!hidePriceChange && (
+          <PriceChange percentChange={1} valueChange={1} hideDollars />
+        )}
       </div>
-      <CompareGraph
-        width={400}
-        height={100}
-        margin={{ top: 10, right: 30, left: 20, bottom: 10 }}
+      {includeDescription && <p>{portfolio.description}</p>}
+      <CompareGraphWrapper
+        width={width}
+        height={height}
+        margin={{ top: 10, right: 20, left: 20, bottom: 10 }}
         data={demoData}
         ticks={4}
         hideLegend

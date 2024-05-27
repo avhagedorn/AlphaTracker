@@ -3,6 +3,7 @@
 import Button from "@/components/Button";
 import register from "./lib";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -21,7 +22,7 @@ export default function RegisterPage() {
       window.location.href = "/home";
     } else {
       setIsSubmitting(false);
-      alert("Failed to register");
+      toast.error("Failed to register");
     }
   };
 

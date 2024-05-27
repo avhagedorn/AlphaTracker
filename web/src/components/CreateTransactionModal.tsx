@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
 import Button from "./Button";
-import { fetchServer } from "@/lib/fetch";
+import { fetchSS, fetchServer } from "@/lib/fetch";
+import { useQuery } from "react-query";
+import { toast } from "react-toastify";
 
 interface CreateTransactionModalProps {
   isOpen: boolean;
@@ -19,6 +21,9 @@ export default function CreateTransactionModal({
   portfolioId,
 }: CreateTransactionModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { data: portfolioData } = useQuery("portfolios", () =>
+    fetchSS("/portfolio/list"),
+  );
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setIsSubmitting(true);
@@ -34,7 +39,8 @@ export default function CreateTransactionModal({
         purchased_at: data.get("date"),
         type: data.get("type"),
         portfolio_id: Number(portfolioId || data.get("portfolioId")),
-        ticker: data.get("ticker"),
+        ticker:
+          ticker?.toUpperCase() || String(data.get("ticker")).toUpperCase(),
       }),
     });
 
@@ -42,7 +48,7 @@ export default function CreateTransactionModal({
       setIsOpen(false);
       onSubmit();
     } else {
-      alert("Failed to submit: " + response.error);
+      toast.error("Failed to submit: " + response.error);
     }
     setIsSubmitting(false);
   };
@@ -139,8 +145,13 @@ export default function CreateTransactionModal({
               value={portfolioId}
               disabled={!!portfolioId}
             >
-              <option value="1">Portfolio 1</option>
-              <option value="2">Portfolio 2</option>
+              {portfolioData?.portfolios?.map(
+                ({ name, id }: { name: string; id: number }) => (
+                  <option key={id} value={id}>
+                    {name}
+                  </option>
+                ),
+              )}
             </select>
           </div>
           <div className="mb-4">

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import login from "./lib";
 import Button from "@/components/Button";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,7 +21,7 @@ export default function LoginPage() {
       window.location.href = "/home";
     } else {
       setIsSubmitting(false);
-      alert("Invalid username or password");
+      toast.error("Invalid username or password");
     }
   };
 

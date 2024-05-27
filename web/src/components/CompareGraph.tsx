@@ -27,7 +27,7 @@ function getVisuallyAppealingRange(data: GraphData[], stepCount: number) {
   return [newLow, newHigh];
 }
 
-interface CompareGraphProps {
+export interface CompareGraphProps {
   width: number;
   height: number;
   margin?: {

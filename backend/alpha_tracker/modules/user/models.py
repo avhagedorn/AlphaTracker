@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 from alpha_tracker.db.models import UserPreferences
@@ -15,3 +17,10 @@ class DisplayUserPreferences(BaseModel):
         return DisplayUserPreferences(
             strategy_display_option=preferences.strategy_display_option
         )
+
+
+class UpdateUserRequest(BaseModel):
+    email: Optional[str] = None
+    username: Optional[str] = None
+    old_password: Optional[str] = None
+    new_password: Optional[str] = None

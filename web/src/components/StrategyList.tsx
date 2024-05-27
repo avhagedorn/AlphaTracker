@@ -7,6 +7,7 @@ import Button from "./Button";
 import { BsThreeDots } from "react-icons/bs";
 import { FiCheck } from "react-icons/fi";
 import PortfolioModal from "./PortfolioModal";
+import { toast } from "react-toastify";
 
 interface StrategyOptionsProps {
   setShowStrategyOptions: (show: boolean) => void;
@@ -71,7 +72,19 @@ function StrategyOptions({
   );
 }
 
-export default function StrategyList() {
+interface StrategyListProps {
+  hideHeader?: boolean;
+  includeDescriptions?: boolean;
+  chartHeight?: number;
+  chartWidth?: number;
+}
+
+export default function StrategyList({
+  includeDescriptions,
+  chartHeight = 100,
+  chartWidth = 400,
+  hideHeader = false,
+}: StrategyListProps) {
   const [showStrategyOptions, setShowStrategyOptions] = useState(false);
   const [showPortfolioModal, setShowPortfolioModal] = useState(false);
   const [selectedStrategyOption, setSelectedStrategyOption] = useState(-1);
@@ -108,19 +121,23 @@ export default function StrategyList() {
 
   return (
     <div>
-      <div className="flex flex-row justify-between items-center">
-        <h1 className="text-3xl font-bold mb-4">Strategies</h1>
-        <button onClick={() => setShowStrategyOptions(true)}>
-          <BsThreeDots size={20} />
-        </button>
-      </div>
-      {showStrategyOptions && (
-        <StrategyOptions
-          selectedStrategyOption={selectedStrategyOption}
-          setShowStrategyOptions={setShowStrategyOptions}
-          setSelectedStrategyOption={handleUpdatePreferences}
-          strategyDisplayOptions={strategyDisplayOptions}
-        />
+      {!hideHeader && (
+        <>
+          <div className="flex flex-row justify-between items-center">
+            <h1 className="text-3xl font-bold mb-4">Strategies</h1>
+            <button onClick={() => setShowStrategyOptions(true)}>
+              <BsThreeDots size={20} />
+            </button>
+          </div>
+          {showStrategyOptions && (
+            <StrategyOptions
+              selectedStrategyOption={selectedStrategyOption}
+              setShowStrategyOptions={setShowStrategyOptions}
+              setSelectedStrategyOption={handleUpdatePreferences}
+              strategyDisplayOptions={strategyDisplayOptions}
+            />
+          )}
+        </>
       )}
       {status === "success" && portfolios.length === 0 && (
         <p>No strategies found</p>
@@ -128,12 +145,23 @@ export default function StrategyList() {
       {status === "success" &&
         portfolios.length > 0 &&
         portfolios.map((strategy, index) => (
-          <StrategyPreview key={index} portfolio={strategy} className="mt-4" />
+          <StrategyPreview
+            key={index}
+            portfolio={strategy}
+            className="mt-4"
+            hidePriceChange={hideHeader}
+            height={chartHeight}
+            width={chartWidth}
+            includeDescription={includeDescriptions}
+          />
         ))}
       {status === "loading" &&
         [...Array(4)].map((_, index) => (
           <div key={index} className="mt-4">
-            <div className="h-32 w-full shimmer"></div>
+            <div
+              className="w-full shimmer"
+              style={{ height: `${chartHeight}px` }}
+            ></div>
           </div>
         ))}
       {status === "error" && <p>{String(error)}</p>}
@@ -148,6 +176,7 @@ export default function StrategyList() {
         setIsOpen={setShowPortfolioModal}
         onSubmit={() => {
           queryClient.invalidateQueries("portfolios");
+          toast.success("Strategy created!");
         }}
       />
     </div>

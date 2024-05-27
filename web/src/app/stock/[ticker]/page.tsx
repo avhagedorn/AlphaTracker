@@ -18,6 +18,7 @@ import {
 } from "@/lib/utils";
 import StockPriceChart from "@/components/StockPriceChart";
 import TruncatedText from "@/components/TruncatedText";
+import { toast } from "react-toastify";
 
 export default function Stock({
   params,
@@ -176,12 +177,6 @@ export default function Stock({
           </div>
         </div>
       </div>
-      <CreateTransactionModal
-        isOpen={createTransactionModalOpen}
-        setIsOpen={setCreateTransactionModalOpen}
-        onSubmit={() => {}}
-        ticker={params.ticker}
-      />
     </ContentWrapper>
   );
 }

@@ -13,6 +13,7 @@ import { useState } from "react";
 import Statistics from "@/components/Statistics";
 import { Timeframe } from "@/types";
 import DateGraph from "@/components/DateGraph";
+import { toast } from "react-toastify";
 
 const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
   ssr: false,
@@ -132,6 +133,7 @@ export default function PortfolioDetail({
         setIsOpen={setEditModalOpen}
         onSubmit={() => {
           queryClient.invalidateQueries("portfolio");
+          toast.success("Successfully updated!");
         }}
         existingPortfolio={data}
       />

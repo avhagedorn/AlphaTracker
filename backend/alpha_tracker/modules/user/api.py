@@ -1,18 +1,25 @@
+from datetime import timedelta
+
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
+from fastapi import Response
 from fastapi import status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
+from alpha_tracker.configs import ACCESS_TOKEN_EXPIRE_MINUTES
 from alpha_tracker.db.engine import get_sqlalchemy_engine
 from alpha_tracker.db.models import User
 from alpha_tracker.db.models import UserPreferences
 from alpha_tracker.modules.auth.models import DisplayUser
 from alpha_tracker.modules.user.models import DisplayUserPreferences
 from alpha_tracker.modules.user.models import UpdateUserPreferencesRequest
+from alpha_tracker.modules.user.models import UpdateUserRequest
+from alpha_tracker.utils.auth import create_access_token
 from alpha_tracker.utils.auth import get_current_admin_user
 from alpha_tracker.utils.auth import get_current_user
+from alpha_tracker.utils.auth import get_password_hash
 
 router = APIRouter(prefix="/user")
 
@@ -28,6 +35,47 @@ async def read_users_me(
     current_user: User = Depends(get_current_user),
 ):
     return DisplayUser.from_db(current_user)
+
+
+@router.post("/update")
+async def update_user(
+    update_user_request: UpdateUserRequest,
+    response: Response,
+    current_user: User = Depends(get_current_user),
+):
+
+    if update_user_request.old_password and not current_user.check_password(
+        update_user_request.old_password
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Old password is incorrect",
+        )
+
+    with Session(get_sqlalchemy_engine()) as db_session:
+        current_user.email = update_user_request.email or current_user.email
+        current_user.username = update_user_request.username or current_user.username
+
+        if update_user_request.new_password:
+            current_user.hashed_password = get_password_hash(
+                update_user_request.new_password or update_user_request.old_password
+            )
+        db_session.commit()
+
+        if update_user_request.new_password:
+            access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+            access_token = create_access_token(
+                data={"sub": current_user.username}, expires_delta=access_token_expires
+            )
+
+            response.set_cookie(
+                key="access_token",
+                value=access_token,
+                httponly=True,
+                max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+            )
+
+        return DisplayUser.from_db(current_user)
 
 
 @router.get("/preferences")

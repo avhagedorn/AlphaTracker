@@ -4,6 +4,7 @@ import Modal from "./Modal";
 import { useState } from "react";
 import { Portfolio } from "@/types";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
+import { toast } from "react-toastify";
 
 interface PortfolioModalProps {
   isOpen: boolean;
@@ -42,7 +43,7 @@ export default function PortfolioModal({
       setIsOpen(false);
       onSubmit();
     } else {
-      alert("Failed to submit: " + response.error);
+      toast.error("Failed to submit: " + response.error);
     }
     setIsSubmitting(false);
   };
@@ -56,7 +57,7 @@ export default function PortfolioModal({
     if (response.data) {
       window.location.href = "/home";
     } else {
-      alert("Failed to delete: " + response.error);
+      toast.error("Failed to delete: " + response.error);
     }
   };
 

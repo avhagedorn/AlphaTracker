@@ -2,9 +2,13 @@
 
 import Button from "@/components/Button";
 import ContentWrapper from "@/components/ContentWrapper";
-import React from "react";
+import UpdateAccountModal from "@/components/UpdateAccountModal";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Account() {
+  const [showUpdateAccountModal, setShowUpdateAccountModal] = useState(false);
+
   return (
     <ContentWrapper userIsAuthenticated>
       <div className="w-1/3 mx-auto">
@@ -28,7 +32,12 @@ export default function Account() {
                 password.
               </p>
             </div>
-            <Button className="mt-2">Update</Button>
+            <Button
+              className="mt-2"
+              onClick={() => setShowUpdateAccountModal(true)}
+            >
+              Update
+            </Button>
           </div>
           <div className="flex flex-row justify-between items-center p-4 bg-white rounded-lg shadow-md space-x-4">
             <div>
@@ -44,6 +53,11 @@ export default function Account() {
           </div>
         </div>
       </div>
+      <UpdateAccountModal
+        isOpen={showUpdateAccountModal}
+        setIsOpen={setShowUpdateAccountModal}
+        onSubmit={() => toast.success("Account updated!")}
+      />
     </ContentWrapper>
   );
 }

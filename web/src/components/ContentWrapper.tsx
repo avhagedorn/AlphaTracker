@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "./Navbar";
 import Link from "next/link";
+import { Bounce, ToastContainer } from "react-toastify";
 
 interface ContentWrapperProps {
   children: React.ReactNode;
@@ -16,6 +17,19 @@ export default function ContentWrapper({
       <div className="min-h-screen">
         <Navbar userIsAuthenticated={userIsAuthenticated} />
         <div className="p-8">{children}</div>
+        <ToastContainer
+          position="bottom-left"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable={false}
+          pauseOnHover
+          theme="colored"
+          transition={Bounce}
+        />
       </div>
       {!userIsAuthenticated && (
         <footer className="bg-gray-100 py-8">

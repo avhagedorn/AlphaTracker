@@ -7,6 +7,7 @@ import { useState } from "react";
 import CreateTransactionModal from "./CreateTransactionModal";
 import { useQuery, useQueryClient } from "react-query";
 import { fetchSS } from "@/lib/fetch";
+import { toast } from "react-toastify";
 
 interface TransactionsTableProps {
   displayTicker?: boolean;
@@ -113,7 +114,10 @@ export default function TransactionsTable({
       <CreateTransactionModal
         isOpen={createTransactionModalOpen}
         setIsOpen={setCreateTransactionModalOpen}
-        onSubmit={() => queryClient.invalidateQueries("transactions")}
+        onSubmit={() => {
+          queryClient.invalidateQueries("transactions");
+          toast.success("Transaction added!");
+        }}
         portfolioId={portfolioId}
         ticker={ticker}
       />
