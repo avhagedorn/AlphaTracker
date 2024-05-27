@@ -35,3 +35,5 @@ typing_extensions==4.11.0
 urllib3==2.2.1
 uvicorn==0.29.0
 virtualenv==20.26.1
+polygon-api-client==1.13.7
+python-dateutil==2.9.0.post0

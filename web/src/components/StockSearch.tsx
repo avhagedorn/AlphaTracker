@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef } from "react";
 import debounce from "lodash/debounce";
+import { fetchSS } from "@/lib/fetch";
 
 function highlightText(highlight: string, text: string) {
   const regex = new RegExp(`(${highlight})`, "i");
@@ -34,21 +35,8 @@ export default function StockSearch() {
       return;
     }
 
-    // Simulating an API call with a delay
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    // Perform the actual search logic here
-    const results = [
-      { id: 1, ticker: "AAPL", name: "Apple" },
-      { id: 2, ticker: "GOOGL", name: "Alphabet" },
-      { id: 3, ticker: "MSFT", name: "Microsoft" },
-    ].filter(
-      (item) =>
-        item.ticker.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-
-    setSearchResults(results);
+    const response = (await fetchSS(`/search/stock?q=${searchTerm}`)) || [];
+    setSearchResults(response);
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,15 +49,18 @@ export default function StockSearch() {
 
     debouncedSearch.current = debounce(() => {
       handleSearch(searchTerm);
-    }, 100);
+    }, 50);
 
     debouncedSearch.current();
   };
 
   const handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && searchResults.length > 0) {
-      // Redirect to the first search result
-      window.location.href = `/stock/${searchResults[0].ticker.toLowerCase()}`;
+    if (e.key === "Enter") {
+      if (searchResults.length === 0) {
+        window.location.href = `/stock/${searchTerm.toLowerCase()}`;
+      } else {
+        window.location.href = `/stock/${searchResults[0].ticker.toLowerCase()}`;
+      }
     }
   };
 
@@ -86,8 +77,8 @@ export default function StockSearch() {
       {searchResults.length > 0 && (
         <ul className="absolute text-center left-1/2 transform -translate-x-1/2 z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
           {searchResults.map(
-            (result: { id: number; ticker: string; name: string }) => (
-              <a href={`/stock/${result.ticker.toLowerCase()}`} key={result.id}>
+            (result: { ticker: string; name: string }, index: number) => (
+              <a href={`/stock/${result.ticker.toLowerCase()}`} key={index}>
                 <li className="rounded-md px-4 py-2 hover:bg-gray-100 cursor-pointer">
                   {highlightText(
                     searchTerm,

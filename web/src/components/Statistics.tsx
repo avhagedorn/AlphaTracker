@@ -10,7 +10,7 @@ const StatisticsCard = ({
   title: string;
   statistics: {
     title: string;
-    value: string;
+    value: JSX.Element | string;
   }[];
 }) => (
   <div className="flex flex-col flex-grow px-8 py-4 shadow-lg border border-gray-100">
@@ -18,7 +18,11 @@ const StatisticsCard = ({
     {statistics.map(({ title, value }) => (
       <div key={title} className="flex flex-row justify-between">
         <h1 className="text-lg font-bold">{title}</h1>
-        <h1 className="text-lg">{value}</h1>
+        {value instanceof String ? (
+          <h1 className="w-1/2 text-lg text-right">{value}</h1>
+        ) : (
+          <div className="w-1/2 flex justify-end items-center">{value}</div>
+        )}
       </div>
     ))}
   </div>
@@ -28,7 +32,7 @@ interface StatisticsCard {
   title: string;
   statistics: {
     title: string;
-    value: string;
+    value: JSX.Element | string;
   }[];
 }
 

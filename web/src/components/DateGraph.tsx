@@ -12,6 +12,7 @@ interface DateGraphProps {
   height: number;
   animationDuration: number;
   lineWidth: number;
+  lineName?: string;
   selectedTimeframe: Timeframe;
   handleTimeframeChange: (timeframe: Timeframe) => void;
 }
@@ -22,6 +23,7 @@ export default function DateGraph({
   height,
   animationDuration,
   lineWidth,
+  lineName,
   selectedTimeframe,
   handleTimeframeChange,
 }: DateGraphProps) {
@@ -41,6 +43,7 @@ export default function DateGraph({
         animationDuration={animationDuration}
         hideLegend
         lineWidth={lineWidth}
+        lineName={lineName}
       />
       <div className="flex space-x-4 w-full pt-2 pb-2 border-b-2 border-gray-300">
         {Object.values(Timeframe).map((timeframe, index) => (
