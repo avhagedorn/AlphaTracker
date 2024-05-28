@@ -131,10 +131,7 @@ export default function PortfolioDetail({
       <PortfolioModal
         isOpen={editModalOpen}
         setIsOpen={setEditModalOpen}
-        onSubmit={() => {
-          queryClient.invalidateQueries("portfolio");
-          toast.success("Successfully updated!");
-        }}
+        onSubmit={() => queryClient.invalidateQueries("portfolio")}
         existingPortfolio={data}
       />
     </ContentWrapper>

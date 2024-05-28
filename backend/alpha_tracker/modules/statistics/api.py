@@ -3,7 +3,7 @@ from fastapi import Depends
 from yfinance import Ticker
 
 from alpha_tracker.db.models import User
-from alpha_tracker.modules.statistics.modules import StockStatisticsResponse
+from alpha_tracker.modules.statistics.models import StockStatisticsResponse
 from alpha_tracker.utils.auth import get_current_user
 
 router = APIRouter(prefix="/statistics")
@@ -27,15 +27,29 @@ async def get_stock_statistics(ticker: str, _: User = Depends(get_current_user))
         description=info.get("longBusinessSummary")
         or info.get("longDescription")
         or "",
+        company_name=info.get("longName", ""),
         market_cap=info.get("marketCap") or 0,
-        fifty_two_week_high=round(info.get("fiftyTwoWeekHigh") or 0, 2),
-        fifty_two_week_low=round(info.get("fiftyTwoWeekLow") or 0, 2),
-        dividend_yield=round(info.get("dividendYield") or 0, 2),
-        beta=round(info.get("beta") or 0, 2),
-        eps=round(info.get("trailingEps") or 0, 2),
-        pe_ratio=round(info.get("trailingPE") or 0, 2),
-        forward_pe=round(info.get("forwardPE") or 0, 2),
-        company_name=info.get("longName") or "",
+        eps=round(info.get("trailingEps", 0), 2),
+        dividend_yield=round(info.get("dividendYield", 0) * 100, 2),
+        pe_ratio=round(info.get("trailingPE", 0), 2),
+        forward_pe=round(info.get("forwardPE", 0), 2),
+        fifty_two_week_high=round(info.get("fiftyTwoWeekHigh", 0), 2),
+        fifty_two_week_low=round(info.get("fiftyTwoWeekLow", 0), 2),
+        beta=round(info.get("beta", 0), 2),
+        debt_to_equity=round(info.get("debtToEquity", 0), 2),
+        gross_margins=round(info.get("grossMargins", 0) * 100, 2),
+        operating_margins=round(info.get("operatingMargins", 0) * 100, 2),
+        profit_margins=round(info.get("profitMargins", 0) * 100, 2),
+        ev_to_ebitda=round(info.get("enterpriseToEbitda", 0), 2),
+        short_ratio=round(info.get("shortRatio", 0), 2),
+        fcf_yield=round(info.get("freeCashflow") / info.get("marketCap") * 100, 2),
+        current_ratio=round(info.get("currentRatio", 0), 2),
+        debt=info.get("totalDebt", 0),
+        cash=info.get("totalCash", 0),
+        return_on_equity=round(info.get("returnOnEquity", 0) * 100, 2),
+        return_on_assets=round(info.get("returnOnAssets", 0) * 100, 2),
+        peg_ratio=round(info.get("pegRatio", 0), 2),
+        revenue_growth=round(info.get("revenueGrowth", 0) * 100, 2),
     )
 
 

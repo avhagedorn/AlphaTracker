@@ -2,22 +2,21 @@ import { fetchSS, fetchServer } from "@/lib/fetch";
 import Button from "./Button";
 import Modal from "./Modal";
 import { useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
 interface AccountUpdateModalProps {
   isOpen: boolean;
   setIsOpen: (show: boolean) => void;
-  onSubmit: () => void;
 }
 
 export default function UpdateAccountModal({
   isOpen,
   setIsOpen,
-  onSubmit,
 }: AccountUpdateModalProps) {
   const { data } = useQuery("me", () => fetchSS("/user/me"));
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setIsSubmitting(true);
@@ -28,14 +27,15 @@ export default function UpdateAccountModal({
     const response = await fetchServer("/user/update", {
       method: "POST",
       body: JSON.stringify({
-        name: data.get("name") as string,
+        username: data.get("username") as string,
         email: data.get("email") as string,
       }),
     });
 
     if (response.data) {
       setIsOpen(false);
-      onSubmit();
+      toast.success("Account updated!");
+      queryClient.invalidateQueries("me");
     } else {
       toast.error("Failed to submit: " + response.error);
     }

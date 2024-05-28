@@ -19,7 +19,7 @@ export default function ContentWrapper({
         <div className="p-8">{children}</div>
         <ToastContainer
           position="bottom-left"
-          autoClose={5000}
+          autoClose={2000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick

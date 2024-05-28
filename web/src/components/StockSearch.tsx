@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import debounce from "lodash/debounce";
 import { fetchSS } from "@/lib/fetch";
+import { toast } from "react-toastify";
 
 function highlightText(highlight: string, text: string) {
   const regex = new RegExp(`(${highlight})`, "i");
@@ -30,12 +31,16 @@ export default function StockSearch() {
   const debouncedSearch = useRef<any>(null);
 
   const handleSearch = useCallback(async (searchTerm: string) => {
-    if (searchTerm.length === 0) {
+    if (searchTerm.length === 0 || searchTerm.startsWith(" ")) {
       setSearchResults([]);
       return;
     }
-
-    const response = (await fetchSS(`/search/stock?q=${searchTerm}`)) || [];
+    let response = [];
+    try {
+      response = await fetchSS(`/search/stock?q=${searchTerm}`);
+    } catch (error) {
+      toast.error("Failed to search");
+    }
     setSearchResults(response);
   }, []);
 

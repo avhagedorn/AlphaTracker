@@ -74,6 +74,7 @@ export default function TransactionsTable({
       method: "POST",
     });
     queryClient.invalidateQueries("transactions");
+    toast.success("Transaction deleted!");
   };
 
   return (

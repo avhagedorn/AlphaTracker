@@ -60,22 +60,34 @@ async def update_user(
             current_user.hashed_password = get_password_hash(
                 update_user_request.new_password or update_user_request.old_password
             )
+
+        db_session.add(current_user)
         db_session.commit()
 
-        if update_user_request.new_password:
-            access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-            access_token = create_access_token(
-                data={"sub": current_user.username}, expires_delta=access_token_expires
-            )
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": current_user.username}, expires_delta=access_token_expires
+        )
 
-            response.set_cookie(
-                key="access_token",
-                value=access_token,
-                httponly=True,
-                max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
-            )
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        )
 
         return DisplayUser.from_db(current_user)
+
+
+@router.post("/delete")
+async def delete_user(
+    current_user: User = Depends(get_current_user),
+):
+    with Session(get_sqlalchemy_engine()) as db_session:
+        db_session.delete(current_user)
+        db_session.commit()
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.get("/preferences")

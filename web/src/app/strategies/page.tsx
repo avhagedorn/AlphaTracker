@@ -5,7 +5,6 @@ import StrategyList from "@/components/StrategyList";
 import React from "react";
 
 export default function Account() {
-  // get 1/3 of the screen width
   const width = Math.floor(window.innerWidth / 3);
 
   return (
@@ -17,7 +16,12 @@ export default function Account() {
           the market. You can create a strategy for long-term investing, day
           trading, or anything in between.
         </p>
-        <StrategyList chartWidth={600} chartHeight={200} hideHeader />
+        <StrategyList
+          chartWidth={width}
+          chartHeight={200}
+          hideHeader
+          includeDescriptions
+        />
       </div>
     </ContentWrapper>
   );

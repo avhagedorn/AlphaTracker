@@ -1,5 +1,5 @@
 import { Portfolio } from "@/types";
-import React from "react";
+import React, { memo } from "react";
 import demoData from "../public/demo-data.json";
 import PriceChange from "./PriceChange";
 import CompareGraphWrapper from "./CompareGraphWrapper";
@@ -13,7 +13,7 @@ interface StrategyPreviewProps {
   includeDescription?: boolean;
 }
 
-export default function StrategyPreview({
+const StrategyPreview = memo(function StrategyPreview({
   portfolio,
   className,
   height,
@@ -44,4 +44,6 @@ export default function StrategyPreview({
       />
     </div>
   );
-}
+});
+
+export default StrategyPreview;

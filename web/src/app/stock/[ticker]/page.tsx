@@ -8,7 +8,6 @@ import DateGraph from "@/components/DateGraph";
 import { Timeframe } from "@/types";
 import TransactionsTable from "@/components/TransactionsTable";
 import Statistics from "@/components/Statistics";
-import CreateTransactionModal from "@/components/CreateTransactionModal";
 import { useQuery } from "react-query";
 import { fetchSS } from "@/lib/fetch";
 import {
@@ -18,7 +17,7 @@ import {
 } from "@/lib/utils";
 import StockPriceChart from "@/components/StockPriceChart";
 import TruncatedText from "@/components/TruncatedText";
-import { toast } from "react-toastify";
+import { FiExternalLink } from "react-icons/fi";
 
 export default function Stock({
   params,
@@ -27,8 +26,6 @@ export default function Stock({
     ticker: string;
   };
 }) {
-  const [createTransactionModalOpen, setCreateTransactionModalOpen] =
-    useState(false);
   const [selectedTimeframe, setSelectedTimeframe] = useState<Timeframe>(
     Timeframe.DAY,
   );
@@ -108,7 +105,14 @@ export default function Stock({
             )}
           </div>
           <div className="mt-8">
-            <h1 className="text-2xl font-bold">Company</h1>
+            <div className="flex items-center space-x-2">
+              <h1 className="text-2xl font-bold">Company</h1>
+              {stats?.website && (
+                <a href={stats?.website} target="_blank">
+                  <FiExternalLink size={18} />
+                </a>
+              )}
+            </div>
             {statsStatus === "loading" && (
               <div className="shimmer h-24 w-full mb-4" />
             )}
@@ -119,6 +123,7 @@ export default function Stock({
             <div className="mt-8">
               <h1 className="text-2xl font-bold">Statistics</h1>
               <Statistics
+                loading={statsStatus === "loading"}
                 cards={[
                   {
                     title: "Financials",
@@ -133,15 +138,43 @@ export default function Stock({
                       },
                       {
                         title: "Dividend Yield",
-                        value: stats?.dividend_yield || "N/A",
+                        value: `${stats?.dividend_yield}%`,
+                        tooltip:
+                          "The dividend yield is the annual dividend income per " +
+                          "share divided by the price per share.",
+                      },
+                      {
+                        title: "Revenue Growth (YoY)",
+                        value: `${stats?.revenue_growth}%`,
                       },
                     ],
                   },
                   {
-                    title: "Price",
+                    title: "Valuation",
                     statistics: [
-                      { title: "PE Ratio", value: stats?.pe_ratio },
-                      { title: "Forward PE", value: stats?.forward_pe },
+                      {
+                        title: "PE Ratio",
+                        value: stats?.pe_ratio,
+                        tooltip:
+                          "The price-to-earnings (P/E) ratio is the ratio for " +
+                          "valuing a company that measures its current share price " +
+                          "relative to its per-share earnings.",
+                      },
+                      {
+                        title: "Forward PE",
+                        value: stats?.forward_pe,
+                        tooltip:
+                          "The forward price-to-earnings (P/E) ratio is a variation of " +
+                          "the P/E ratio that uses forecasted earnings for the P/E calculation.",
+                      },
+                      {
+                        title: "EV to EBITDA",
+                        value: stats?.ev_to_ebitda,
+                        tooltip:
+                          "The EV/EBITDA ratio is a valuation metric used to compare a " +
+                          "company's enterprise value to its earnings before interest, " +
+                          "taxes, depreciation, and amortization.",
+                      },
                       {
                         title: "52W Range",
                         value: (
@@ -155,17 +188,104 @@ export default function Stock({
                     ],
                   },
                   {
-                    title: "Statistics",
+                    title: "Ratios",
                     statistics: [
-                      { title: "Market Cap", value: "1.2T" },
-                      { title: "PE Ratio", value: "30.0" },
+                      {
+                        title: "Short Ratio",
+                        value: stats?.short_ratio,
+                        tooltip:
+                          "The short ratio is the number of shares sold short divided by " +
+                          "the average daily volume. It's used to determine how long it will " +
+                          "take short sellers, on average, to cover their positions.",
+                      },
+                      {
+                        title: "PEG Ratio",
+                        value: stats?.peg_ratio,
+                        tooltip:
+                          "The PEG ratio is a valuation metric for determining the relative " +
+                          "trade-off between the price of a stock, the earnings generated per " +
+                          "share (EPS), and the company's expected growth.",
+                      },
+                      {
+                        title: "Beta",
+                        value: stats?.beta,
+                        tooltip:
+                          "Beta is a measure of a stock's volatility in relation to the market.",
+                      },
                     ],
                   },
                   {
-                    title: "The Greeks",
+                    title: "Margins",
                     statistics: [
-                      { title: `Alpha (${selectedTimeframe})`, value: "0.8" },
-                      { title: `Beta (${selectedTimeframe})`, value: "1.2" },
+                      {
+                        title: "Gross Margins",
+                        value: `${stats?.gross_margins}%`,
+                        tooltip:
+                          "The gross margin represents the percentage of total revenue that the " +
+                          "company retains after incurring the direct costs associated with " +
+                          "producing the goods and services sold by the company.",
+                      },
+                      {
+                        title: "Operating Margins",
+                        value: `${stats?.operating_margins}%`,
+                        tooltip:
+                          "The operating margin measures how much profit a company makes on a " +
+                          "dollar of sales after paying for variable costs of production, such " +
+                          "as wages and raw materials, but before paying interest or tax.",
+                      },
+                      {
+                        title: "Profit Margins",
+                        value: `${stats?.profit_margins}%`,
+                        tooltip:
+                          "The profit margin is a ratio of a company's profit (sales minus all " +
+                          "expenses) divided by its revenue.",
+                      },
+                    ],
+                  },
+                  {
+                    title: "Profitability",
+                    statistics: [
+                      {
+                        title: "Free Cash Flow Yield",
+                        value: `${stats?.fcf_yield}%`,
+                        tooltip:
+                          "The free cash flow yield is a financial ratio that measures a " +
+                          "company's ability to generate free cash flow relative to its " +
+                          "market capitalization.",
+                      },
+                      {
+                        title: "Return on Equity",
+                        value: `${stats?.return_on_equity}%`,
+                        tooltip:
+                          "Return on equity (ROE) is a measure of financial performance calculated " +
+                          "by dividing net income by shareholders' equity.",
+                      },
+                      {
+                        title: "Return on Assets",
+                        value: `${stats?.return_on_assets}%`,
+                        tooltip:
+                          "Return on assets (ROA) is an indicator of how profitable a company is " +
+                          "relative to its total assets.",
+                      },
+                    ],
+                  },
+                  {
+                    title: "Debt",
+                    statistics: [
+                      {
+                        title: "Cash",
+                        value: `$${displayLargeNumber(stats?.cash)}`,
+                      },
+                      {
+                        title: "Debt",
+                        value: `$${displayLargeNumber(stats?.debt)}`,
+                      },
+                      {
+                        title: "Current Ratio",
+                        value: stats?.current_ratio,
+                        tooltip:
+                          "The current ratio is a liquidity ratio that measures a company's ability to pay short-term obligations or those due within one year.",
+                      },
                     ],
                   },
                 ]}

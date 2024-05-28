@@ -1,4 +1,4 @@
-import { fetchSS, fetchServer } from "@/lib/fetch";
+import { fetchServer } from "@/lib/fetch";
 import Button from "./Button";
 import Modal from "./Modal";
 import { useState } from "react";
@@ -40,6 +40,9 @@ export default function PortfolioModal({
     });
 
     if (response.data) {
+      toast.success(
+        existingPortfolio ? "Successfully updated!" : "Created successfully!",
+      );
       setIsOpen(false);
       onSubmit();
     } else {
@@ -55,6 +58,7 @@ export default function PortfolioModal({
     });
 
     if (response.data) {
+      toast.success("Successfully deleted!");
       window.location.href = "/home";
     } else {
       toast.error("Failed to delete: " + response.error);

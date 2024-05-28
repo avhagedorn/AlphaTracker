@@ -110,13 +110,18 @@ export default function StrategyList({
   ];
 
   const handleUpdatePreferences = async (option: number) => {
-    await fetchServer("/user/preferences/update", {
-      method: "POST",
-      body: JSON.stringify({
-        strategy_display_option: option,
-      }),
-    });
-    queryClient.invalidateQueries("portfolios");
+    try {
+      await fetchServer("/user/preferences/update", {
+        method: "POST",
+        body: JSON.stringify({
+          strategy_display_option: option,
+        }),
+      });
+      queryClient.invalidateQueries("portfolios");
+      toast.success("Preferences updated!");
+    } catch (error) {
+      toast.error("Failed to update preferences");
+    }
   };
 
   return (
@@ -174,10 +179,7 @@ export default function StrategyList({
       <PortfolioModal
         isOpen={showPortfolioModal}
         setIsOpen={setShowPortfolioModal}
-        onSubmit={() => {
-          queryClient.invalidateQueries("portfolios");
-          toast.success("Strategy created!");
-        }}
+        onSubmit={() => queryClient.invalidateQueries("portfolios")}
       />
     </div>
   );
