@@ -30,11 +30,14 @@ class User(Base):
     portfolios = relationship(
         "Portfolio", back_populates="user", cascade="all, delete-orphan"
     )
-    preferences = relationship(
-        "UserPreferences", back_populates="user", cascade="all, delete-orphan"
-    )
     transactions = relationship(
         "Transaction", back_populates="user", cascade="all, delete-orphan"
+    )
+    preferences = relationship(
+        "UserPreferences",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        uselist=False,
     )
 
 
@@ -75,7 +78,9 @@ class Transaction(Base):
 class UserPreferences(Base):
     __tablename__ = "user_preferences"
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"), nullable=False)
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("user.id"), nullable=False, unique=True
+    )
     strategy_display_option: Mapped[int] = mapped_column(
         Integer, nullable=False, default=0
     )

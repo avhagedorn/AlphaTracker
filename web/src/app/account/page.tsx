@@ -3,13 +3,17 @@
 import Button from "@/components/Button";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 import ContentWrapper from "@/components/ContentWrapper";
+import Modal from "@/components/Modal";
 import UpdateAccountModal from "@/components/UpdateAccountModal";
+import { fetchSS } from "@/lib/fetch";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Account() {
   const [showUpdateAccountModal, setShowUpdateAccountModal] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+  const [dataRequestModalIsOpen, setDataRequestModalIsOpen] = useState(false);
+  const [dataRequestIsSubmitting, setDataRequestIsSubmitting] = useState(false);
 
   return (
     <ContentWrapper userIsAuthenticated>
@@ -51,7 +55,12 @@ export default function Account() {
                 about you and your account.
               </p>
             </div>
-            <Button className="mt-2">Request</Button>
+            <Button
+              className="mt-2"
+              onClick={() => setDataRequestModalIsOpen(true)}
+            >
+              Request
+            </Button>
           </div>
           <div className="flex flex-row justify-between items-center p-4 bg-white rounded-lg shadow-md space-x-4">
             <div>
@@ -83,6 +92,43 @@ export default function Account() {
         }}
         onCancel={() => setShowDeleteAccountModal(false)}
       />
+      <Modal
+        isOpen={dataRequestModalIsOpen}
+        onClose={() => {
+          setDataRequestModalIsOpen(false);
+        }}
+        title="Request a Copy of Your Data"
+        size="small"
+      >
+        <p>
+          Please allow up to 30 days for your data to be prepared. Your data
+          will be delivered to the email address associated with your account.
+          <span className="font-semibold">
+            {" "}
+            Emails may show up in your spam folder.
+          </span>
+        </p>
+        <Button
+          isLoading={dataRequestIsSubmitting}
+          className="mt-4"
+          onClick={() => {
+            setDataRequestIsSubmitting(true);
+            fetchSS("/email/create-data-request")
+              .then(() => {
+                setDataRequestIsSubmitting(false);
+                setDataRequestModalIsOpen(false);
+                toast.success("Data request submitted successfully");
+              })
+              .catch(() => {
+                setDataRequestIsSubmitting(false);
+                setDataRequestModalIsOpen(false);
+                toast.error("Failed to submit data request");
+              });
+          }}
+        >
+          Request
+        </Button>
+      </Modal>
     </ContentWrapper>
   );
 }

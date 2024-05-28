@@ -9,6 +9,7 @@ from alpha_tracker.configs import ALPHA_TRACKER_HOST
 from alpha_tracker.configs import ALPHA_TRACKER_PORT
 from alpha_tracker.modules.auth.api import router as auth_router
 from alpha_tracker.modules.chart.api import router as chart_router
+from alpha_tracker.modules.email.api import router as email_router
 from alpha_tracker.modules.portfolio.api import router as portfolio_router
 from alpha_tracker.modules.search.api import router as search_router
 from alpha_tracker.modules.statistics.api import router as statistics_router
@@ -29,6 +30,7 @@ def get_application() -> FastAPI:
     application.include_router(chart_router)
     application.include_router(statistics_router)
     application.include_router(search_router)
+    application.include_router(email_router)
 
     application.add_middleware(
         CORSMiddleware,
