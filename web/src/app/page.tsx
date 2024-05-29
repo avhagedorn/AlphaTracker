@@ -38,7 +38,7 @@ export default function Home() {
             </p>
             <a
               className="bg-emerald-500 hover:bg-emerald-700 text-white font-semibold py-3 px-6 mt-16 rounded shadow-lg text-2xl"
-              href={"/auth/login"}
+              href={"/auth/register"}
             >
               Track your portfolio
             </a>

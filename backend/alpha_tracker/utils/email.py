@@ -42,7 +42,7 @@ def _create_email_message_with_attachments(
         )
         msg.attach(attachment_part)
 
-    _send_email(email_to, msg)
+    return msg
 
 
 def send_data_request_email(email_to: str, attachment: bytes):

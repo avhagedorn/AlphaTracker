@@ -88,7 +88,16 @@ export default function Account() {
         isOpen={showDeleteAccountModal}
         deletionPrompt="Are you sure you want to delete your account? This action is irreversible."
         onDelete={() => {
-          toast.success("Account deleted successfully");
+          fetchSS("/user/delete", { method: "POST" })
+            .then(() => {
+              toast.success("Account deleted successfully");
+              setShowDeleteAccountModal(false);
+              window.location.href = "/";
+            })
+            .catch(() => {
+              toast.error("Failed to delete account");
+              setShowDeleteAccountModal(false);
+            });
         }}
         onCancel={() => setShowDeleteAccountModal(false)}
       />

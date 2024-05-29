@@ -81,13 +81,14 @@ async def update_user(
 
 @router.post("/delete")
 async def delete_user(
-    current_user: User = Depends(get_current_user),
+    response: Response, current_user: User = Depends(get_current_user)
 ):
     with Session(get_sqlalchemy_engine()) as db_session:
         db_session.delete(current_user)
         db_session.commit()
 
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+    response.delete_cookie(key="access_token")
+    return {"message": "User deleted"}
 
 
 @router.get("/preferences")

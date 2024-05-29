@@ -117,7 +117,7 @@ export default function Compare() {
       );
     }
 
-    return "";
+    return "Enter two symbols to compare them.";
   };
 
   return (
