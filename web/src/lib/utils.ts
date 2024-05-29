@@ -10,22 +10,30 @@ export const fmtPercent = (value: number) => {
 };
 
 export const timeframeToDisplayString = (timeframe: Timeframe) => {
-  switch (timeframe) {
-    case Timeframe.DAY:
-      return "Today";
-    case Timeframe.WEEK:
-      return "Past week";
-    case Timeframe.MONTH:
-      return "Past month";
-    case Timeframe.QUARTER:
-      return "Past quarter";
-    case Timeframe.YTD:
-      return "Year to date";
-    case Timeframe.YEAR:
-      return "Past year";
-    case Timeframe.ALL:
-      return "All time";
-  }
+  const timeframeMap: Record<Timeframe, string> = {
+    [Timeframe.DAY]: "Today",
+    [Timeframe.WEEK]: "Past week",
+    [Timeframe.MONTH]: "Past month",
+    [Timeframe.QUARTER]: "Past quarter",
+    [Timeframe.YTD]: "Year to date",
+    [Timeframe.YEAR]: "Past year",
+    [Timeframe.ALL]: "All time",
+  };
+
+  return timeframeMap[timeframe] || "Invalid timeframe";
+};
+
+export const timeframeToHistoryString = (timeframe: Timeframe) => {
+  const timeframeMap: Record<Timeframe, string> = {
+    [Timeframe.DAY]: "over the past day",
+    [Timeframe.WEEK]: "over the past week",
+    [Timeframe.MONTH]: "over the past month",
+    [Timeframe.QUARTER]: "over the past quarter",
+    [Timeframe.YTD]: "year-to-date",
+    [Timeframe.YEAR]: "over the past year",
+    [Timeframe.ALL]: "across all time",
+  };
+  return timeframeMap[timeframe] || "Invalid timeframe";
 };
 
 export const displayLargeNumber = (value: number) => {

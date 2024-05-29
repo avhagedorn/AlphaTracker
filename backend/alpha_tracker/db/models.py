@@ -50,6 +50,7 @@ class Portfolio(Base):
     created_at: Mapped[datetime.datetime] = mapped_column(
         DateTime, default=func.now(), nullable=False
     )
+    cash_in_cents: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
     user = relationship("User", back_populates="portfolios")
     transactions = relationship("Transaction", back_populates="portfolio")

@@ -47,9 +47,14 @@ interface StatisticsCard {
 interface StatisticsProps {
   cards: StatisticsCard[];
   loading?: boolean;
+  hideViewMorePrompt?: boolean;
 }
 
-export default function Statistics({ cards, loading }: StatisticsProps) {
+export default function Statistics({
+  cards,
+  loading,
+  hideViewMorePrompt,
+}: StatisticsProps) {
   const displayCount = 2;
   const moreCards = cards.slice(displayCount);
   const displayedCards = cards.slice(0, displayCount);
@@ -66,7 +71,19 @@ export default function Statistics({ cards, loading }: StatisticsProps) {
           />
         ))}
       </div>
-      {moreCards && (
+      {hideViewMorePrompt && moreCards && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 w-full">
+          {moreCards.map((card) => (
+            <StatisticsCard
+              key={card.title}
+              title={card.title}
+              statistics={card.statistics}
+              loading={loading}
+            />
+          ))}
+        </div>
+      )}
+      {!hideViewMorePrompt && moreCards && (
         <ViewMore>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 w-full">
             {moreCards.map((card) => (

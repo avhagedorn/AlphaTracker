@@ -25,9 +25,6 @@ export async function fetchServer(
   if (response.ok) {
     return { loading: false, data, error: null };
   } else {
-    if (response.status === 401) {
-      window.location.href = "/login";
-    }
     const errorMessage = data.detail || data.message || data.status;
     return { loading: false, data: null, error: errorMessage };
   }
@@ -50,9 +47,6 @@ export async function fetchSS(
   if (response.ok) {
     return response.json();
   } else {
-    if (response.status === 401) {
-      window.location.href = "/login";
-    }
     throw new Error(response.statusText);
   }
 }

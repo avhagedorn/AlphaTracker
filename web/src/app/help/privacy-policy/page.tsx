@@ -85,8 +85,8 @@ export default function PrivacyPolicy() {
         </ul>
         <p>
           To exercise any of these rights, please submit a request through the{" "}
-          <a href="/account/settings" className="text-blue-500">
-            Settings
+          <a href="/account" className="text-blue-500">
+            Account
           </a>{" "}
           page in our application or contact us at{" "}
           <a href="mailto:me@avhagedorn.dev" className="text-blue-500">

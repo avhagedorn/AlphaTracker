@@ -18,6 +18,8 @@ import {
 import StockPriceChart from "@/components/StockPriceChart";
 import TruncatedText from "@/components/TruncatedText";
 import { FiExternalLink } from "react-icons/fi";
+import { LuArrowRightLeft } from "react-icons/lu";
+import { FaArrowRightArrowLeft } from "react-icons/fa6";
 
 export default function Stock({
   params,
@@ -53,19 +55,40 @@ export default function Stock({
     <ContentWrapper userIsAuthenticated>
       <div className="flex flex-col items-center">
         <div className="w-1/2">
-          <h1 className="text-3xl font-bold mb-4">
-            {params.ticker.toUpperCase()}
-            {stats?.company_name ? ` - ${stats?.company_name}` : ""}
-          </h1>
-          {status === "loading" && <div className="shimmer h-16 w-32 mb-4" />}
-          {status === "success" && (
-            <h1 className="text-6xl font-bold mb-4">
-              {fmtDollars(data?.last_price || 0)}
-            </h1>
-          )}
-          {status === "error" && (
-            <h1 className="text-6xl font-bold mb-4">Error</h1>
-          )}
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-3xl font-bold mb-4">
+                {params.ticker.toUpperCase()}
+                {stats?.company_name ? ` - ${stats?.company_name}` : ""}
+              </h1>
+              {status === "loading" && (
+                <div className="shimmer h-16 w-32 mb-4" />
+              )}
+              {status === "success" && (
+                <h1 className="text-6xl font-bold mb-4">
+                  {fmtDollars(data?.last_price || 0)}
+                </h1>
+              )}
+              {status === "error" && (
+                <h1 className="text-6xl font-bold mb-4">Error, please retry</h1>
+              )}
+            </div>
+            <div>
+              <div className="flex flex-col items-start">
+                <button
+                  onClick={() => {
+                    window.location.href = `/compare?left=stock:${params.ticker}`;
+                  }}
+                  className="mt-4"
+                >
+                  <div className="flex items-center justify-center text-lg">
+                    <LuArrowRightLeft className="mr-2" size={18} />
+                    Compare
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
           <PriceChange
             loading={status === "loading"}
             percentChange={data?.total_return_percent || 0}
@@ -95,7 +118,7 @@ export default function Stock({
                 height={300}
                 data={data?.points || demoData}
                 lineWidth={3}
-                lineName={params.ticker.toUpperCase()}
+                leftLineName={params.ticker.toUpperCase()}
                 animationDuration={500}
                 selectedTimeframe={selectedTimeframe}
                 handleTimeframeChange={(timeframe) =>

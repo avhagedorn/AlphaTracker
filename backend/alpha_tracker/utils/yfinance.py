@@ -1,17 +1,29 @@
-def convert_timespan_to_period(timespan: str):
-    if timespan == "1D":
+from datetime import datetime
+
+
+def convert_timeframe_to_period(timeframe: str):
+    if timeframe == "1D":
         return "1d", "5m"
-    elif timespan == "1W":
+    elif timeframe == "1W":
         return "5d", "30m"
-    elif timespan == "1M":
+    elif timeframe == "1M":
         return "1mo", "1h"
-    elif timespan == "3M":
+    elif timeframe == "3M":
         return "3mo", "1d"
-    elif timespan == "YTD":
+    elif timeframe == "YTD":
         return "ytd", "1d"
-    elif timespan == "1Y":
+    elif timeframe == "1Y":
         return "1y", "1d"
-    elif timespan == "ALL":
+    elif timeframe == "ALL":
         return "max", "1wk"
     else:
-        raise ValueError("Invalid timespan")
+        raise ValueError("Invalid timeframe")
+
+
+def format_date(date: datetime, timeframe: str):
+    if timeframe == "1D":
+        return date.strftime("%-I:%M %p")
+    elif timeframe == "1W":
+        return date.strftime("%m/%d %-I:%M %p")
+    else:
+        return date.strftime("%m/%d/%Y")

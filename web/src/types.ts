@@ -17,8 +17,8 @@ export interface PositionRow {
 
 export interface GraphData {
   date: string;
-  spy: number;
-  portfolio: number;
+  left: number;
+  right: number;
 }
 
 export enum Timeframe {

@@ -1,15 +1,18 @@
 from datetime import datetime
+from typing import Optional
 
 from polygon.rest.models.aggs import Agg
 from pydantic import BaseModel
 
+from alpha_tracker.utils.yfinance import format_date
+
 
 class DataPoint(BaseModel):
     date: str
-    portfolio: float
-    spy: float
-    portfolio_percent_change: float
-    spy_percent_change: float
+    left: float
+    right: float
+    left_percent_change: float
+    right_percent_change: float
 
     @staticmethod
     def from_aggs(
@@ -19,20 +22,22 @@ class DataPoint(BaseModel):
         start_portfolio: float = 0.0,
         start_spy: float = 0.0,
     ):
-        scaleSpy = start_portfolio / start_spy
+        scale_spy = start_portfolio / start_spy
+        start_spy_scaled = start_spy * scale_spy
 
         return DataPoint(
             date=DataPoint._format_date(
                 datetime.fromtimestamp(portfolio.timestamp / 1000),
                 timeframe,
             ),
-            portfolio=portfolio.close,
-            spy=round(spy.close * scaleSpy, 2),
-            portfolio_percent_change=round(
+            left=portfolio.close,
+            right=round(spy.close * scale_spy, 2),
+            left_percent_change=round(
                 ((portfolio.close - start_portfolio) / start_portfolio) * 100, 2
             ),
-            spy_percent_change=round(
-                (((spy.close * scaleSpy) - start_spy) / start_spy) * 100, 2
+            right_percent_change=round(
+                (((spy.close * scale_spy) - start_spy_scaled) / start_spy_scaled) * 100,
+                2,
             ),
         )
 
@@ -45,59 +50,132 @@ class DataPoint(BaseModel):
         start_portfolio: float = 0.0,
         start_spy: float = 0.0,
     ):
-        scaleSpy = start_portfolio / start_spy
+        scale_spy = start_portfolio / start_spy
+        start_spy_scaled = start_spy * scale_spy
 
         return DataPoint(
-            date=DataPoint._format_date(
+            date=format_date(
                 timestamp,
                 timeframe,
             ),
-            portfolio=round(portfolio, 2),
-            spy=round(spy * scaleSpy, 2),
-            portfolio_percent_change=round(
+            left=round(portfolio, 2),
+            right=round(spy * scale_spy, 2),
+            left_percent_change=round(
                 ((portfolio - start_portfolio) / start_portfolio) * 100, 2
             ),
-            spy_percent_change=round(
-                (((spy * scaleSpy) - start_spy) / start_spy) * 100, 2
+            right_percent_change=round(
+                (((spy * scale_spy) - start_spy_scaled) / start_spy_scaled) * 100, 2
             ),
         )
-
-    @staticmethod
-    def _format_date(date: datetime, timeframe: str):
-        if timeframe == "1D":
-            return date.strftime("%-I:%M %p")
-        elif timeframe == "1W":
-            return date.strftime("%m/%d %-I:%M %p")
-        else:
-            return date.strftime("%m/%d/%Y")
 
 
 class ChartResponse(BaseModel):
     points: list[DataPoint]
     ticker: str
-    timespan: str
+    timeframe: str
     last_price: float
     total_return: float
     total_return_percent: float
     total_return_spy: float
     total_return_percent_spy: float
+    left_name: str
+    right_name: str
 
     @staticmethod
-    def from_data_points(data: list[DataPoint], ticker: str, timespan: str):
-        start_portfolio = data[0].portfolio
-        start_spy = data[0].spy
+    def from_data_points(data: list[DataPoint], ticker: str, timeframe: str):
+        start_portfolio = data[0].left
+        start_spy = data[0].right
 
         return ChartResponse(
             points=data,
             ticker=ticker,
-            timespan=timespan,
-            total_return=round((data[-1].portfolio - start_portfolio), 2),
+            timeframe=timeframe,
+            total_return=round((data[-1].left - start_portfolio), 2),
             total_return_percent=round(
-                ((data[-1].portfolio - start_portfolio) / start_portfolio) * 100, 2
+                ((data[-1].left - start_portfolio) / start_portfolio) * 100, 2
             ),
-            total_return_spy=round((data[-1].spy - start_spy), 2),
+            total_return_spy=round((data[-1].right - start_spy), 2),
             total_return_percent_spy=round(
-                ((data[-1].spy - start_spy) / start_spy) * 100, 2
+                ((data[-1].right - start_spy) / start_spy) * 100, 2
             ),
-            last_price=round(data[-1].portfolio, 2),
+            last_price=round(data[-1].left, 2),
+            left_name="Portfolio",
+            right_name="SPY",
+        )
+
+
+class CompareDataPoint(BaseModel):
+    date: str
+    left: float
+    right: float
+    left_percent_change: float
+    right_percent_change: float
+
+    @staticmethod
+    def from_api(
+        left: float,
+        right: float,
+        timestamp: int,
+        timeframe: str,
+        start_left: float = 0.0,
+        start_right: float = 0.0,
+    ):
+        scaleRight = 100 / start_right
+        scaleLeft = 100 / start_left
+
+        return CompareDataPoint(
+            date=format_date(
+                timestamp,
+                timeframe,
+            ),
+            left=round(left * scaleLeft, 2),
+            right=round(right * scaleRight, 2),
+            left_percent_change=round((right * scaleRight) - 100, 2),
+            right_percent_change=round((left * scaleLeft) - 100, 2),
+        )
+
+
+class CompareChartResponse(BaseModel):
+    points: list[CompareDataPoint]
+    left_ticker: Optional[str]
+    right_ticker: Optional[str]
+    left_portfolio_name: Optional[str]
+    right_portfolio_name: Optional[str]
+    timeframe: str
+    last_left: float
+    last_right: float
+    total_return_left: float
+    total_return_percent_left: float
+    total_return_right: float
+    total_return_percent_right: float
+
+    @staticmethod
+    def from_data_points(
+        data: list[CompareDataPoint],
+        timeframe: str,
+        left_ticker: Optional[str] = None,
+        right_ticker: Optional[str] = None,
+        left_portfolio_name: Optional[str] = None,
+        right_portfolio_name: Optional[str] = None,
+    ):
+        start_left = data[0].left
+        start_right = data[0].right
+
+        return CompareChartResponse(
+            points=data,
+            left_ticker=left_ticker,
+            right_ticker=right_ticker,
+            left_portfolio_name=left_portfolio_name,
+            right_portfolio_name=right_portfolio_name,
+            timeframe=timeframe,
+            total_return_left=round((data[-1].left - start_left), 2),
+            total_return_percent_left=round(
+                ((data[-1].left - start_left) / start_left) * 100, 2
+            ),
+            total_return_right=round((data[-1].right - start_right), 2),
+            total_return_percent_right=round(
+                ((data[-1].right - start_right) / start_right) * 100, 2
+            ),
+            last_left=round(data[-1].left, 2),
+            last_right=round(data[-1].right, 2),
         )

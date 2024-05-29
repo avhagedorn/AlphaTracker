@@ -1,17 +1,15 @@
 "use client";
 
+import { getLineColor } from "@/lib/displayUtils";
 import { GraphData } from "@/types";
 import React from "react";
 import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 
 function getVisuallyAppealingRange(data: GraphData[], stepCount: number) {
-  const low = Math.min(
-    ...data.map((d) => d.portfolio),
-    ...data.map((d) => d.spy),
-  );
+  const low = Math.min(...data.map((d) => d.left), ...data.map((d) => d.right));
   const high = Math.max(
-    ...data.map((d) => d.portfolio),
-    ...data.map((d) => d.spy),
+    ...data.map((d) => d.left),
+    ...data.map((d) => d.right),
   );
 
   const range = high - low;
@@ -38,11 +36,12 @@ export interface CompareGraphProps {
   };
   data: GraphData[];
   ticks: number;
-  lineName?: string;
   animationDuration?: number;
   hideLegend?: boolean;
   lineWidth?: number;
   hideTooltip?: boolean;
+  leftLineName?: string;
+  rightLineName?: string;
 }
 
 export default function CompareGraph({
@@ -51,21 +50,25 @@ export default function CompareGraph({
   height,
   margin,
   ticks,
-  lineName = "Your Portfolio",
-  animationDuration = 1500,
-  hideLegend = false,
   lineWidth = 2,
+  hideLegend = false,
   hideTooltip = false,
+  animationDuration = 1500,
+  leftLineName = "Your Portfolio",
+  rightLineName = "S&P 500",
 }: CompareGraphProps) {
   const domain = getVisuallyAppealingRange(data, ticks);
 
-  const getLineColor = (data: GraphData[]) => {
-    if (data.length === 0) return "#82ca9d";
-
-    const firstPrice = data[0].portfolio;
-    const lastPrice = data[data.length - 1].portfolio;
-    return firstPrice < lastPrice ? "#82ca9d" : "#ff7300";
-  };
+  if (data.length === 0) {
+    return (
+      <div
+        className={`flex items-center justify-center`}
+        style={{ width, height }}
+      >
+        <p className="text-gray-400">No data available</p>
+      </div>
+    );
+  }
 
   return (
     <LineChart width={width} height={height} data={data} margin={margin}>
@@ -90,19 +93,21 @@ export default function CompareGraph({
       {!hideLegend && <Legend />}
       <Line
         type="monotone"
-        dataKey="portfolio"
+        dataKey="left"
         stroke={getLineColor(data)}
+        className="opacity-50"
         animationDuration={animationDuration}
-        name={lineName}
+        name={leftLineName}
         dot={false}
         strokeWidth={lineWidth}
       />
       <Line
         type="monotone"
-        dataKey="spy"
-        stroke="#8884d8"
+        dataKey="right"
+        stroke="#4f46e5" // indigo-600
+        className="opacity-50"
         animationDuration={animationDuration}
-        name="SP500"
+        name={rightLineName}
         dot={false}
         strokeWidth={lineWidth}
       />

@@ -69,6 +69,7 @@ async def create_transaction(
     with Session(get_sqlalchemy_engine()) as db_session:
         transaction = (
             db_session.query(Transaction)
+            .filter(Transaction.user_id == current_user.id)
             .filter(Transaction.id == transaction_id)
             .first()
         )

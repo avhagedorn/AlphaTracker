@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-const protectedRoutes = ["/home", "/profile", "/settings", "/logout"];
+const protectedRoutes = [
+  "/home",
+  "/profile",
+  "/account",
+  "/logout",
+  "/strategies",
+  "/compare",
+];
 
 export default function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;

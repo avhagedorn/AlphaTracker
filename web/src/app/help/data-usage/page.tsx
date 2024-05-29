@@ -51,8 +51,8 @@ export default function DataUsage() {
         <p>
           If you have an account and would like to request a copy of your data,
           please submit a data copy request in the{" "}
-          <a href="/account/settings" className="text-blue-500">
-            Settings
+          <a href="/account" className="text-blue-500">
+            Account
           </a>{" "}
           page. We will send you a copy of your data within 30 days.
         </p>

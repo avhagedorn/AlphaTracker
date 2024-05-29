@@ -8,11 +8,12 @@ export default function CompareGraphWrapper({
   height,
   margin,
   ticks,
-  lineName,
   animationDuration,
   hideLegend,
   lineWidth,
   hideTooltip,
+  leftLineName,
+  rightLineName,
 }: CompareGraphProps) {
   const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
     ssr: false,
@@ -28,7 +29,8 @@ export default function CompareGraphWrapper({
       margin={margin}
       data={data}
       ticks={ticks}
-      lineName={lineName}
+      leftLineName={leftLineName}
+      rightLineName={rightLineName}
       hideLegend={hideLegend}
       animationDuration={animationDuration}
       lineWidth={lineWidth}

@@ -3,8 +3,13 @@ from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import status
+from sqlalchemy.orm import Session
 
+from alpha_tracker.db.engine import get_sqlalchemy_engine
+from alpha_tracker.db.models import Portfolio
 from alpha_tracker.db.models import User
+from alpha_tracker.modules.search.models import PortfolioResult
+from alpha_tracker.modules.search.models import SearchResponse
 from alpha_tracker.modules.search.models import SearchResult
 from alpha_tracker.utils.auth import get_current_user
 
@@ -16,7 +21,7 @@ Handle search related operations.
 
 
 @router.get("/stock")
-async def search(q: str = "", _: User = Depends(get_current_user)):
+async def search(q: str = "", current_user: User = Depends(get_current_user)):
     """
     Search for a stock.
     """
@@ -43,7 +48,14 @@ async def search(q: str = "", _: User = Depends(get_current_user)):
             detail="Failed to fetch data",
         )
 
-    quotes = [
+    with Session(get_sqlalchemy_engine()) as db_session:
+        portfolios = (
+            db_session.query(Portfolio)
+            .filter(Portfolio.user_id == current_user.id)
+            .filter(Portfolio.name.ilike(f"%{q}%"))
+        )
+
+    ticker_results = [
         (
             SearchResult(
                 ticker=quote["symbol"],
@@ -55,4 +67,15 @@ async def search(q: str = "", _: User = Depends(get_current_user)):
         for quote in response.json().get("quotes", [])
     ]
 
-    return [quote for quote in quotes if quote]
+    portfolio_results = [
+        PortfolioResult(
+            id=portfolio.id,
+            name=portfolio.name,
+        )
+        for portfolio in portfolios
+    ]
+
+    return SearchResponse(
+        ticker_results=[ticker for ticker in ticker_results if ticker],
+        portfolio_results=portfolio_results,
+    )

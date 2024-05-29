@@ -13,7 +13,7 @@ import { useState } from "react";
 import Statistics from "@/components/Statistics";
 import { Timeframe } from "@/types";
 import DateGraph from "@/components/DateGraph";
-import { toast } from "react-toastify";
+import PositionsTable from "@/components/PositionsTable";
 
 const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
   ssr: false,
@@ -115,6 +115,40 @@ export default function PortfolioDetail({
                     { title: `Alpha (${selectedTimeframe})`, value: "0.8" },
                     { title: `Beta (${selectedTimeframe})`, value: "1.2" },
                   ],
+                },
+              ]}
+            />
+          </div>
+          <div className="mt-8">
+            <h1 className="text-2xl font-bold">Positions</h1>
+            <PositionsTable
+              data={[
+                {
+                  ticker: "AAPL",
+                  equity: 1000,
+                  equityValueDollars: 1000,
+                  return: 0.1,
+                  returnValueDollars: 100,
+                  alpha: 0.05,
+                  alphaValueDollars: 50,
+                },
+                {
+                  ticker: "GOOGL",
+                  equity: 2000,
+                  equityValueDollars: 2000,
+                  return: 0.2,
+                  returnValueDollars: 400,
+                  alpha: 0.1,
+                  alphaValueDollars: 200,
+                },
+                {
+                  ticker: "MSFT",
+                  equity: 1500,
+                  equityValueDollars: 1500,
+                  return: 0.15,
+                  returnValueDollars: 225,
+                  alpha: 0.075,
+                  alphaValueDollars: 112.5,
                 },
               ]}
             />

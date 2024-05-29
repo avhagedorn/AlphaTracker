@@ -46,37 +46,40 @@ export default function Home() {
               />
             </div>
 
-            <PositionsTable
-              data={[
-                {
-                  ticker: "AAPL",
-                  equity: 1000,
-                  equityValueDollars: 1000,
-                  return: 0.1,
-                  returnValueDollars: 100,
-                  alpha: 0.05,
-                  alphaValueDollars: 50,
-                },
-                {
-                  ticker: "GOOGL",
-                  equity: 2000,
-                  equityValueDollars: 2000,
-                  return: 0.2,
-                  returnValueDollars: 400,
-                  alpha: 0.1,
-                  alphaValueDollars: 200,
-                },
-                {
-                  ticker: "MSFT",
-                  equity: 1500,
-                  equityValueDollars: 1500,
-                  return: 0.15,
-                  returnValueDollars: 225,
-                  alpha: 0.075,
-                  alphaValueDollars: 112.5,
-                },
-              ]}
-            />
+            <div className="mt-8">
+              <h2 className="text-4xl font-bold ml-4">Positions</h2>
+              <PositionsTable
+                data={[
+                  {
+                    ticker: "AAPL",
+                    equity: 1000,
+                    equityValueDollars: 1000,
+                    return: 0.1,
+                    returnValueDollars: 100,
+                    alpha: 0.05,
+                    alphaValueDollars: 50,
+                  },
+                  {
+                    ticker: "GOOGL",
+                    equity: 2000,
+                    equityValueDollars: 2000,
+                    return: 0.2,
+                    returnValueDollars: 400,
+                    alpha: 0.1,
+                    alphaValueDollars: 200,
+                  },
+                  {
+                    ticker: "MSFT",
+                    equity: 1500,
+                    equityValueDollars: 1500,
+                    return: 0.15,
+                    returnValueDollars: 225,
+                    alpha: 0.075,
+                    alphaValueDollars: 112.5,
+                  },
+                ]}
+              />
+            </div>
           </div>
 
           <div className="w-[500px] min-w-[500px] min-h-screen p-8 border-l-2 border-gray-300">

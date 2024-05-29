@@ -4,74 +4,74 @@ from dateutil.relativedelta import relativedelta
 
 
 class BarArgs:
-    def __init__(self, timespan: str, multiplier: int, from_: datetime, to: datetime):
-        self.timespan = timespan
+    def __init__(self, timeframe: str, multiplier: int, from_: datetime, to: datetime):
+        self.timeframe = timeframe
         self.multiplier = multiplier
         self.from_ = from_.strftime("%Y-%m-%d")
         self.to = to.strftime("%Y-%m-%d")
 
 
-def timespan_to_bar(timespan: str):
+def timeframe_to_bar(timeframe: str):
     """
-    Transform a timespan (1D, 1W, 1M, 3M, YTD, 1Y, ALL) into arguments for the Polygon Bar API.
+    Transform a timeframe (1D, 1W, 1M, 3M, YTD, 1Y, ALL) into arguments for the Polygon Bar API.
 
-    :param timespan: The timespan.
-    :return: A tuple of timespan and multiplier.
+    :param timeframe: The timeframe.
+    :return: A tuple of timeframe and multiplier.
     """
 
     to = get_last_business_day(datetime.now())
 
-    if timespan == "1D":
+    if timeframe == "1D":
         return BarArgs(
-            timespan="minute",
+            timeframe="minute",
             multiplier=5,
             from_=datetime(to.year, to.month, to.day),
             to=to,
         )
-    elif timespan == "1W":
+    elif timeframe == "1W":
         return BarArgs(
-            timespan="hour",
+            timeframe="hour",
             multiplier=1,
             from_=get_last_business_day(to - relativedelta(weeks=1)),
             to=to,
         )
-    elif timespan == "1M":
+    elif timeframe == "1M":
         return BarArgs(
-            timespan="day",
+            timeframe="day",
             multiplier=1,
             from_=get_last_business_day(to - relativedelta(months=1)),
             to=to,
         )
-    elif timespan == "3M":
+    elif timeframe == "3M":
         return BarArgs(
-            timespan="day",
+            timeframe="day",
             multiplier=1,
             from_=get_last_business_day(to - relativedelta(months=3)),
             to=to,
         )
-    elif timespan == "YTD":
+    elif timeframe == "YTD":
         return BarArgs(
-            timespan="day",
+            timeframe="day",
             multiplier=1,
             from_=get_last_business_day(datetime(to.year, 1, 1)),
             to=to,
         )
-    elif timespan == "1Y":
+    elif timeframe == "1Y":
         return BarArgs(
-            timespan="day",
+            timeframe="day",
             multiplier=1,
             from_=get_last_business_day(to - relativedelta(years=1)),
             to=to,
         )
-    elif timespan == "ALL":
+    elif timeframe == "ALL":
         return BarArgs(
-            timespan="day",
+            timeframe="day",
             multiplier=1,
             from_=get_last_business_day(datetime.fromtimestamp(0)),
             to=to,
         )
     else:
-        raise ValueError("Invalid timespan")
+        raise ValueError("Invalid timeframe")
 
 
 def get_last_business_day(date: datetime):
