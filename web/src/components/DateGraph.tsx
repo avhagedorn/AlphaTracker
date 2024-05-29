@@ -8,8 +8,8 @@ const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
 
 interface DateGraphProps {
   data: GraphData[];
-  width: number;
-  height: number;
+  width: number | string;
+  height: number | string;
   animationDuration: number;
   lineWidth: number;
   leftLineName?: string;

@@ -3,7 +3,15 @@
 import { getLineColor } from "@/lib/displayUtils";
 import { GraphData } from "@/types";
 import React from "react";
-import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 function getVisuallyAppealingRange(data: GraphData[], stepCount: number) {
   const low = Math.min(...data.map((d) => d.left), ...data.map((d) => d.right));
@@ -26,8 +34,8 @@ function getVisuallyAppealingRange(data: GraphData[], stepCount: number) {
 }
 
 export interface CompareGraphProps {
-  width: number;
-  height: number;
+  width: number | string;
+  height: number | string;
   margin?: {
     top: number;
     right: number;
@@ -71,46 +79,48 @@ export default function CompareGraph({
   }
 
   return (
-    <LineChart width={width} height={height} data={data} margin={margin}>
-      <XAxis
-        dataKey="date"
-        className="text-sm"
-        tick={!hideLegend}
-        axisLine={!hideLegend}
-        height={hideLegend ? 0 : undefined}
-      />
-      <YAxis
-        domain={domain}
-        allowDataOverflow={false}
-        className="text-sm"
-        tickCount={ticks}
-        tickFormatter={(value) => `$${value}`}
-        tick={!hideLegend}
-        axisLine={!hideLegend}
-        width={hideLegend ? 0 : undefined}
-      />
-      {!hideTooltip && <Tooltip />}
-      {!hideLegend && <Legend />}
-      <Line
-        type="monotone"
-        dataKey="left"
-        stroke={getLineColor(data)}
-        className="opacity-50"
-        animationDuration={animationDuration}
-        name={leftLineName}
-        dot={false}
-        strokeWidth={lineWidth}
-      />
-      <Line
-        type="monotone"
-        dataKey="right"
-        stroke="#4f46e5" // indigo-600
-        className="opacity-50"
-        animationDuration={animationDuration}
-        name={rightLineName}
-        dot={false}
-        strokeWidth={lineWidth}
-      />
-    </LineChart>
+    <ResponsiveContainer width={width} height={height}>
+      <LineChart data={data} margin={margin}>
+        <XAxis
+          dataKey="date"
+          className="text-sm"
+          tick={!hideLegend}
+          axisLine={!hideLegend}
+          height={hideLegend ? 0 : undefined}
+        />
+        <YAxis
+          domain={domain}
+          allowDataOverflow={false}
+          className="text-sm"
+          tickCount={ticks}
+          tickFormatter={(value) => `$${value}`}
+          tick={!hideLegend}
+          axisLine={!hideLegend}
+          width={hideLegend ? 0 : undefined}
+        />
+        {!hideTooltip && <Tooltip />}
+        {!hideLegend && <Legend />}
+        <Line
+          type="monotone"
+          dataKey="left"
+          stroke={getLineColor(data)}
+          className="opacity-50"
+          animationDuration={animationDuration}
+          name={leftLineName}
+          dot={false}
+          strokeWidth={lineWidth}
+        />
+        <Line
+          type="monotone"
+          dataKey="right"
+          stroke="#4f46e5" // indigo-600
+          className="opacity-50"
+          animationDuration={animationDuration}
+          name={rightLineName}
+          dot={false}
+          strokeWidth={lineWidth}
+        />
+      </LineChart>
+    </ResponsiveContainer>
   );
 }

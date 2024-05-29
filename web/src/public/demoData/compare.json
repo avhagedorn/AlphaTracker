@@ -1,0 +1,974 @@
+{
+  "points": [
+    {
+      "date": "4:00 AM",
+      "left": 100.0,
+      "right": 100.0,
+      "left_percent_change": 0.0,
+      "right_percent_change": 0.0
+    },
+    {
+      "date": "4:05 AM",
+      "left": 99.91,
+      "right": 99.91,
+      "left_percent_change": -0.09,
+      "right_percent_change": -0.09
+    },
+    {
+      "date": "4:10 AM",
+      "left": 99.83,
+      "right": 99.93,
+      "left_percent_change": -0.07,
+      "right_percent_change": -0.17
+    },
+    {
+      "date": "4:15 AM",
+      "left": 99.83,
+      "right": 99.92,
+      "left_percent_change": -0.08,
+      "right_percent_change": -0.17
+    },
+    {
+      "date": "4:20 AM",
+      "left": 99.62,
+      "right": 99.92,
+      "left_percent_change": -0.08,
+      "right_percent_change": -0.38
+    },
+    {
+      "date": "4:25 AM",
+      "left": 99.83,
+      "right": 99.95,
+      "left_percent_change": -0.05,
+      "right_percent_change": -0.17
+    },
+    {
+      "date": "4:30 AM",
+      "left": 99.86,
+      "right": 99.85,
+      "left_percent_change": -0.15,
+      "right_percent_change": -0.14
+    },
+    {
+      "date": "4:35 AM",
+      "left": 99.81,
+      "right": 99.81,
+      "left_percent_change": -0.19,
+      "right_percent_change": -0.19
+    },
+    {
+      "date": "4:40 AM",
+      "left": 99.76,
+      "right": 99.71,
+      "left_percent_change": -0.29,
+      "right_percent_change": -0.24
+    },
+    {
+      "date": "4:45 AM",
+      "left": 99.77,
+      "right": 99.58,
+      "left_percent_change": -0.42,
+      "right_percent_change": -0.23
+    },
+    {
+      "date": "4:50 AM",
+      "left": 99.81,
+      "right": 99.69,
+      "left_percent_change": -0.31,
+      "right_percent_change": -0.19
+    },
+    {
+      "date": "4:55 AM",
+      "left": 99.81,
+      "right": 99.74,
+      "left_percent_change": -0.26,
+      "right_percent_change": -0.19
+    },
+    {
+      "date": "5:00 AM",
+      "left": 99.84,
+      "right": 99.76,
+      "left_percent_change": -0.24,
+      "right_percent_change": -0.16
+    },
+    {
+      "date": "5:05 AM",
+      "left": 99.8,
+      "right": 99.79,
+      "left_percent_change": -0.21,
+      "right_percent_change": -0.2
+    },
+    {
+      "date": "5:10 AM",
+      "left": 99.8,
+      "right": 99.73,
+      "left_percent_change": -0.27,
+      "right_percent_change": -0.2
+    },
+    {
+      "date": "5:20 AM",
+      "left": 99.8,
+      "right": 99.72,
+      "left_percent_change": -0.28,
+      "right_percent_change": -0.2
+    },
+    {
+      "date": "5:25 AM",
+      "left": 99.81,
+      "right": 99.71,
+      "left_percent_change": -0.29,
+      "right_percent_change": -0.19
+    },
+    {
+      "date": "5:30 AM",
+      "left": 99.8,
+      "right": 99.71,
+      "left_percent_change": -0.29,
+      "right_percent_change": -0.2
+    },
+    {
+      "date": "5:35 AM",
+      "left": 99.8,
+      "right": 99.75,
+      "left_percent_change": -0.25,
+      "right_percent_change": -0.2
+    },
+    {
+      "date": "5:40 AM",
+      "left": 99.84,
+      "right": 99.74,
+      "left_percent_change": -0.26,
+      "right_percent_change": -0.16
+    },
+    {
+      "date": "5:45 AM",
+      "left": 99.83,
+      "right": 99.76,
+      "left_percent_change": -0.24,
+      "right_percent_change": -0.17
+    },
+    {
+      "date": "5:50 AM",
+      "left": 99.83,
+      "right": 99.76,
+      "left_percent_change": -0.24,
+      "right_percent_change": -0.17
+    },
+    {
+      "date": "5:55 AM",
+      "left": 99.81,
+      "right": 99.82,
+      "left_percent_change": -0.18,
+      "right_percent_change": -0.19
+    },
+    {
+      "date": "6:00 AM",
+      "left": 99.84,
+      "right": 99.83,
+      "left_percent_change": -0.17,
+      "right_percent_change": -0.16
+    },
+    {
+      "date": "6:05 AM",
+      "left": 99.77,
+      "right": 99.82,
+      "left_percent_change": -0.18,
+      "right_percent_change": -0.23
+    },
+    {
+      "date": "6:20 AM",
+      "left": 99.81,
+      "right": 100.02,
+      "left_percent_change": 0.02,
+      "right_percent_change": -0.19
+    },
+    {
+      "date": "6:25 AM",
+      "left": 99.79,
+      "right": 100.0,
+      "left_percent_change": 0.0,
+      "right_percent_change": -0.21
+    },
+    {
+      "date": "6:30 AM",
+      "left": 99.81,
+      "right": 99.98,
+      "left_percent_change": -0.02,
+      "right_percent_change": -0.19
+    },
+    {
+      "date": "6:35 AM",
+      "left": 99.82,
+      "right": 99.91,
+      "left_percent_change": -0.09,
+      "right_percent_change": -0.18
+    },
+    {
+      "date": "6:40 AM",
+      "left": 99.79,
+      "right": 99.89,
+      "left_percent_change": -0.11,
+      "right_percent_change": -0.21
+    },
+    {
+      "date": "6:45 AM",
+      "left": 99.8,
+      "right": 99.94,
+      "left_percent_change": -0.06,
+      "right_percent_change": -0.2
+    },
+    {
+      "date": "6:50 AM",
+      "left": 99.78,
+      "right": 99.89,
+      "left_percent_change": -0.11,
+      "right_percent_change": -0.22
+    },
+    {
+      "date": "6:55 AM",
+      "left": 99.83,
+      "right": 99.97,
+      "left_percent_change": -0.03,
+      "right_percent_change": -0.17
+    },
+    {
+      "date": "7:00 AM",
+      "left": 99.86,
+      "right": 99.91,
+      "left_percent_change": -0.09,
+      "right_percent_change": -0.14
+    },
+    {
+      "date": "7:05 AM",
+      "left": 99.84,
+      "right": 99.97,
+      "left_percent_change": -0.03,
+      "right_percent_change": -0.16
+    },
+    {
+      "date": "7:10 AM",
+      "left": 99.86,
+      "right": 99.82,
+      "left_percent_change": -0.18,
+      "right_percent_change": -0.14
+    },
+    {
+      "date": "7:15 AM",
+      "left": 99.67,
+      "right": 99.83,
+      "left_percent_change": -0.17,
+      "right_percent_change": -0.33
+    },
+    {
+      "date": "7:20 AM",
+      "left": 99.62,
+      "right": 99.86,
+      "left_percent_change": -0.14,
+      "right_percent_change": -0.38
+    },
+    {
+      "date": "7:25 AM",
+      "left": 99.68,
+      "right": 99.88,
+      "left_percent_change": -0.12,
+      "right_percent_change": -0.32
+    },
+    {
+      "date": "7:30 AM",
+      "left": 99.75,
+      "right": 99.88,
+      "left_percent_change": -0.12,
+      "right_percent_change": -0.25
+    },
+    {
+      "date": "7:35 AM",
+      "left": 99.76,
+      "right": 99.98,
+      "left_percent_change": -0.02,
+      "right_percent_change": -0.24
+    },
+    {
+      "date": "7:40 AM",
+      "left": 99.8,
+      "right": 99.98,
+      "left_percent_change": -0.02,
+      "right_percent_change": -0.2
+    },
+    {
+      "date": "7:50 AM",
+      "left": 99.77,
+      "right": 99.98,
+      "left_percent_change": -0.02,
+      "right_percent_change": -0.23
+    },
+    {
+      "date": "7:55 AM",
+      "left": 99.74,
+      "right": 100.03,
+      "left_percent_change": 0.03,
+      "right_percent_change": -0.26
+    },
+    {
+      "date": "8:00 AM",
+      "left": 99.66,
+      "right": 100.28,
+      "left_percent_change": 0.28,
+      "right_percent_change": -0.34
+    },
+    {
+      "date": "8:05 AM",
+      "left": 99.73,
+      "right": 100.29,
+      "left_percent_change": 0.29,
+      "right_percent_change": -0.27
+    },
+    {
+      "date": "8:10 AM",
+      "left": 99.75,
+      "right": 100.41,
+      "left_percent_change": 0.41,
+      "right_percent_change": -0.25
+    },
+    {
+      "date": "8:15 AM",
+      "left": 99.75,
+      "right": 100.38,
+      "left_percent_change": 0.38,
+      "right_percent_change": -0.25
+    },
+    {
+      "date": "8:20 AM",
+      "left": 99.66,
+      "right": 100.33,
+      "left_percent_change": 0.33,
+      "right_percent_change": -0.34
+    },
+    {
+      "date": "8:25 AM",
+      "left": 99.71,
+      "right": 100.23,
+      "left_percent_change": 0.23,
+      "right_percent_change": -0.29
+    },
+    {
+      "date": "8:30 AM",
+      "left": 99.71,
+      "right": 100.13,
+      "left_percent_change": 0.13,
+      "right_percent_change": -0.29
+    },
+    {
+      "date": "8:35 AM",
+      "left": 99.65,
+      "right": 100.02,
+      "left_percent_change": 0.02,
+      "right_percent_change": -0.35
+    },
+    {
+      "date": "8:40 AM",
+      "left": 99.64,
+      "right": 100.09,
+      "left_percent_change": 0.09,
+      "right_percent_change": -0.36
+    },
+    {
+      "date": "8:45 AM",
+      "left": 99.68,
+      "right": 100.08,
+      "left_percent_change": 0.08,
+      "right_percent_change": -0.32
+    },
+    {
+      "date": "8:50 AM",
+      "left": 99.66,
+      "right": 100.17,
+      "left_percent_change": 0.17,
+      "right_percent_change": -0.34
+    },
+    {
+      "date": "8:55 AM",
+      "left": 99.66,
+      "right": 100.22,
+      "left_percent_change": 0.22,
+      "right_percent_change": -0.34
+    },
+    {
+      "date": "9:00 AM",
+      "left": 99.57,
+      "right": 100.14,
+      "left_percent_change": 0.14,
+      "right_percent_change": -0.43
+    },
+    {
+      "date": "9:05 AM",
+      "left": 99.59,
+      "right": 100.13,
+      "left_percent_change": 0.13,
+      "right_percent_change": -0.41
+    },
+    {
+      "date": "9:10 AM",
+      "left": 99.66,
+      "right": 100.06,
+      "left_percent_change": 0.06,
+      "right_percent_change": -0.34
+    },
+    {
+      "date": "9:15 AM",
+      "left": 99.61,
+      "right": 99.97,
+      "left_percent_change": -0.03,
+      "right_percent_change": -0.39
+    },
+    {
+      "date": "9:20 AM",
+      "left": 99.61,
+      "right": 100.0,
+      "left_percent_change": 0.0,
+      "right_percent_change": -0.39
+    },
+    {
+      "date": "9:25 AM",
+      "left": 99.7,
+      "right": 99.9,
+      "left_percent_change": -0.1,
+      "right_percent_change": -0.3
+    },
+    {
+      "date": "9:30 AM",
+      "left": 100.08,
+      "right": 100.38,
+      "left_percent_change": 0.38,
+      "right_percent_change": 0.08
+    },
+    {
+      "date": "9:35 AM",
+      "left": 99.62,
+      "right": 100.65,
+      "left_percent_change": 0.65,
+      "right_percent_change": -0.38
+    },
+    {
+      "date": "9:40 AM",
+      "left": 99.68,
+      "right": 100.63,
+      "left_percent_change": 0.63,
+      "right_percent_change": -0.32
+    },
+    {
+      "date": "9:45 AM",
+      "left": 99.88,
+      "right": 100.9,
+      "left_percent_change": 0.9,
+      "right_percent_change": -0.12
+    },
+    {
+      "date": "9:50 AM",
+      "left": 100.21,
+      "right": 101.16,
+      "left_percent_change": 1.16,
+      "right_percent_change": 0.21
+    },
+    {
+      "date": "9:55 AM",
+      "left": 100.05,
+      "right": 101.01,
+      "left_percent_change": 1.01,
+      "right_percent_change": 0.05
+    },
+    {
+      "date": "10:00 AM",
+      "left": 99.86,
+      "right": 100.96,
+      "left_percent_change": 0.96,
+      "right_percent_change": -0.14
+    },
+    {
+      "date": "10:05 AM",
+      "left": 99.91,
+      "right": 101.0,
+      "left_percent_change": 1.0,
+      "right_percent_change": -0.09
+    },
+    {
+      "date": "10:10 AM",
+      "left": 100.21,
+      "right": 101.14,
+      "left_percent_change": 1.14,
+      "right_percent_change": 0.21
+    },
+    {
+      "date": "10:15 AM",
+      "left": 100.26,
+      "right": 101.0,
+      "left_percent_change": 1.0,
+      "right_percent_change": 0.26
+    },
+    {
+      "date": "10:20 AM",
+      "left": 100.43,
+      "right": 100.97,
+      "left_percent_change": 0.97,
+      "right_percent_change": 0.43
+    },
+    {
+      "date": "10:25 AM",
+      "left": 100.25,
+      "right": 101.04,
+      "left_percent_change": 1.04,
+      "right_percent_change": 0.25
+    },
+    {
+      "date": "10:30 AM",
+      "left": 100.25,
+      "right": 101.09,
+      "left_percent_change": 1.09,
+      "right_percent_change": 0.25
+    },
+    {
+      "date": "10:35 AM",
+      "left": 100.17,
+      "right": 101.19,
+      "left_percent_change": 1.19,
+      "right_percent_change": 0.17
+    },
+    {
+      "date": "10:40 AM",
+      "left": 100.2,
+      "right": 101.1,
+      "left_percent_change": 1.1,
+      "right_percent_change": 0.2
+    },
+    {
+      "date": "10:45 AM",
+      "left": 100.14,
+      "right": 101.18,
+      "left_percent_change": 1.18,
+      "right_percent_change": 0.14
+    },
+    {
+      "date": "10:50 AM",
+      "left": 100.21,
+      "right": 101.1,
+      "left_percent_change": 1.1,
+      "right_percent_change": 0.21
+    },
+    {
+      "date": "10:55 AM",
+      "left": 100.26,
+      "right": 101.21,
+      "left_percent_change": 1.21,
+      "right_percent_change": 0.26
+    },
+    {
+      "date": "11:00 AM",
+      "left": 100.34,
+      "right": 101.12,
+      "left_percent_change": 1.12,
+      "right_percent_change": 0.34
+    },
+    {
+      "date": "11:05 AM",
+      "left": 100.15,
+      "right": 100.89,
+      "left_percent_change": 0.89,
+      "right_percent_change": 0.15
+    },
+    {
+      "date": "11:10 AM",
+      "left": 100.16,
+      "right": 100.8,
+      "left_percent_change": 0.8,
+      "right_percent_change": 0.16
+    },
+    {
+      "date": "11:15 AM",
+      "left": 100.16,
+      "right": 100.72,
+      "left_percent_change": 0.72,
+      "right_percent_change": 0.16
+    },
+    {
+      "date": "11:20 AM",
+      "left": 100.18,
+      "right": 100.74,
+      "left_percent_change": 0.74,
+      "right_percent_change": 0.18
+    },
+    {
+      "date": "11:25 AM",
+      "left": 100.22,
+      "right": 100.84,
+      "left_percent_change": 0.84,
+      "right_percent_change": 0.22
+    },
+    {
+      "date": "11:30 AM",
+      "left": 100.15,
+      "right": 100.8,
+      "left_percent_change": 0.8,
+      "right_percent_change": 0.15
+    },
+    {
+      "date": "11:35 AM",
+      "left": 100.11,
+      "right": 100.74,
+      "left_percent_change": 0.74,
+      "right_percent_change": 0.11
+    },
+    {
+      "date": "11:40 AM",
+      "left": 100.12,
+      "right": 100.69,
+      "left_percent_change": 0.69,
+      "right_percent_change": 0.12
+    },
+    {
+      "date": "11:45 AM",
+      "left": 99.99,
+      "right": 100.67,
+      "left_percent_change": 0.67,
+      "right_percent_change": -0.01
+    },
+    {
+      "date": "11:50 AM",
+      "left": 100.04,
+      "right": 100.84,
+      "left_percent_change": 0.84,
+      "right_percent_change": 0.04
+    },
+    {
+      "date": "11:55 AM",
+      "left": 100.12,
+      "right": 100.83,
+      "left_percent_change": 0.83,
+      "right_percent_change": 0.12
+    },
+    {
+      "date": "12:00 PM",
+      "left": 100.1,
+      "right": 100.76,
+      "left_percent_change": 0.76,
+      "right_percent_change": 0.1
+    },
+    {
+      "date": "12:05 PM",
+      "left": 100.16,
+      "right": 100.84,
+      "left_percent_change": 0.84,
+      "right_percent_change": 0.16
+    },
+    {
+      "date": "12:10 PM",
+      "left": 100.1,
+      "right": 100.82,
+      "left_percent_change": 0.82,
+      "right_percent_change": 0.1
+    },
+    {
+      "date": "12:15 PM",
+      "left": 100.21,
+      "right": 100.93,
+      "left_percent_change": 0.93,
+      "right_percent_change": 0.21
+    },
+    {
+      "date": "12:20 PM",
+      "left": 100.2,
+      "right": 100.98,
+      "left_percent_change": 0.98,
+      "right_percent_change": 0.2
+    },
+    {
+      "date": "12:25 PM",
+      "left": 100.25,
+      "right": 100.99,
+      "left_percent_change": 0.99,
+      "right_percent_change": 0.25
+    },
+    {
+      "date": "12:30 PM",
+      "left": 100.31,
+      "right": 100.91,
+      "left_percent_change": 0.91,
+      "right_percent_change": 0.31
+    },
+    {
+      "date": "12:35 PM",
+      "left": 100.43,
+      "right": 100.93,
+      "left_percent_change": 0.93,
+      "right_percent_change": 0.43
+    },
+    {
+      "date": "12:40 PM",
+      "left": 100.36,
+      "right": 100.95,
+      "left_percent_change": 0.95,
+      "right_percent_change": 0.36
+    },
+    {
+      "date": "12:45 PM",
+      "left": 100.4,
+      "right": 101.01,
+      "left_percent_change": 1.01,
+      "right_percent_change": 0.4
+    },
+    {
+      "date": "12:50 PM",
+      "left": 100.44,
+      "right": 101.12,
+      "left_percent_change": 1.12,
+      "right_percent_change": 0.44
+    },
+    {
+      "date": "12:55 PM",
+      "left": 100.43,
+      "right": 101.06,
+      "left_percent_change": 1.06,
+      "right_percent_change": 0.43
+    },
+    {
+      "date": "1:00 PM",
+      "left": 100.41,
+      "right": 100.99,
+      "left_percent_change": 0.99,
+      "right_percent_change": 0.41
+    },
+    {
+      "date": "1:05 PM",
+      "left": 100.38,
+      "right": 101.0,
+      "left_percent_change": 1.0,
+      "right_percent_change": 0.38
+    },
+    {
+      "date": "1:10 PM",
+      "left": 100.21,
+      "right": 100.9,
+      "left_percent_change": 0.9,
+      "right_percent_change": 0.21
+    },
+    {
+      "date": "1:15 PM",
+      "left": 100.31,
+      "right": 100.95,
+      "left_percent_change": 0.95,
+      "right_percent_change": 0.31
+    },
+    {
+      "date": "1:20 PM",
+      "left": 100.3,
+      "right": 100.95,
+      "left_percent_change": 0.95,
+      "right_percent_change": 0.3
+    },
+    {
+      "date": "1:25 PM",
+      "left": 100.38,
+      "right": 101.01,
+      "left_percent_change": 1.01,
+      "right_percent_change": 0.38
+    },
+    {
+      "date": "1:30 PM",
+      "left": 100.32,
+      "right": 100.9,
+      "left_percent_change": 0.9,
+      "right_percent_change": 0.32
+    },
+    {
+      "date": "1:35 PM",
+      "left": 100.3,
+      "right": 100.88,
+      "left_percent_change": 0.88,
+      "right_percent_change": 0.3
+    },
+    {
+      "date": "1:40 PM",
+      "left": 100.28,
+      "right": 100.85,
+      "left_percent_change": 0.85,
+      "right_percent_change": 0.28
+    },
+    {
+      "date": "1:45 PM",
+      "left": 100.22,
+      "right": 100.98,
+      "left_percent_change": 0.98,
+      "right_percent_change": 0.22
+    },
+    {
+      "date": "1:50 PM",
+      "left": 100.35,
+      "right": 101.06,
+      "left_percent_change": 1.06,
+      "right_percent_change": 0.35
+    },
+    {
+      "date": "1:55 PM",
+      "left": 100.37,
+      "right": 101.0,
+      "left_percent_change": 1.0,
+      "right_percent_change": 0.37
+    },
+    {
+      "date": "2:00 PM",
+      "left": 100.41,
+      "right": 100.94,
+      "left_percent_change": 0.94,
+      "right_percent_change": 0.41
+    },
+    {
+      "date": "2:05 PM",
+      "left": 100.36,
+      "right": 100.93,
+      "left_percent_change": 0.93,
+      "right_percent_change": 0.36
+    },
+    {
+      "date": "2:10 PM",
+      "left": 100.35,
+      "right": 100.87,
+      "left_percent_change": 0.87,
+      "right_percent_change": 0.35
+    },
+    {
+      "date": "2:15 PM",
+      "left": 100.34,
+      "right": 100.81,
+      "left_percent_change": 0.81,
+      "right_percent_change": 0.34
+    },
+    {
+      "date": "2:20 PM",
+      "left": 100.34,
+      "right": 100.85,
+      "left_percent_change": 0.85,
+      "right_percent_change": 0.34
+    },
+    {
+      "date": "2:25 PM",
+      "left": 100.3,
+      "right": 100.88,
+      "left_percent_change": 0.88,
+      "right_percent_change": 0.3
+    },
+    {
+      "date": "2:30 PM",
+      "left": 100.18,
+      "right": 100.77,
+      "left_percent_change": 0.77,
+      "right_percent_change": 0.18
+    },
+    {
+      "date": "2:35 PM",
+      "left": 100.08,
+      "right": 100.72,
+      "left_percent_change": 0.72,
+      "right_percent_change": 0.08
+    },
+    {
+      "date": "2:40 PM",
+      "left": 100.12,
+      "right": 100.74,
+      "left_percent_change": 0.74,
+      "right_percent_change": 0.12
+    },
+    {
+      "date": "2:45 PM",
+      "left": 100.03,
+      "right": 100.71,
+      "left_percent_change": 0.71,
+      "right_percent_change": 0.03
+    },
+    {
+      "date": "2:50 PM",
+      "left": 100.02,
+      "right": 100.7,
+      "left_percent_change": 0.7,
+      "right_percent_change": 0.02
+    },
+    {
+      "date": "2:55 PM",
+      "left": 100.01,
+      "right": 100.71,
+      "left_percent_change": 0.71,
+      "right_percent_change": 0.01
+    },
+    {
+      "date": "3:00 PM",
+      "left": 100.01,
+      "right": 100.64,
+      "left_percent_change": 0.64,
+      "right_percent_change": 0.01
+    },
+    {
+      "date": "3:05 PM",
+      "left": 100.05,
+      "right": 100.54,
+      "left_percent_change": 0.54,
+      "right_percent_change": 0.05
+    },
+    {
+      "date": "3:10 PM",
+      "left": 100.09,
+      "right": 100.63,
+      "left_percent_change": 0.63,
+      "right_percent_change": 0.09
+    },
+    {
+      "date": "3:15 PM",
+      "left": 100.09,
+      "right": 100.55,
+      "left_percent_change": 0.55,
+      "right_percent_change": 0.09
+    },
+    {
+      "date": "3:20 PM",
+      "left": 100.24,
+      "right": 100.62,
+      "left_percent_change": 0.62,
+      "right_percent_change": 0.24
+    },
+    {
+      "date": "3:25 PM",
+      "left": 100.25,
+      "right": 100.66,
+      "left_percent_change": 0.66,
+      "right_percent_change": 0.25
+    },
+    {
+      "date": "3:30 PM",
+      "left": 100.29,
+      "right": 100.65,
+      "left_percent_change": 0.65,
+      "right_percent_change": 0.29
+    },
+    {
+      "date": "3:35 PM",
+      "left": 100.26,
+      "right": 100.65,
+      "left_percent_change": 0.65,
+      "right_percent_change": 0.26
+    },
+    {
+      "date": "3:40 PM",
+      "left": 100.23,
+      "right": 100.61,
+      "left_percent_change": 0.61,
+      "right_percent_change": 0.23
+    }
+  ],
+  "left_ticker": "GOOG",
+  "right_ticker": "AAPL",
+  "left_portfolio_name": null,
+  "right_portfolio_name": null,
+  "timeframe": "1D",
+  "last_left": 100.23,
+  "last_right": 100.61,
+  "total_return_left": 0.23,
+  "total_return_percent_left": 0.23,
+  "total_return_right": 0.61,
+  "total_return_percent_right": 0.61
+}

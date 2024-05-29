@@ -156,7 +156,7 @@ export default function StrategyList({
             className="mt-4"
             hidePriceChange={hideHeader}
             height={chartHeight}
-            width={chartWidth}
+            width={"100%"}
             includeDescription={includeDescriptions}
           />
         ))}

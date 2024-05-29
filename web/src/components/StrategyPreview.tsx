@@ -1,6 +1,6 @@
 import { Portfolio } from "@/types";
 import React, { memo } from "react";
-import demoData from "../public/demo-data.json";
+import demoData from "../public/demoData/dummyGraph.json";
 import PriceChange from "./PriceChange";
 import CompareGraphWrapper from "./CompareGraphWrapper";
 
@@ -8,8 +8,8 @@ interface StrategyPreviewProps {
   portfolio: Portfolio;
   className?: string;
   hidePriceChange?: boolean;
-  height: number;
-  width: number;
+  height: number | string;
+  width: number | string;
   includeDescription?: boolean;
 }
 

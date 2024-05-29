@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import demoData from "../../../public/demo-data.json";
+import demoData from "../../../public/demoData/dummyGraph.json";
 import ContentWrapper from "@/components/ContentWrapper";
 import PriceChange from "@/components/PriceChange";
 import DateGraph from "@/components/DateGraph";
@@ -19,7 +19,6 @@ import StockPriceChart from "@/components/StockPriceChart";
 import TruncatedText from "@/components/TruncatedText";
 import { FiExternalLink } from "react-icons/fi";
 import { LuArrowRightLeft } from "react-icons/lu";
-import { FaArrowRightArrowLeft } from "react-icons/fa6";
 
 export default function Stock({
   params,
@@ -103,7 +102,7 @@ export default function Stock({
             valueChange={data?.total_return - data?.total_return_spy || 0}
             subText="Alpha"
           />
-          <div className="w-[1000px] mt-4">
+          <div className="mt-4">
             {status === "loading" && (
               <div className="shimmer h-[300px] w-full" />
             )}
@@ -114,7 +113,7 @@ export default function Stock({
             )}
             {status === "success" && (
               <DateGraph
-                width={1000}
+                width={"100%"}
                 height={300}
                 data={data?.points || demoData}
                 lineWidth={3}

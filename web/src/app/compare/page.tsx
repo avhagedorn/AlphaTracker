@@ -141,10 +141,10 @@ export default function Compare() {
               textColor="#6366f1"
             />
           </div>
-          <p>{getStatusText()}</p>
+          <p className="text-xl">{getStatusText()}</p>
           <div className="mt-4">
             <DateGraph
-              width={1000}
+              width={"100%"}
               height={300}
               data={data?.points || []}
               selectedTimeframe={selectedTimeframe}

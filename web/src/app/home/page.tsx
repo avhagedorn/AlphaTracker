@@ -3,7 +3,7 @@
 import PositionsTable from "@/components/PositionsTable";
 import PriceChange from "@/components/PriceChange";
 import { useEffect, useState } from "react";
-import demoData from "../../public/demo-data.json";
+import demoData from "../../public/demoData/dummyGraph.json";
 import DateGraph from "@/components/DateGraph";
 import { Timeframe } from "@/types";
 import StrategyList from "@/components/StrategyList";
@@ -37,7 +37,7 @@ export default function Home() {
             <div className="flex mt-8">
               <DateGraph
                 data={data}
-                width={1400}
+                width={"100%"}
                 height={300}
                 animationDuration={500}
                 lineWidth={3}

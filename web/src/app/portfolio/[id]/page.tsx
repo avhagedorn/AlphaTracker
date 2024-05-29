@@ -2,9 +2,8 @@
 
 import ContentWrapper from "@/components/ContentWrapper";
 import { fetchSS } from "@/lib/fetch";
-import dynamic from "next/dynamic";
 import { useQuery, useQueryClient } from "react-query";
-import demoData from "../../../public/demo-data.json";
+import demoData from "../../../public/demoData/dummyGraph.json";
 import PriceChange from "@/components/PriceChange";
 import { FiEdit2 } from "react-icons/fi";
 import TransactionsTable from "@/components/TransactionsTable";
@@ -14,11 +13,6 @@ import Statistics from "@/components/Statistics";
 import { Timeframe } from "@/types";
 import DateGraph from "@/components/DateGraph";
 import PositionsTable from "@/components/PositionsTable";
-
-const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
-  ssr: false,
-  loading: () => <div className="h-full w-full shimmer"></div>,
-});
 
 export default function PortfolioDetail({
   params,
