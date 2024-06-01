@@ -3,11 +3,11 @@ import "@/style/loading.css";
 import StockSearch from "./StockSearch";
 
 interface NavbarProps {
-  userIsAuthenticated: boolean;
+  hideFooter: boolean;
 }
 
-export default function Navbar({ userIsAuthenticated }: NavbarProps) {
-  if (!userIsAuthenticated) {
+export default function Navbar({ hideFooter }: NavbarProps) {
+  if (!hideFooter) {
     return (
       <div className="px-8 top-0 w-full">
         <div className="flex justify-between items-center space-x-4 font-bold">

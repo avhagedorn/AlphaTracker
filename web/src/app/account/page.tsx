@@ -16,7 +16,7 @@ export default function Account() {
   const [dataRequestIsSubmitting, setDataRequestIsSubmitting] = useState(false);
 
   return (
-    <ContentWrapper userIsAuthenticated>
+    <ContentWrapper hideFooter>
       <div className="w-1/3 mx-auto">
         <h1 className="text-4xl font-bold">Account</h1>
         <div className="flex flex-col space-y-4 mt-8">

@@ -29,7 +29,7 @@ export default function Home() {
     router.push("/home");
   } else {
     return (
-      <ContentWrapper>
+      <ContentWrapper className="bg-gradient-to-r from-white to-emerald-50">
         <div className="flex min-h-screen flex-col items-center p-24">
           <header className="flex flex-col items-center">
             <h1 className="text-6xl font-bold">AlphaTracker</h1>
@@ -54,7 +54,7 @@ export default function Home() {
                 create custom benchmarks. Start generating alpha!
               </p>
             </div>
-            <div className="transform skew-y-2 w-1/2 bg-emerald-50 p-4 rounded-xl shadow-lg">
+            <div className="transform skew-y-2 w-1/2 bg-white p-4 rounded-xl shadow-lg">
               <h1 className="text-4xl font-bold">$3,500</h1>
               <PriceChange
                 percentChange={0.1}
@@ -111,7 +111,7 @@ export default function Home() {
 
           {/* Stock Graph */}
           <div className="flex flex-row justify-center items-center w-full space-x-16 mt-32">
-            <div className="transform -skew-y-2 w-1/2 bg-teal-50 p-4 rounded-xl shadow-lg">
+            <div className="transform -skew-y-2 w-1/2 bg-white p-4 rounded-xl shadow-lg">
               <div className="flex justify-between items-start">
                 <div>
                   <h1 className="text-3xl font-bold mb-4">
@@ -359,7 +359,7 @@ export default function Home() {
                 charts.
               </p>
             </div>
-            <div className="transform skew-y-2 w-1/3 bg-teal-50 p-4 rounded-xl shadow-lg">
+            <div className="transform skew-y-2 w-1/3 bg-white p-4 rounded-xl shadow-lg">
               <div className="h-10 flex flex-row items-end">
                 <CompareSearch
                   symbol={demoCompareData.left_ticker}

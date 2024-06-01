@@ -8,7 +8,7 @@ export default function Account() {
   const width = Math.floor(window.innerWidth / 3);
 
   return (
-    <ContentWrapper userIsAuthenticated>
+    <ContentWrapper hideFooter>
       <div className="w-1/3 mx-auto">
         <h1 className="text-4xl font-bold mb-4">Strategies</h1>
         <p className="mb-4 text-gray-700">

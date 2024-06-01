@@ -34,3 +34,13 @@ class DisplayUser(BaseModel):
             created_at=str(user.created_at),
             is_admin=user.is_admin,
         )
+
+
+class ForgotPasswordRequest(BaseModel):
+    email_or_username: str
+
+
+class ResetPasswordUserRequest(BaseModel):
+    password: str
+    confirm_password: str
+    reset_password_request_id: str

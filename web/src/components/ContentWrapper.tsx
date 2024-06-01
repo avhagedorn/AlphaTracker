@@ -5,18 +5,22 @@ import { Bounce, ToastContainer } from "react-toastify";
 
 interface ContentWrapperProps {
   children: React.ReactNode;
-  userIsAuthenticated?: boolean;
+  hideFooter?: boolean;
+  className?: string;
+  hideNavbar?: boolean;
 }
 
 export default function ContentWrapper({
   children,
-  userIsAuthenticated = false,
+  hideFooter = false,
+  className = "bg-white",
+  hideNavbar = false,
 }: ContentWrapperProps) {
   return (
-    <main>
+    <main className={className}>
       <div className="min-h-screen">
-        <Navbar userIsAuthenticated={userIsAuthenticated} />
-        <div className="p-8">{children}</div>
+        {!hideNavbar && <Navbar hideFooter={hideFooter} />}
+        <div className={hideNavbar ? "" : "pt-8"}>{children}</div>
         <ToastContainer
           position="bottom-left"
           autoClose={2000}
@@ -31,7 +35,7 @@ export default function ContentWrapper({
           transition={Bounce}
         />
       </div>
-      {!userIsAuthenticated && (
+      {!hideFooter && (
         <footer className="bg-gray-100 py-8">
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap justify-between">

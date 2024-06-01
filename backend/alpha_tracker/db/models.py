@@ -27,6 +27,9 @@ class User(Base):
         DateTime, default=func.now(), nullable=False
     )
 
+    reset_password_requests = relationship(
+        "ResetPasswordRequest", back_populates="user", cascade="all, delete-orphan"
+    )
     portfolios = relationship(
         "Portfolio", back_populates="user", cascade="all, delete-orphan"
     )
@@ -87,3 +90,23 @@ class UserPreferences(Base):
     )
 
     user = relationship("User", back_populates="preferences")
+
+
+"""
+User State Tables
+"""
+
+
+class ResetPasswordRequest(Base):
+    __tablename__ = "reset_password_request"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    uuid_token: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"), nullable=False)
+    expires_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime, nullable=False, default=func.now() + datetime.timedelta(hours=1)
+    )
+
+    user = relationship("User", back_populates="reset_password_requests")
+
+    def is_expired(self) -> bool:
+        return self.expires_at < datetime.datetime.now()

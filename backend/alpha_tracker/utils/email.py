@@ -6,6 +6,7 @@ from typing import List
 
 from alpha_tracker.configs import SUPPORT_EMAIL
 from alpha_tracker.configs import SUPPORT_EMAIL_APP_PASSWORD
+from alpha_tracker.configs import WEB_URL
 
 
 def _send_email(email_to: str, msg: MIMEMultipart):
@@ -58,10 +59,13 @@ def send_data_request_email(email_to: str, attachment: bytes):
     _send_email(email_to, msg)
 
 
-def reset_password_email(email_to: str, reset_password_link: str):
+def send_reset_password_email(email_to: str, request_uuid: str):
+    reset_password_link = f"{WEB_URL}/auth/reset-password/{request_uuid}"
+
     subject = "Reset Your AlphaTracker Password"
     body = (
-        "Please click the link below to reset your password:"
+        "Please click the link below to reset your password. This request will expire in one hour."
+        "\nIf you did not request a password reset, please ignore this email."
         f"\n\n{reset_password_link}\n\nBest,\nAlphaTracker Team"
     )
     msg = _create_email_message(email_to, subject, body)

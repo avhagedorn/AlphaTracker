@@ -51,7 +51,7 @@ export default function Stock({
   );
 
   return (
-    <ContentWrapper userIsAuthenticated>
+    <ContentWrapper hideFooter>
       <div className="flex flex-col items-center">
         <div className="w-1/2">
           <div className="flex justify-between items-start">

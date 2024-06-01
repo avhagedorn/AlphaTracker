@@ -18,7 +18,7 @@ export default function Home() {
   }, [timeframe]);
 
   return (
-    <ContentWrapper userIsAuthenticated>
+    <ContentWrapper hideFooter>
       <div className="flex min-h-screen flex-col items-center">
         <div className="flex w-screen">
           <div className="flex-1 p-8">

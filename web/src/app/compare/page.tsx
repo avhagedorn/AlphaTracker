@@ -121,7 +121,7 @@ export default function Compare() {
   };
 
   return (
-    <ContentWrapper userIsAuthenticated>
+    <ContentWrapper hideFooter>
       <div className="flex flex-col items-center">
         <div className="w-1/2">
           <div className="h-10 flex flex-row items-end">

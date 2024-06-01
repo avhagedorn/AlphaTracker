@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+WEB_URL = env.get("WEB_URL")
+
 ALPHA_TRACKER_HOST = env.get("ALPHA_TRACKER_HOST")
 ALPHA_TRACKER_PORT = int(env.get("ALPHA_TRACKER_PORT"))
 
