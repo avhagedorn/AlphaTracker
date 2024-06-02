@@ -47,3 +47,10 @@ export interface TransactionItem {
   type: string;
   portfolio_id: number;
 }
+
+export interface SearchableSymbol {
+  id?: number;
+  ticker?: string;
+  name: string;
+  type: "STOCK" | "PORTFOLIO" | "UNDEFINED";
+}

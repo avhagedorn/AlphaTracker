@@ -51,7 +51,7 @@ export default function Home() {
               </h1>
               <p className="text-2xl mt-4">
                 Track your portfolio against common indices like the S&P 500, or
-                create custom benchmarks. Start generating alpha!
+                create custom benchmarks. Start generating alpha today!
               </p>
             </div>
             <div className="transform skew-y-2 w-1/2 bg-white p-4 rounded-xl shadow-lg">
@@ -338,7 +338,7 @@ export default function Home() {
             </div>
             <div className="w-1/3">
               <h1 className="text-4xl font-bold">
-                Benchmark Stocks and Your Investing Strategies 💡
+                Analyze Stocks and Your Investing Strategies 💡
               </h1>
               <p className="text-2xl mt-4">
                 Compare your stock picks against the market. Analyze your
@@ -361,17 +361,13 @@ export default function Home() {
             </div>
             <div className="transform skew-y-2 w-1/3 bg-white p-4 rounded-xl shadow-lg">
               <div className="h-10 flex flex-row items-end">
-                <CompareSearch
-                  symbol={demoCompareData.left_ticker}
-                  onSelect={() => {}}
-                  textColor="#10b981"
-                />
+                <p className="text-3xl font-bold text-emerald-500 cursor-pointer">
+                  {demoCompareData.left_ticker}
+                </p>
                 <span className="mx-2 text-3xl font-bold">vs</span>
-                <CompareSearch
-                  symbol={demoCompareData.right_ticker}
-                  onSelect={() => {}}
-                  textColor="#6366f1"
-                />
+                <p className="text-3xl font-bold text-indigo-500 cursor-pointer">
+                  {demoCompareData.right_ticker}
+                </p>
               </div>
               <p>
                 {demoCompareData.left_ticker} has returned{" "}

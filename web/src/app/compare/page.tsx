@@ -4,7 +4,7 @@ import ContentWrapper from "@/components/ContentWrapper";
 import { useQuery, useQueryClient } from "react-query";
 import { useMemo, useState } from "react";
 import Statistics from "@/components/Statistics";
-import { Timeframe } from "@/types";
+import { SearchableSymbol, Timeframe } from "@/types";
 import DateGraph from "@/components/DateGraph";
 import { useSearchParams } from "next/navigation";
 import CompareSearch from "@/components/CompareSearch";
@@ -12,46 +12,45 @@ import { fetchSS } from "@/lib/fetch";
 import { getLineColor } from "@/lib/displayUtils";
 import { round } from "lodash";
 import { timeframeToHistoryString } from "@/lib/utils";
+import Search from "@/components/Search";
+import { DEFAULT_SEARCHABLE_SYMBOL } from "@/lib/search";
 
-const deconstructSymbol = (symbol: string) => {
-  const [type, name] = symbol.split(":");
+const deconstructSymbol = (symbol: string): SearchableSymbol => {
+  const parts = symbol.split(":");
 
-  if (type === "stock") {
+  // STOCK:AAPL
+  if (parts.length === 2 && parts[0].toLowerCase() === "stock") {
+    const ticker = parts[1].toUpperCase();
     return {
-      name: name.toUpperCase(),
+      ticker,
+      name: ticker,
       type: "STOCK",
     };
-  } else if (type === "portfolio") {
+  }
+  // PORTFOLIO:[name]:[id]
+  else if (parts.length === 3 && parts[0].toLowerCase() === "portfolio") {
+    const [_, name, id] = parts;
     return {
       name,
+      id: Number(id),
       type: "PORTFOLIO",
     };
-  } else {
-    return {
-      name: "",
-      type: "",
-    };
   }
+  return DEFAULT_SEARCHABLE_SYMBOL;
 };
 
-interface Symbol {
-  id?: string;
-  name: string;
-  type: string;
-}
-
-const symbolToString = (symbol: Symbol) => {
-  return `${symbol.type}:${symbol.name}`;
+const symbolToString = (symbol: SearchableSymbol) => {
+  return `${symbol.type}:${symbol.ticker || symbol.id}`;
 };
 
 export default function Compare() {
   const searchParams = useSearchParams();
   const left = searchParams.get("left");
   const right = searchParams.get("right");
-  const [leftSymbol, setLeftSymbol] = useState<Symbol>(
+  const [leftSymbol, setLeftSymbol] = useState<SearchableSymbol>(
     deconstructSymbol(left || ""),
   );
-  const [rightSymbol, setRightSymbol] = useState<Symbol>(
+  const [rightSymbol, setRightSymbol] = useState<SearchableSymbol>(
     deconstructSymbol(right || ""),
   );
 
@@ -67,7 +66,6 @@ export default function Compare() {
     return ["portfolio", leftSymbol.name, rightSymbol.name, selectedTimeframe];
   }, [leftSymbol.name, rightSymbol.name, selectedTimeframe]);
 
-  const queryClient = useQueryClient();
   const { data, status, error } = useQuery(
     queryKey,
     () =>
@@ -127,17 +125,15 @@ export default function Compare() {
           <div className="h-10 flex flex-row items-end">
             <CompareSearch
               focusInput={leftSymbol.name.length === 0}
-              symbol={leftSymbol.name}
-              onSelect={(symbol) => {
-                setLeftSymbol(deconstructSymbol(symbol));
-              }}
+              symbol={leftSymbol.ticker || leftSymbol.name}
+              onSelect={setLeftSymbol}
               textColor={getLineColor(data?.points || [])}
             />
             <span className="mx-2 text-3xl font-bold">vs</span>
             <CompareSearch
               focusInput={leftSymbol.name.length > 0}
-              symbol={rightSymbol.name}
-              onSelect={(symbol) => setRightSymbol(deconstructSymbol(symbol))}
+              symbol={rightSymbol.ticker || rightSymbol.name}
+              onSelect={setRightSymbol}
               textColor="#6366f1"
             />
           </div>

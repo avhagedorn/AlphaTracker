@@ -1,7 +1,7 @@
 import { ReactQueryClientProvider } from "@/components/ReactQueryClientProvider";
 import "./globals.css";
 import type { Metadata } from "next";
-import { Manrope } from "@next/font/google";
+import { Manrope } from "next/font/google";
 
 export const metadata: Metadata = {
   title: "AlphaTracker",

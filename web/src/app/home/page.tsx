@@ -22,7 +22,7 @@ export default function Home() {
       <div className="flex min-h-screen flex-col items-center">
         <div className="flex w-screen">
           <div className="flex-1 p-8">
-            <h1 className="text-6xl font-bold mb-4">$40,034.65</h1>
+            <h1 className="text-6xl font-bold mb-4">$4,034.65</h1>
             <PriceChange
               percentChange={0.1}
               valueChange={1000}
