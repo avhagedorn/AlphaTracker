@@ -18,7 +18,7 @@ export default function ContentWrapper({
 }: ContentWrapperProps) {
   return (
     <main className={className}>
-      <div className="min-h-screen">
+      <div className="min-h-screen pb-10">
         {!hideNavbar && <Navbar hideFooter={hideFooter} />}
         <div className={hideNavbar ? "" : "pt-8"}>{children}</div>
         <ToastContainer

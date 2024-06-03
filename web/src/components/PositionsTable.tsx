@@ -5,42 +5,52 @@ import { fmtDollars, fmtPercent } from "@/lib/utils";
 
 interface PositionTableProps {
   data: PositionRow[];
+  loading?: boolean;
+  className?: string;
 }
 
-export default function PositionsTable({ data }: PositionTableProps) {
+export default function PositionsTable({
+  data,
+  loading,
+  className,
+}: PositionTableProps) {
   return (
-    <Table
-      headers={[
-        {
-          name: "Ticker",
-          sort: (a: PositionRow, b: PositionRow) =>
-            b.ticker.localeCompare(a.ticker),
-        },
-        {
-          name: "Equity",
-          sort: (a: PositionRow, b: PositionRow) =>
-            a.equityValueDollars - b.equityValueDollars,
-        },
-        {
-          name: "Return",
-          sort: (a: PositionRow, b: PositionRow) =>
-            a.returnValueDollars - b.returnValueDollars,
-        },
-        {
-          name: "Alpha",
-          sort: (a: PositionRow, b: PositionRow) =>
-            a.alphaValueDollars - b.alphaValueDollars,
-        },
-      ]}
-      data={data}
-      itemToRow={(item) => (
-        <>
-          <td className="px-4 py-2">{item.ticker}</td>
-          <td className="px-4 py-2">{`${fmtDollars(item.equityValueDollars)} (${item.equity} shares)`}</td>
-          <td className="px-4 py-2">{`${fmtDollars(item.returnValueDollars)} (${fmtPercent(item.return)})`}</td>
-          <td className="px-4 py-2">{`${fmtDollars(item.alphaValueDollars)} (${fmtPercent(item.alpha)})`}</td>
-        </>
-      )}
-    />
+    <div className={className}>
+      <h1 className="text-2xl font-bold">Positions</h1>
+      <Table
+        loading={loading}
+        headers={[
+          {
+            name: "Ticker",
+            sort: (a: PositionRow, b: PositionRow) =>
+              b.ticker.localeCompare(a.ticker),
+          },
+          {
+            name: "Equity",
+            sort: (a: PositionRow, b: PositionRow) =>
+              a.equity_value - b.equity_value,
+          },
+          {
+            name: "Return",
+            sort: (a: PositionRow, b: PositionRow) =>
+              a.return_value - b.return_value,
+          },
+          {
+            name: "Alpha",
+            sort: (a: PositionRow, b: PositionRow) =>
+              a.alpha_value - b.alpha_value,
+          },
+        ]}
+        data={data}
+        itemToRow={(item) => (
+          <>
+            <td className="px-4 py-2">{item.ticker}</td>
+            <td className="px-4 py-2">{`${fmtDollars(item.equity_value)} (${item.shares} shares)`}</td>
+            <td className="px-4 py-2">{`${fmtDollars(item.return_value)} (${fmtPercent(item.return_percent)})`}</td>
+            <td className="px-4 py-2">{`${fmtDollars(item.alpha_value)} (${fmtPercent(item.alpha_percent)})`}</td>
+          </>
+        )}
+      />
+    </div>
   );
 }

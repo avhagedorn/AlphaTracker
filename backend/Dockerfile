@@ -5,6 +5,8 @@ WORKDIR /app
 COPY . .
 
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
+RUN alembic upgrade head
+RUN python3 ./alpha_tracker/scripts/backfill_daily_spy_price_history.py
 
 EXPOSE 8080
 

@@ -1,3 +1,7 @@
-backend/.venv
+backend/alpha_tracker/.venv
 backend/.env
 backend/email/gcloud_client_secret.json
+
+__pycache__/
+*.pyc
+*.pyo

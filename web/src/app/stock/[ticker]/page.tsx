@@ -11,7 +11,7 @@ import Statistics from "@/components/Statistics";
 import { useQuery } from "react-query";
 import { fetchSS } from "@/lib/fetch";
 import {
-  displayLargeNumber,
+  fmtLargeNumber,
   fmtDollars,
   timeframeToDisplayString,
 } from "@/lib/utils";
@@ -152,7 +152,7 @@ export default function Stock({
                     statistics: [
                       {
                         title: "Market Cap",
-                        value: displayLargeNumber(stats?.market_cap),
+                        value: fmtLargeNumber(stats?.market_cap),
                       },
                       {
                         title: "EPS",
@@ -296,11 +296,11 @@ export default function Stock({
                     statistics: [
                       {
                         title: "Cash",
-                        value: `$${displayLargeNumber(stats?.cash)}`,
+                        value: `$${fmtLargeNumber(stats?.cash)}`,
                       },
                       {
                         title: "Debt",
-                        value: `$${displayLargeNumber(stats?.debt)}`,
+                        value: `$${fmtLargeNumber(stats?.debt)}`,
                       },
                       {
                         title: "Current Ratio",

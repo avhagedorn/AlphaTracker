@@ -1,7 +1,7 @@
 "use client";
 
 import ContentWrapper from "@/components/ContentWrapper";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import { useMemo, useState } from "react";
 import Statistics from "@/components/Statistics";
 import { SearchableSymbol, Timeframe } from "@/types";
@@ -12,7 +12,6 @@ import { fetchSS } from "@/lib/fetch";
 import { getLineColor } from "@/lib/displayUtils";
 import { round } from "lodash";
 import { timeframeToHistoryString } from "@/lib/utils";
-import Search from "@/components/Search";
 import { DEFAULT_SEARCHABLE_SYMBOL } from "@/lib/search";
 
 const deconstructSymbol = (symbol: string): SearchableSymbol => {

@@ -2,7 +2,11 @@ import { Timeframe } from "@/types";
 
 export const fmtDollars = (value: number) => {
   const isNegative = value < 0;
-  return `${isNegative ? "-" : ""}$${Math.abs(value).toFixed(2)}`;
+  let displayNumber = Math.abs(value).toFixed(2);
+  if (Math.abs(value) >= 10_000) {
+    displayNumber = fmtLargeNumber(Math.abs(value));
+  }
+  return `${isNegative ? "-" : ""}$${displayNumber}`;
 };
 
 export const fmtPercent = (value: number) => {
@@ -36,7 +40,7 @@ export const timeframeToHistoryString = (timeframe: Timeframe) => {
   return timeframeMap[timeframe] || "Invalid timeframe";
 };
 
-export const displayLargeNumber = (value: number) => {
+export const fmtLargeNumber = (value: number) => {
   if (value >= 1_000_000_000_000) {
     return `${(value / 1_000_000_000_000).toFixed(2)}T`;
   } else if (value >= 1_000_000_000) {

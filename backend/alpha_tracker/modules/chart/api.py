@@ -105,6 +105,7 @@ async def get_stock_chart_v2(
             group_by="ticker",
             auto_adjust=True,
             prepost=True,
+            progress=False,
         ).dropna()
     except:
         raise HTTPException(
@@ -203,6 +204,7 @@ async def compare(
                 group_by="ticker",
                 auto_adjust=True,
                 prepost=True,
+                progress=False,
             ).dropna()
 
             if left_symbol == right_symbol:

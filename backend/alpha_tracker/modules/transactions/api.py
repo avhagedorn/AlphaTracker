@@ -49,7 +49,7 @@ async def create_transaction(
             portfolio_id=transaction.portfolio_id,
             user_id=current_user.id,
             ticker=transaction.ticker,
-            price=transaction.price,
+            price_cents=int(transaction.price * 100),
             quantity=transaction.quantity,
             transaction_type=transaction.type,
             purchased_at=datetime.fromisoformat(transaction.purchased_at),

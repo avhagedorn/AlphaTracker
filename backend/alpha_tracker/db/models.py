@@ -4,7 +4,9 @@ from sqlalchemy import Boolean
 from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
 from sqlalchemy import func
+from sqlalchemy import Index
 from sqlalchemy import Integer
+from sqlalchemy import PrimaryKeyConstraint
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
@@ -67,8 +69,8 @@ class Transaction(Base):
     )
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"), nullable=False)
     ticker: Mapped[str] = mapped_column(String, nullable=False)
-    price: Mapped[float] = mapped_column(Integer, nullable=False)
-    quantity: Mapped[int] = mapped_column(Integer, nullable=False)
+    price_cents: Mapped[int] = mapped_column(Integer, nullable=False)
+    quantity: Mapped[float] = mapped_column(Integer, nullable=False)
     transaction_type: Mapped[str] = mapped_column(String, nullable=False)
     created_at: Mapped[datetime.datetime] = mapped_column(
         DateTime, default=func.now(), nullable=False
@@ -110,3 +112,40 @@ class ResetPasswordRequest(Base):
 
     def is_expired(self) -> bool:
         return self.expires_at < datetime.datetime.now()
+
+
+"""
+Index Price History
+
+--- Rationale ---
+It would be preferable to handle all price history data using an API, but
+fetching specific dates for SPY price history is not supported by the service
+being used, yfinance (Yahoo Finance SDK).
+
+--- Purpose ---
+This table will be used to store the daily price history of SPY for the purpose
+of calculating the alpha of positions in a portfolio. For data that is range-bound,
+such as chart data, we will continue to use the yfinance API.
+
+--- Consistency ---
+The data will be backfilled using the `backfill_daily_spy_price_history` script.
+It will be updated daily using the `fetch_daily_spy_price` task.
+
+--- Additional Notes ---
+We use "Index" to refer to SPY, but this table could be used to store other
+index price history data in the future, such as QQQ or DIA.
+"""
+
+
+class IndexPriceHistory(Base):
+    __tablename__ = "index_price_history"
+
+    date: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False)
+    ticker: Mapped[str] = mapped_column(String, nullable=False)
+    open_price_cents: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    # Composite primary key
+    __table_args__ = (
+        PrimaryKeyConstraint("date", "ticker", name="pk_date_ticker"),
+        Index("idx_index_price_history_date", "date"),
+    )

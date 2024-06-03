@@ -47,35 +47,40 @@ export default function Home() {
             </div>
 
             <div className="mt-8">
-              <h2 className="text-4xl font-bold ml-4">Positions</h2>
               <PositionsTable
                 data={[
                   {
                     ticker: "AAPL",
-                    equity: 1000,
-                    equityValueDollars: 1000,
-                    return: 0.1,
-                    returnValueDollars: 100,
-                    alpha: 0.05,
-                    alphaValueDollars: 50,
+                    shares: 1000,
+                    equity_value: 1000,
+                    return_percent: 0.1,
+                    return_value: 100,
+                    alpha_percent: 0.05,
+                    alpha_value: 50,
+                    realized_alpha: 0,
+                    realized_value: 0,
                   },
                   {
                     ticker: "GOOGL",
-                    equity: 2000,
-                    equityValueDollars: 2000,
-                    return: 0.2,
-                    returnValueDollars: 400,
-                    alpha: 0.1,
-                    alphaValueDollars: 200,
+                    shares: 2000,
+                    equity_value: 2000,
+                    return_percent: 0.2,
+                    return_value: 400,
+                    alpha_percent: 0.1,
+                    alpha_value: 200,
+                    realized_alpha: 0,
+                    realized_value: 0,
                   },
                   {
                     ticker: "MSFT",
-                    equity: 1500,
-                    equityValueDollars: 1500,
-                    return: 0.15,
-                    returnValueDollars: 225,
-                    alpha: 0.075,
-                    alphaValueDollars: 112.5,
+                    shares: 1500,
+                    equity_value: 1500,
+                    return_percent: 0.15,
+                    return_value: 225,
+                    alpha_percent: 0.075,
+                    alpha_value: 112.5,
+                    realized_alpha: 0,
+                    realized_value: 0,
                   },
                 ]}
               />

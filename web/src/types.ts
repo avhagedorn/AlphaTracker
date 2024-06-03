@@ -7,12 +7,14 @@ export interface UserResponse {
 
 export interface PositionRow {
   ticker: string;
-  equity: number;
-  equityValueDollars: number;
-  return: number;
-  returnValueDollars: number;
-  alpha: number;
-  alphaValueDollars: number;
+  shares: number;
+  equity_value: number;
+  return_percent: number;
+  return_value: number;
+  alpha_percent: number;
+  alpha_value: number;
+  realized_value: number;
+  realized_alpha: number;
 }
 
 export interface GraphData {

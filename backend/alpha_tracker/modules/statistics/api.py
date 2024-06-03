@@ -28,7 +28,7 @@ async def get_stock_statistics(ticker: str, _: User = Depends(get_current_user))
         or info.get("longDescription")
         or "",
         company_name=info.get("longName", ""),
-        market_cap=info.get("marketCap") or 0,
+        market_cap=info.get("marketCap", 0),
         eps=round(info.get("trailingEps", 0), 2),
         dividend_yield=round(info.get("dividendYield", 0) * 100, 2),
         pe_ratio=round(info.get("trailingPE", 0), 2),
@@ -42,7 +42,9 @@ async def get_stock_statistics(ticker: str, _: User = Depends(get_current_user))
         profit_margins=round(info.get("profitMargins", 0) * 100, 2),
         ev_to_ebitda=round(info.get("enterpriseToEbitda", 0), 2),
         short_ratio=round(info.get("shortRatio", 0), 2),
-        fcf_yield=round(info.get("freeCashflow", 0) / info.get("marketCap") * 100, 2),
+        fcf_yield=round(
+            info.get("freeCashflow", 0) / info.get("marketCap", 0) * 100, 2
+        ),
         current_ratio=round(info.get("currentRatio", 0), 2),
         debt=info.get("totalDebt", 0),
         cash=info.get("totalCash", 0),

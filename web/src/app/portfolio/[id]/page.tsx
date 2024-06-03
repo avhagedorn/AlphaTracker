@@ -13,6 +13,7 @@ import Statistics from "@/components/Statistics";
 import { Timeframe } from "@/types";
 import DateGraph from "@/components/DateGraph";
 import PositionsTable from "@/components/PositionsTable";
+import ExercisedPositionsTable from "@/components/ExercisedPositionsTable";
 
 export default function PortfolioDetail({
   params,
@@ -24,6 +25,13 @@ export default function PortfolioDetail({
   const { data, status, error, isFetching } = useQuery("portfolio", () =>
     fetchSS(`/portfolio/${params.id}`),
   );
+
+  const {
+    data: positions,
+    status: positionsStatus,
+    error: positionsError,
+  } = useQuery("positions", () => fetchSS(`/positions/${params.id}`));
+
   const [selectedTimeframe, setSelectedTimeframe] = useState<Timeframe>(
     Timeframe.DAY,
   );
@@ -62,7 +70,7 @@ export default function PortfolioDetail({
           <PriceChange percentChange={-0.05} valueChange={-5} subText="Alpha" />
           <div className="mt-4">
             <DateGraph
-              width={1000}
+              width={"100%"}
               height={300}
               data={demoData}
               selectedTimeframe={selectedTimeframe}
@@ -113,40 +121,16 @@ export default function PortfolioDetail({
               ]}
             />
           </div>
-          <div className="mt-8">
-            <h1 className="text-2xl font-bold">Positions</h1>
-            <PositionsTable
-              data={[
-                {
-                  ticker: "AAPL",
-                  equity: 1000,
-                  equityValueDollars: 1000,
-                  return: 0.1,
-                  returnValueDollars: 100,
-                  alpha: 0.05,
-                  alphaValueDollars: 50,
-                },
-                {
-                  ticker: "GOOGL",
-                  equity: 2000,
-                  equityValueDollars: 2000,
-                  return: 0.2,
-                  returnValueDollars: 400,
-                  alpha: 0.1,
-                  alphaValueDollars: 200,
-                },
-                {
-                  ticker: "MSFT",
-                  equity: 1500,
-                  equityValueDollars: 1500,
-                  return: 0.15,
-                  returnValueDollars: 225,
-                  alpha: 0.075,
-                  alphaValueDollars: 112.5,
-                },
-              ]}
-            />
-          </div>
+          <ExercisedPositionsTable
+            data={positions || []}
+            loading={positionsStatus === "loading"}
+            className="mt-8"
+          />
+          <PositionsTable
+            data={positions || []}
+            loading={positionsStatus === "loading"}
+            className="mt-8"
+          />
           <div className="mt-8">
             <TransactionsTable
               portfolioId={params.id}

@@ -34,7 +34,7 @@ class DisplayTransaction(BaseModel):
         return DisplayTransaction(
             id=transaction.id,
             shares=transaction.quantity,
-            price=transaction.price,
+            price=round(transaction.price_cents / 100, 2),
             ticker=transaction.ticker,
             portfolio_id=transaction.portfolio_id,
             type=transaction.transaction_type,
