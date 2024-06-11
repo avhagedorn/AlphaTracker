@@ -14,6 +14,13 @@ export default function FAQ() {
           investments and portfolios. Users can create portfolios, add
           positions, and compare their performance against various benchmarks.
         </p>
+        <h2 className="text-xl font-bold mt-4">
+          What kinds of assets can I track?
+        </h2>
+        <p>
+          AlphaTracker only supports tracking equities (stocks) at this time. We
+          plan to add support for other asset classes in the future.
+        </p>
         <h2 className="text-xl font-bold mt-4">Do you allow trading?</h2>
         <p>
           No, AlphaTracker is a portfolio tracking application only. We do not

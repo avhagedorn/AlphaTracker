@@ -14,6 +14,8 @@ export default function Account() {
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const [dataRequestModalIsOpen, setDataRequestModalIsOpen] = useState(false);
   const [dataRequestIsSubmitting, setDataRequestIsSubmitting] = useState(false);
+  const [plaidConnectionModalIsOpen, setPlaidConnectionModalIsOpen] =
+    useState(false);
 
   return (
     <ContentWrapper hideFooter>
@@ -28,7 +30,12 @@ export default function Account() {
                 connect your brokerage account to AlphaTracker using Plaid.
               </p>
             </div>
-            <Button className="mt-2">Connect</Button>
+            <Button
+              className="mt-2"
+              onClick={() => setPlaidConnectionModalIsOpen(true)}
+            >
+              Connect
+            </Button>
           </div>
           <div className="flex flex-row justify-between items-center p-4 bg-white rounded-lg shadow-md space-x-4">
             <div>
@@ -101,6 +108,7 @@ export default function Account() {
         }}
         onCancel={() => setShowDeleteAccountModal(false)}
       />
+      {/* Data Request Modal */}
       <Modal
         isOpen={dataRequestModalIsOpen}
         onClose={() => {
@@ -136,6 +144,36 @@ export default function Account() {
           }}
         >
           Request
+        </Button>
+      </Modal>
+      {/* Plaid connection Modal */}
+      <Modal
+        isOpen={plaidConnectionModalIsOpen}
+        onClose={() => {
+          setPlaidConnectionModalIsOpen(false);
+        }}
+        title="Connect Your Brokerage Account"
+        size="medium"
+      >
+        <p>
+          You can connect your brokerage account to AlphaTracker using Plaid to
+          automatically import your past and future transactions.
+          <br />
+          <br />
+          By connecting your brokerage account, you acknowledge that your
+          trading data will be stored and processed by AlphaTracker. Please
+          review our
+          <a href="/help/privacy-policy" className="text-blue-500">
+            {" "}
+            Privacy Policy{" "}
+          </a>
+          for more information.
+        </p>
+        <Button
+          className="mt-4"
+          onClick={() => setPlaidConnectionModalIsOpen(false)}
+        >
+          Connect
         </Button>
       </Modal>
     </ContentWrapper>

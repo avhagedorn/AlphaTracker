@@ -17,7 +17,6 @@ import { Timeframe } from "@/types";
 import { LuArrowRightLeft } from "react-icons/lu";
 import { FiExternalLink } from "react-icons/fi";
 import TruncatedText from "@/components/TruncatedText";
-import CompareSearch from "@/components/CompareSearch";
 
 export default function Home() {
   const router = useRouter();

@@ -56,7 +56,7 @@ async def data_request(
                         "portfolio_id": transaction.portfolio_id,
                         "user_id": transaction.user_id,
                         "ticker": transaction.ticker,
-                        "price": transaction.price,
+                        "price_cents": transaction.price_cents,
                         "quantity": transaction.quantity,
                         "transaction_type": transaction.transaction_type,
                         "created_at": int(transaction.created_at.timestamp()),
