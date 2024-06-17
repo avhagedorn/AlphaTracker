@@ -101,7 +101,7 @@ export default function Search({
     if (debouncedSearch.current) {
       debouncedSearch.current.cancel();
     }
-    debouncedSearch.current = debounce(() => handleSearch(term), 50);
+    debouncedSearch.current = debounce(() => handleSearch(term), 200);
     debouncedSearch.current();
   };
 

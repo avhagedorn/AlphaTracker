@@ -1,18 +1,18 @@
 from collections import defaultdict
 from typing import List
 
-import yfinance as yf
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import status
 from sqlalchemy.orm import Session
 
+from alpha_tracker.api_integrations.yfinance_client import yf_download
 from alpha_tracker.db.engine import get_sqlalchemy_engine
 from alpha_tracker.db.models import IndexPriceHistory
-from alpha_tracker.db.models import Portfolio
 from alpha_tracker.db.models import Transaction
 from alpha_tracker.db.models import User
+from alpha_tracker.modules.common import get_all_portfolio_transactions
 from alpha_tracker.modules.positions.models import PortfolioPosition
 from alpha_tracker.utils.auth import get_current_user
 
@@ -56,33 +56,21 @@ async def create_transaction(
     """
     Aggregates all a portfolio's positions by examining the associated transaction history.
     """
-    transactions = []
-
-    with Session(get_sqlalchemy_engine()) as db_session:
-        portfolio = (
-            db_session.query(Portfolio).filter(Portfolio.id == portfolio_id).first()
-        )
-
-        if not portfolio or portfolio.user_id != current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Transaction not found",
-            )
-
-        transactions = portfolio.transactions
+    transactions = get_all_portfolio_transactions(portfolio_id, current_user)
 
     if transactions:
-        try:
-            ticker_dict = defaultdict(list)
-            for transaction in transactions:
-                ticker_dict[transaction.ticker].append(transaction)
-            transactions_grouped_by_ticker = list(ticker_dict.values())
-            return _transactions_to_positions(transactions_grouped_by_ticker)
-        except Exception:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Failed to fetch positions",
-            )
+        # try:
+        ticker_dict = defaultdict(list)
+        for transaction in transactions:
+            ticker_dict[transaction.ticker].append(transaction)
+        transactions_grouped_by_ticker = list(ticker_dict.values())
+        return _transactions_to_positions(transactions_grouped_by_ticker)
+    # except Exception as e:
+    #     print("eee", e)
+    #     raise HTTPException(
+    #         status_code=status.HTTP_400_BAD_REQUEST,
+    #         detail="Failed to fetch positions",
+    #     )
 
     else:
         return []
@@ -90,22 +78,26 @@ async def create_transaction(
 
 def _get_last_prices(tickers: List[str]):
     tickers_with_spy = list(set([*tickers, "SPY"]))
-    prices = yf.download(
+    prices = yf_download(
         tickers=tickers_with_spy,
         period="1d",
-        interval="1d",
-        group_by="ticker",
-        auto_adjust=True,
-        prepost=True,
-        progress=False,
-    ).dropna()
+        interval="1h",
+    )
 
-    return {ticker: prices[ticker]["Close"] for ticker in tickers_with_spy}
+    return {
+        ticker: int(prices[ticker]["Close"].iloc[-1] * 100)
+        for ticker in tickers_with_spy
+    }
 
 
 def _transactions_to_positions(transations_grouped_by_ticker: List[List[Transaction]]):
-    tickers = [transactions[0].ticker for transactions in transations_grouped_by_ticker]
+    tickers = [
+        transactions[0].ticker.upper() for transactions in transations_grouped_by_ticker
+    ]
     last_prices = _get_last_prices(tickers)
+    import json
+
+    print(json.dumps(last_prices, indent=2))
 
     with Session(get_sqlalchemy_engine()) as db_session:
 
@@ -133,17 +125,11 @@ def _transactions_to_positions(transations_grouped_by_ticker: List[List[Transact
             realized_value_cents = 0
             realized_alpha_cents = 0
 
-            print("spy_date_to_price", spy_date_to_price)
-            print("transaction_dates", transaction_dates)
-
             for transaction in transactions:
                 shares_delta = transaction.quantity
                 spy_price_cents = spy_date_to_price.get(
                     transaction.purchased_at.strftime("%Y-%m-%d")
                 )
-
-                print("shares", shares)
-                print("spy_price_cents", spy_price_cents)
 
                 spy_shares_delta = (
                     spy_shares * (shares_delta / shares)
@@ -174,11 +160,9 @@ def _transactions_to_positions(transations_grouped_by_ticker: List[List[Transact
                     cost_basis_cents -= cost_basis_cents_delta
                     spy_shares -= spy_shares_delta
 
-            print("cost_basis_cents", cost_basis_cents)
-
             ticker = transactions[0].ticker
-            ticker_current_price_cents = last_prices[ticker].iloc[0] * 100
-            spy_current_price_cents = last_prices["SPY"].iloc[0] * 100
+            ticker_current_price_cents = last_prices[ticker]
+            spy_current_price_cents = last_prices["SPY"]
 
             ticker_current_equity_value_cents = int(shares * ticker_current_price_cents)
             ticker_return_percent = (

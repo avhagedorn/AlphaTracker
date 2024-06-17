@@ -49,8 +49,9 @@ class DataPoint(BaseModel):
         timeframe: str,
         start_portfolio: float = 0.0,
         start_spy: float = 0.0,
+        scale_spy_to_portfolio: bool = True,
     ):
-        scale_spy = start_portfolio / start_spy
+        scale_spy = start_portfolio / start_spy if scale_spy_to_portfolio else 1
         start_spy_scaled = start_spy * scale_spy
 
         return DataPoint(

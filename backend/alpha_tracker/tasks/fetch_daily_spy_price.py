@@ -1,23 +1,17 @@
 from datetime import datetime
 from datetime import timedelta
 
-import yfinance as yf
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from alpha_tracker.api_integrations.yfinance_client import yf_download
 from alpha_tracker.db.engine import get_sqlalchemy_engine
 from alpha_tracker.db.models import IndexPriceHistory
 
 
 def fetch_daily_spy_price():
-    data = yf.download(
+    data = yf_download(
         tickers="SPY",
-        period="max",
-        interval="1d",
-        group_by="ticker",
-        auto_adjust=True,
-        prepost=True,
-        progress=False,
         start=(datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d"),
     )
 

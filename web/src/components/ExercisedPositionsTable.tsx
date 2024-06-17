@@ -26,7 +26,7 @@ export default function ExercisedPositionsTable({
 
   return (
     <div className={className}>
-      <h1 className="text-2xl font-bold">Exercised Gains</h1>
+      <h1 className="text-2xl font-bold">Exercised Positions</h1>
       <Table
         loading={loading}
         headers={[

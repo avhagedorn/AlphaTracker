@@ -11,7 +11,7 @@ class BarArgs:
         self.to = to.strftime("%Y-%m-%d")
 
 
-def timeframe_to_bar(timeframe: str):
+def timeframe_to_bar(timeframe: str) -> BarArgs:
     """
     Transform a timeframe (1D, 1W, 1M, 3M, YTD, 1Y, ALL) into arguments for the Polygon Bar API.
 

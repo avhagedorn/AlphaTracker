@@ -1,20 +1,16 @@
-import yfinance as yf
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from alpha_tracker.api_integrations.yfinance_client import yf_download
 from alpha_tracker.db.engine import get_sqlalchemy_engine
 from alpha_tracker.db.models import IndexPriceHistory
 
 
 def backfill_daily_spy_price_history():
-    data = yf.download(
-        tickers="SPY",
+    data = yf_download(
+        tickers=["SPY"],
         period="max",
         interval="1d",
-        group_by="ticker",
-        auto_adjust=True,
-        prepost=True,
-        progress=False,
     )
 
     if data.empty:
@@ -22,6 +18,10 @@ def backfill_daily_spy_price_history():
 
     try:
         with Session(get_sqlalchemy_engine()) as db_session:
+            db_session.query(IndexPriceHistory).filter(
+                IndexPriceHistory.ticker == "SPY"
+            ).delete()
+
             price_history = []
             for date, price in zip(data.index, data["Open"]):
                 price_history.append(

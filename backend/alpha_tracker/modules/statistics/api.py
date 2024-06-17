@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from fastapi import Depends
-from yfinance import Ticker
 
+from alpha_tracker.api_integrations.yfinance_client import yf_ticker
 from alpha_tracker.db.models import User
 from alpha_tracker.modules.statistics.models import StockStatisticsResponse
 from alpha_tracker.utils.auth import get_current_user
@@ -19,7 +19,7 @@ async def get_stock_statistics(ticker: str, _: User = Depends(get_current_user))
     Get stock statistics.
     """
 
-    ticker = Ticker(ticker)
+    ticker = yf_ticker(ticker)
     info = ticker.info
 
     return StockStatisticsResponse(

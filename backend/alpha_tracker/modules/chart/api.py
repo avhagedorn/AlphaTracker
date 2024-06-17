@@ -1,20 +1,27 @@
-import yfinance as yf
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import status
+from sqlalchemy.orm import Session
 
 from alpha_tracker.api_integrations.polygon_client import rest_client
+from alpha_tracker.api_integrations.yfinance_client import yf_download
+from alpha_tracker.db.engine import get_sqlalchemy_engine
+from alpha_tracker.db.models import IndexPriceHistory
 from alpha_tracker.db.models import User
 from alpha_tracker.modules.chart.models import ChartResponse
 from alpha_tracker.modules.chart.models import CompareChartResponse
 from alpha_tracker.modules.chart.models import CompareDataPoint
 from alpha_tracker.modules.chart.models import DataPoint
+from alpha_tracker.modules.common import get_all_portfolio_transactions
 from alpha_tracker.utils.auth import get_current_user
 from alpha_tracker.utils.polygon import timeframe_to_bar
+from alpha_tracker.utils.time import split_by_date
+from alpha_tracker.utils.validation import get_start_from_timeframe
 from alpha_tracker.utils.validation import is_valid_compare_symbol
 from alpha_tracker.utils.validation import is_valid_timeframe
 from alpha_tracker.utils.yfinance import convert_timeframe_to_period
+from alpha_tracker.utils.yfinance import interval_from_start_date
 
 
 router = APIRouter(prefix="/chart")
@@ -98,16 +105,12 @@ async def get_stock_chart_v2(
     data = []
 
     try:
-        data = yf.download(
-            tickers=[ticker, "SPY"] if ticker != "SPY" else ["SPY"],
+        data = yf_download(
+            tickers=[ticker, "SPY"],
             period=period,
             interval=interval,
-            group_by="ticker",
-            auto_adjust=True,
-            prepost=True,
-            progress=False,
-        ).dropna()
-    except:
+        )
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             detail="Request limit reached. Please try again later.",
@@ -197,15 +200,11 @@ async def compare(
             right_data = []
 
         if tickers:
-            data = yf.download(
+            data = yf_download(
                 tickers=list(tickers),
                 period=period,
                 interval=interval,
-                group_by="ticker",
-                auto_adjust=True,
-                prepost=True,
-                progress=False,
-            ).dropna()
+            )
 
             if left_symbol == right_symbol:
                 left_data = data["Close"]
@@ -235,8 +234,7 @@ async def compare(
                 left_portfolio_name=left_portfolio_name,
                 right_portfolio_name=right_portfolio_name,
             )
-    except Exception as e:
-        print(e)
+    except:
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             detail="Request limit reached. Please try again later.",
@@ -244,10 +242,160 @@ async def compare(
 
 
 @router.get("/portfolio/{portfolio_id}")
-async def get_portfolio_chart(portfolio_id: int, _: User = Depends(get_current_user)):
-    """
-    Get portfolio chart.
-    """
+async def get_portfolio_chart(
+    portfolio_id: int, timeframe: str, current_user: User = Depends(get_current_user)
+):
+    if not is_valid_timeframe(timeframe):
+        raise ValueError("Invalid timeframe")
+
+    transactions = get_all_portfolio_transactions(portfolio_id, current_user)
+
+    if not transactions:
+        return ChartResponse()
+
+    # Step 1: Get all the data points for the timeframe
+    tickers = list(set(["SPY", *[transaction.ticker for transaction in transactions]]))
+
+    # Step 2: Get all SPY data points for each transaction
+    spy_date_to_price = {}
+    with Session(get_sqlalchemy_engine()) as db_session:
+        spy_prices = (
+            db_session.query(IndexPriceHistory)
+            .filter(IndexPriceHistory.ticker == "SPY")
+            .filter(
+                IndexPriceHistory.date.in_(
+                    [transaction.purchased_at.date() for transaction in transactions]
+                )
+            )
+            .all()
+        )
+        spy_date_to_price = {
+            price.date.date(): price.open_price_cents for price in spy_prices
+        }
+
+    # Step 3: Get all holdings from before the start of the timeframe
+    initial_holdings = {}
+    timeframe_start = get_start_from_timeframe(timeframe)
+    pre_timeframe_transactions, timeframe_transactions = split_by_date(
+        transactions, timeframe_start.date()
+    )
+    cash_holding_cents = 0
+    initial_spy_shares = 0
+    cost_basis_cents = 0
+
+    for transaction in pre_timeframe_transactions:
+        shares = initial_holdings.get(transaction.ticker, 0)
+        current_spy_price = spy_date_to_price.get(transaction.purchased_at.date())
+        transaction_cost = transaction.quantity * transaction.price_cents
+
+        if transaction.transaction_type == "BUY":
+            initial_holdings[transaction.ticker] = shares + transaction.quantity
+            initial_spy_shares += transaction_cost // current_spy_price
+            cost_basis_cents += max(0, transaction_cost - cash_holding_cents)
+            cash_holding_cents = max(0, cash_holding_cents - transaction_cost)
+        else:
+            initial_holdings[transaction.ticker] = shares - transaction.quantity
+            cash_holding_cents += transaction_cost
+
+    # Step 4: Get all the data points for the timeframe
+    ticker_data = []
+    timestamps = []
+
+    try:
+        period, _ = convert_timeframe_to_period(timeframe)
+        interval_start_timestamp = get_start_from_timeframe(timeframe)
+
+        if (
+            period == "max"
+            and interval_start_timestamp.date()
+            < timeframe_transactions[0].purchased_at.date()
+        ):
+            interval_start_timestamp = timeframe_transactions[0].purchased_at
+
+        interval = interval_from_start_date(interval_start_timestamp)
+        data = yf_download(
+            tickers=tickers, interval=interval, start=interval_start_timestamp
+        )
+
+        timestamps = data[tickers[0]].index
+        ticker_to_prices = {ticker: data[ticker]["Close"] for ticker in tickers}
+        ticker_data = [
+            {
+                **dict(zip(ticker_to_prices.keys(), values)),
+                "timestamp": timestamp.date(),
+            }
+            for values, timestamp in zip(zip(*ticker_to_prices.values()), timestamps)
+        ]
+
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Request limit reached. Please try again later.",
+        )
+
+    # Step 5: Calculate the portfolio value for each data point in the timeframe
+    portfolio_value = []
+    cost_basis_value = []
+    spy_value = []
+    timeframe_transactions_index = 0
+    for data_point in ticker_data:
+        if timeframe_transactions_index < len(timeframe_transactions):
+            transaction = timeframe_transactions[timeframe_transactions_index]
+            if data_point["timestamp"] >= transaction.purchased_at.date():
+                shares = initial_holdings.get(transaction.ticker, 0)
+                current_spy_price = spy_date_to_price.get(
+                    transaction.purchased_at.date()
+                )
+                transaction_cost = transaction.quantity * transaction.price_cents
+
+                if transaction.transaction_type == "BUY":
+                    initial_holdings[transaction.ticker] = shares + transaction.quantity
+                    initial_spy_shares += transaction_cost // current_spy_price
+                    cost_basis_cents += max(0, transaction_cost - cash_holding_cents)
+                    cash_holding_cents = max(0, cash_holding_cents - transaction_cost)
+                else:
+                    initial_holdings[transaction.ticker] = shares - transaction.quantity
+                    cash_holding_cents += transaction_cost
+
+                timeframe_transactions_index += 1
+        portfolio_value.append(
+            sum(
+                [
+                    initial_holdings[ticker] * data_point[ticker]
+                    for ticker in initial_holdings.keys()
+                ]
+            )
+            + cash_holding_cents / 100
+        )
+        spy_value.append(initial_spy_shares * data_point["SPY"])
+        cost_basis_value.append(cost_basis_cents / 100)
+
+    for idx, value in enumerate(cost_basis_value):
+        if value < cost_basis_cents / 100:
+            cost_basis_diff = cost_basis_cents / 100 - cost_basis_value[idx]
+            portfolio_value[idx] += cost_basis_diff
+            spy_value[idx] += cost_basis_diff
+
+    # Round to the nearest cent
+    portfolio_value = [round(value, 2) for value in portfolio_value]
+    spy_value = [round(value, 2) for value in spy_value]
+
+    return ChartResponse.from_data_points(
+        data=[
+            DataPoint.from_yahoo(
+                portfolio=portfolio,
+                spy=spy,
+                start_portfolio=cost_basis_cents,
+                start_spy=cost_basis_cents,
+                timeframe=timeframe,
+                timestamp=timestamp,
+                scale_spy_to_portfolio=False,
+            )
+            for portfolio, spy, timestamp in zip(portfolio_value, spy_value, timestamps)
+        ],
+        ticker="Portfolio",
+        timeframe=timeframe,
+    )
 
 
 @router.get("/summary")

@@ -14,6 +14,7 @@ import { Timeframe } from "@/types";
 import DateGraph from "@/components/DateGraph";
 import PositionsTable from "@/components/PositionsTable";
 import ExercisedPositionsTable from "@/components/ExercisedPositionsTable";
+import { fmtDollars, timeframeToDisplayString } from "@/lib/utils";
 
 export default function PortfolioDetail({
   params,
@@ -22,6 +23,10 @@ export default function PortfolioDetail({
     id: number;
   };
 }) {
+  const [selectedTimeframe, setSelectedTimeframe] = useState<Timeframe>(
+    Timeframe.DAY,
+  );
+
   const { data, status, error, isFetching } = useQuery("portfolio", () =>
     fetchSS(`/portfolio/${params.id}`),
   );
@@ -32,9 +37,14 @@ export default function PortfolioDetail({
     error: positionsError,
   } = useQuery("positions", () => fetchSS(`/positions/${params.id}`));
 
-  const [selectedTimeframe, setSelectedTimeframe] = useState<Timeframe>(
-    Timeframe.DAY,
+  const {
+    data: chartData,
+    status: chartStatus,
+    error: chartError,
+  } = useQuery(["chart", selectedTimeframe], () =>
+    fetchSS(`/chart/portfolio/${params.id}?timeframe=${selectedTimeframe}`),
   );
+
   const [editModalOpen, setEditModalOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -53,7 +63,14 @@ export default function PortfolioDetail({
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold mb-4">{data.name}</h1>
-              <h1 className="text-6xl font-bold mb-4">$180.41</h1>
+              {chartStatus === "loading" && (
+                <div className="shimmer h-16 w-32 mb-4" />
+              )}
+              {chartStatus === "success" && (
+                <h1 className="text-6xl font-bold mb-4">
+                  {fmtDollars(chartData?.last_price || 0)}
+                </h1>
+              )}
             </div>
             <div>
               <div className="flex flex-col items-start">
@@ -66,13 +83,28 @@ export default function PortfolioDetail({
               </div>
             </div>
           </div>
-          <PriceChange percentChange={0.1} valueChange={10} subText="Today" />
-          <PriceChange percentChange={-0.05} valueChange={-5} subText="Alpha" />
+          <PriceChange
+            loading={chartStatus === "loading"}
+            percentChange={chartData?.total_return_percent || 0}
+            valueChange={chartData?.total_return || 0}
+            subText={timeframeToDisplayString(selectedTimeframe)}
+          />
+          <PriceChange
+            loading={chartStatus === "loading"}
+            percentChange={
+              chartData?.total_return_percent -
+                chartData?.total_return_percent_spy || 0
+            }
+            valueChange={
+              chartData?.total_return - chartData?.total_return_spy || 0
+            }
+            subText="Alpha"
+          />
           <div className="mt-4">
             <DateGraph
               width={"100%"}
               height={300}
-              data={demoData}
+              data={chartData?.points || demoData}
               selectedTimeframe={selectedTimeframe}
               handleTimeframeChange={setSelectedTimeframe}
               lineWidth={3}
@@ -85,48 +117,12 @@ export default function PortfolioDetail({
               <p className="text-lg mb-4">{data.description}</p>
             </>
           )}
-          <div className="mt-8">
-            <h1 className="text-2xl font-bold">Statistics</h1>
-            <Statistics
-              cards={[
-                {
-                  title: "Financials",
-                  statistics: [
-                    { title: "Market Cap", value: "1.2T" },
-                    { title: "PE Ratio", value: "30.0" },
-                    { title: "Dividend Yield", value: "0.50%" },
-                  ],
-                },
-                {
-                  title: "The Greeks",
-                  statistics: [
-                    { title: `Alpha (${selectedTimeframe})`, value: "0.8" },
-                    { title: `Beta (${selectedTimeframe})`, value: "1.2" },
-                  ],
-                },
-                {
-                  title: "Statistics",
-                  statistics: [
-                    { title: "Market Cap", value: "1.2T" },
-                    { title: "PE Ratio", value: "30.0" },
-                  ],
-                },
-                {
-                  title: "The Greeks",
-                  statistics: [
-                    { title: `Alpha (${selectedTimeframe})`, value: "0.8" },
-                    { title: `Beta (${selectedTimeframe})`, value: "1.2" },
-                  ],
-                },
-              ]}
-            />
-          </div>
-          <ExercisedPositionsTable
+          <PositionsTable
             data={positions || []}
             loading={positionsStatus === "loading"}
             className="mt-8"
           />
-          <PositionsTable
+          <ExercisedPositionsTable
             data={positions || []}
             loading={positionsStatus === "loading"}
             className="mt-8"

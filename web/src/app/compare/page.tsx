@@ -150,43 +150,7 @@ export default function Compare() {
               rightLineName={data?.right_ticker || data?.right_portfolio_name}
             />
           </div>
-          <div className="mt-8">
-            <h1 className="text-2xl font-bold">Statistics</h1>
-            <Statistics
-              cards={[
-                {
-                  title: "Financials",
-                  statistics: [
-                    { title: "Market Cap", value: "1.2T" },
-                    { title: "PE Ratio", value: "30.0" },
-                    { title: "Dividend Yield", value: "0.50%" },
-                  ],
-                },
-                {
-                  title: "The Greeks",
-                  statistics: [
-                    { title: `Alpha (${selectedTimeframe})`, value: "0.8" },
-                    { title: `Beta (${selectedTimeframe})`, value: "1.2" },
-                  ],
-                },
-                {
-                  title: "Statistics",
-                  statistics: [
-                    { title: "Market Cap", value: "1.2T" },
-                    { title: "PE Ratio", value: "30.0" },
-                  ],
-                },
-                {
-                  title: "The Greeks",
-                  statistics: [
-                    { title: `Alpha (${selectedTimeframe})`, value: "0.8" },
-                    { title: `Beta (${selectedTimeframe})`, value: "1.2" },
-                  ],
-                },
-              ]}
-              hideViewMorePrompt
-            />
-          </div>
+          <div className="mt-8"></div>
         </div>
       </div>
     </ContentWrapper>

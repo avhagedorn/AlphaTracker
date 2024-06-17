@@ -16,7 +16,7 @@ export default function PositionsTable({
 }: PositionTableProps) {
   return (
     <div className={className}>
-      <h1 className="text-2xl font-bold">Positions</h1>
+      <h1 className="text-2xl font-bold">Active Positions</h1>
       <Table
         loading={loading}
         headers={[
