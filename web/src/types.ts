@@ -38,6 +38,14 @@ export interface Portfolio {
   name: string;
   description?: string;
   createdAt: string;
+  chart: {
+    points: GraphData[];
+    last_price: number;
+    total_return: number;
+    total_return_percent: number;
+    total_return_spy: number;
+    total_return_percent_spy: number;
+  };
 }
 
 export interface TransactionItem {

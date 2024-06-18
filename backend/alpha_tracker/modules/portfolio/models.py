@@ -3,6 +3,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 from alpha_tracker.db.models import Portfolio
+from alpha_tracker.modules.chart.models import ChartResponse
 
 
 class CreatePortfolioRequest(BaseModel):
@@ -28,6 +29,21 @@ class DisplayPortfolio(BaseModel):
         )
 
 
+class DisplayPortfolioWithChart(DisplayPortfolio):
+    chart: ChartResponse
+
+    @classmethod
+    def from_db(cls, portfolio: Portfolio, chart: ChartResponse):
+        return cls(
+            id=portfolio.id,
+            name=portfolio.name,
+            cash=round(portfolio.cash_in_cents / 100, 2),
+            description=portfolio.description,
+            created_at=str(portfolio.created_at),
+            chart=chart,
+        )
+
+
 class ListPortfoliosResponse(BaseModel):
-    portfolios: list[DisplayPortfolio]
+    portfolios: list[DisplayPortfolio | DisplayPortfolioWithChart]
     strategy_display_option: int

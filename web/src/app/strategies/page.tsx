@@ -5,8 +5,6 @@ import StrategyList from "@/components/StrategyList";
 import React from "react";
 
 export default function Account() {
-  const width = Math.floor(window.innerWidth / 3);
-
   return (
     <ContentWrapper hideFooter>
       <div className="w-1/3 mx-auto">
@@ -16,12 +14,7 @@ export default function Account() {
           the market. You can create a strategy for long-term investing, day
           trading, or anything in between.
         </p>
-        <StrategyList
-          chartWidth={width}
-          chartHeight={200}
-          hideHeader
-          includeDescriptions
-        />
+        <StrategyList chartHeight={200} hideHeader includeDescriptions />
       </div>
     </ContentWrapper>
   );

@@ -9,8 +9,10 @@ from alpha_tracker.db.engine import get_sqlalchemy_engine
 from alpha_tracker.db.models import Portfolio
 from alpha_tracker.db.models import User
 from alpha_tracker.db.models import UserPreferences
+from alpha_tracker.modules.chart.api import get_portfolio_chart
 from alpha_tracker.modules.portfolio.models import CreatePortfolioRequest
 from alpha_tracker.modules.portfolio.models import DisplayPortfolio
+from alpha_tracker.modules.portfolio.models import DisplayPortfolioWithChart
 from alpha_tracker.modules.portfolio.models import ListPortfoliosResponse
 from alpha_tracker.utils.auth import get_current_user
 
@@ -58,11 +60,13 @@ async def list_portfolios(current_user: User = Depends(get_current_user)):
             db_session.query(UserPreferences).filter_by(user_id=current_user.id).first()
         )
 
-        # TODO: Apply user preferences to the portfolios
-
         return ListPortfoliosResponse(
             portfolios=[
-                DisplayPortfolio.from_db(portfolio) for portfolio in portfolios
+                DisplayPortfolioWithChart.from_db(
+                    portfolio,
+                    await get_portfolio_chart(portfolio.id, "ALL", current_user),
+                )
+                for portfolio in portfolios
             ],
             strategy_display_option=user_preferences.strategy_display_option,
         )

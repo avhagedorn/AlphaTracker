@@ -58,7 +58,9 @@ class Portfolio(Base):
     cash_in_cents: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
     user = relationship("User", back_populates="portfolios")
-    transactions = relationship("Transaction", back_populates="portfolio")
+    transactions = relationship(
+        "Transaction", back_populates="portfolio", cascade="all, delete-orphan"
+    )
 
 
 class Transaction(Base):

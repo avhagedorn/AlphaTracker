@@ -76,13 +76,11 @@ interface StrategyListProps {
   hideHeader?: boolean;
   includeDescriptions?: boolean;
   chartHeight?: number;
-  chartWidth?: number;
 }
 
 export default function StrategyList({
   includeDescriptions,
   chartHeight = 100,
-  chartWidth = 400,
   hideHeader = false,
 }: StrategyListProps) {
   const [showStrategyOptions, setShowStrategyOptions] = useState(false);
@@ -101,13 +99,7 @@ export default function StrategyList({
     }
   }, [status, data]);
 
-  const strategyDisplayOptions = [
-    "Total Return",
-    "Today's Return",
-    "Today's Alpha",
-    "Total Alpha",
-    "Equity",
-  ];
+  const strategyDisplayOptions = ["Total Return", "Total Alpha", "Equity"];
 
   const handleUpdatePreferences = async (option: number) => {
     try {
@@ -117,7 +109,7 @@ export default function StrategyList({
           strategy_display_option: option,
         }),
       });
-      queryClient.invalidateQueries("portfolios");
+      setSelectedStrategyOption(option);
       toast.success("Preferences updated!");
     } catch (error) {
       toast.error("Failed to update preferences");
@@ -158,6 +150,7 @@ export default function StrategyList({
             height={chartHeight}
             width={"100%"}
             includeDescription={includeDescriptions}
+            strategyDisplayOption={selectedStrategyOption}
           />
         ))}
       {status === "loading" &&
