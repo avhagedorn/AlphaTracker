@@ -367,15 +367,15 @@ export default function Home() {
             <div className="transform skew-y-2 w-1/3 bg-white p-4 rounded-xl shadow-lg">
               <div className="h-10 flex flex-row items-end">
                 <p className="text-3xl font-bold text-emerald-500 cursor-pointer">
-                  {demoCompareData.left_ticker}
+                  {demoCompareData.left_name}
                 </p>
                 <span className="mx-2 text-3xl font-bold">vs</span>
                 <p className="text-3xl font-bold text-indigo-500 cursor-pointer">
-                  {demoCompareData.right_ticker}
+                  {demoCompareData.left_name}
                 </p>
               </div>
               <p>
-                {demoCompareData.left_ticker} has returned{" "}
+                {demoCompareData.left_name} has returned{" "}
                 <span className="font-bold" style={{ color: "#10b981" }}>
                   {demoCompareData.total_return_left}%
                 </span>{" "}
@@ -387,7 +387,7 @@ export default function Home() {
                   )}
                   % less
                 </span>{" "}
-                than {demoCompareData.right_ticker}, which has returned{" "}
+                than {demoCompareData.right_name}, which has returned{" "}
                 <span className="font-bold" style={{ color: "#6366f1" }}>
                   {demoCompareData.total_return_percent_right}%
                 </span>
@@ -402,8 +402,8 @@ export default function Home() {
                   handleTimeframeChange={() => {}}
                   lineWidth={3}
                   animationDuration={500}
-                  leftLineName={demoCompareData.left_ticker}
-                  rightLineName={demoCompareData.right_ticker}
+                  leftLineName={demoCompareData.left_name}
+                  rightLineName={demoCompareData.right_name}
                 />
               </div>
             </div>

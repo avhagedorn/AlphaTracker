@@ -960,10 +960,8 @@
       "right_percent_change": 0.23
     }
   ],
-  "left_ticker": "GOOG",
-  "right_ticker": "AAPL",
-  "left_portfolio_name": null,
-  "right_portfolio_name": null,
+  "left_name": "GOOG",
+  "right_name": "AAPL",
   "timeframe": "1D",
   "last_left": 100.23,
   "last_right": 100.61,

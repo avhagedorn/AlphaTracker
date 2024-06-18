@@ -77,8 +77,6 @@ export default function Compare() {
     },
   );
 
-  const leftName = data?.left_ticker || data?.left_portfolio_name;
-  const rightName = data?.right_ticker || data?.right_portfolio_name;
   const leftReturn = data?.total_return_left || 0;
   const rightReturn = data?.total_return_right || 0;
   const leftAlpha = round(leftReturn - rightReturn, 2);
@@ -96,7 +94,7 @@ export default function Compare() {
       const alphaText = `${Math.abs(leftAlpha)}% ${leftAlpha < 0 ? "less" : "more"}`;
       return (
         <>
-          {leftName} has returned{" "}
+          {data?.left_name} has returned{" "}
           <span
             className="font-bold"
             style={{ color: getLineColor(data?.points || []) }}
@@ -104,8 +102,8 @@ export default function Compare() {
             {leftReturn}%
           </span>{" "}
           {timeframeToHistoryString(selectedTimeframe)}, which is{" "}
-          <span className="font-bold">{alphaText}</span> than {rightName}, which
-          has returned{" "}
+          <span className="font-bold">{alphaText}</span> than {data?.right_name}
+          , which has returned{" "}
           <span className="font-bold" style={{ color: "#6366f1" }}>
             {rightReturn}%
           </span>
@@ -140,14 +138,14 @@ export default function Compare() {
           <div className="mt-4">
             <DateGraph
               width={"100%"}
-              height={300}
+              height={500}
               data={data?.points || []}
               selectedTimeframe={selectedTimeframe}
               handleTimeframeChange={setSelectedTimeframe}
               lineWidth={3}
               animationDuration={500}
-              leftLineName={data?.left_ticker || data?.left_portfolio_name}
-              rightLineName={data?.right_ticker || data?.right_portfolio_name}
+              leftLineName={data?.left_name}
+              rightLineName={data?.right_name}
             />
           </div>
           <div className="mt-8"></div>

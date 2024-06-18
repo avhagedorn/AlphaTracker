@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from polygon.rest.models.aggs import Agg
 from pydantic import BaseModel
@@ -104,6 +103,21 @@ class ChartResponse(BaseModel):
             right_name="SPY",
         )
 
+    @staticmethod
+    def empty_response():
+        return ChartResponse(
+            points=[],
+            ticker="",
+            timeframe="",
+            total_return=0,
+            total_return_percent=0,
+            total_return_spy=0,
+            total_return_percent_spy=0,
+            last_price=0,
+            left_name="",
+            right_name="",
+        )
+
 
 class CompareDataPoint(BaseModel):
     date: str
@@ -138,10 +152,8 @@ class CompareDataPoint(BaseModel):
 
 class CompareChartResponse(BaseModel):
     points: list[CompareDataPoint]
-    left_ticker: Optional[str]
-    right_ticker: Optional[str]
-    left_portfolio_name: Optional[str]
-    right_portfolio_name: Optional[str]
+    left_name: str
+    right_name: str
     timeframe: str
     last_left: float
     last_right: float
@@ -154,20 +166,16 @@ class CompareChartResponse(BaseModel):
     def from_data_points(
         data: list[CompareDataPoint],
         timeframe: str,
-        left_ticker: Optional[str] = None,
-        right_ticker: Optional[str] = None,
-        left_portfolio_name: Optional[str] = None,
-        right_portfolio_name: Optional[str] = None,
+        left_name: str,
+        right_name: str,
     ):
         start_left = data[0].left
         start_right = data[0].right
 
         return CompareChartResponse(
             points=data,
-            left_ticker=left_ticker,
-            right_ticker=right_ticker,
-            left_portfolio_name=left_portfolio_name,
-            right_portfolio_name=right_portfolio_name,
+            left_name=left_name,
+            right_name=right_name,
             timeframe=timeframe,
             total_return_left=round((data[-1].left - start_left), 2),
             total_return_percent_left=round(

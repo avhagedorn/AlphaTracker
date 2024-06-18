@@ -3,14 +3,9 @@ from typing import List
 from typing import Optional
 
 import yfinance as yf
-from pyrate_limiter import Duration
-from pyrate_limiter import Limiter
-from pyrate_limiter import RequestRate
 from requests import Session
 from requests_cache import CacheMixin
-from requests_cache import SQLiteCache
 from requests_ratelimiter import LimiterMixin
-from requests_ratelimiter import MemoryQueueBucket
 from yfinance import Ticker
 
 
@@ -18,17 +13,17 @@ class CachedLimiterSession(CacheMixin, LimiterMixin, Session):
     pass
 
 
-session = CachedLimiterSession(
-    limiter=Limiter(
-        RequestRate(5, Duration.SECOND * 5)
-    ),  # max 5 requests per 5 seconds
-    bucket_class=MemoryQueueBucket,
-    backend=SQLiteCache("yfinance.cache"),
-)
+# session = CachedLimiterSession(
+#     limiter=Limiter(
+#         RequestRate(15, Duration.SECOND * 5)
+#     ),  # max 15 requests per 5 seconds
+#     bucket_class=MemoryQueueBucket,
+#     backend=SQLiteCache("yfinance.cache"),
+# )
 
 
 def yf_ticker(ticker):
-    return Ticker(ticker, session=session)
+    return Ticker(ticker)  # , session=session)
 
 
 def yf_download(
@@ -47,7 +42,7 @@ def yf_download(
         group_by="ticker",
         auto_adjust=True,
         progress=False,
-        session=session,
+        # session=session,
     ).dropna()
 
     if len(tickers) == 1:
