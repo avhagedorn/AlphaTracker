@@ -2,87 +2,78 @@
 
 import PositionsTable from "@/components/PositionsTable";
 import PriceChange from "@/components/PriceChange";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import demoData from "../../public/demoData/dummyGraph.json";
 import DateGraph from "@/components/DateGraph";
 import { Timeframe } from "@/types";
 import StrategyList from "@/components/StrategyList";
 import ContentWrapper from "@/components/ContentWrapper";
+import { useQuery } from "react-query";
+import { fetchSS } from "@/lib/fetch";
+import { fmtDollars, timeframeToDisplayString } from "@/lib/utils";
+import ExercisedPositionsTable from "@/components/ExercisedPositionsTable";
 
 export default function Home() {
   const [timeframe, setTimeframe] = useState<Timeframe>(Timeframe.DAY);
-  const [data, setData] = useState(demoData);
+  const { data, status, error } = useQuery(["summary", timeframe], () =>
+    fetchSS(`/chart/summary?timeframe=${timeframe}`),
+  );
 
-  useEffect(() => {
-    setData([...demoData]);
-  }, [timeframe]);
+  const {
+    data: positionsData,
+    status: positionsStatus,
+    error: positionsError,
+  } = useQuery("positions", () => fetchSS("/positions/all"));
 
   return (
     <ContentWrapper hideFooter>
       <div className="flex min-h-screen flex-col items-center">
         <div className="flex w-screen">
           <div className="flex-1 p-8">
-            <h1 className="text-6xl font-bold mb-4">$4,034.65</h1>
+            {status === "loading" && <div className="shimmer h-16 w-32 mb-4" />}
+            {status === "success" && (
+              <h1 className="text-6xl font-bold mb-4">
+                {fmtDollars(data?.last_price || 0)}
+              </h1>
+            )}
             <PriceChange
-              percentChange={0.1}
-              valueChange={1000}
-              subText="Today"
+              loading={status === "loading"}
+              percentChange={data?.total_return_percent || 0}
+              valueChange={data?.total_return || 0}
+              subText={timeframeToDisplayString(timeframe)}
             />
             <PriceChange
-              percentChange={-0.05}
-              valueChange={-500}
+              loading={status === "loading"}
+              percentChange={
+                data?.total_return_percent - data?.total_return_percent_spy || 0
+              }
+              valueChange={data?.total_return - data?.total_return_spy || 0}
               subText="Alpha"
             />
-
-            <div className="flex mt-8">
+            <div className="mt-4">
               <DateGraph
-                data={data}
                 width={"100%"}
                 height={300}
-                animationDuration={500}
-                lineWidth={3}
+                data={data?.points || demoData}
                 selectedTimeframe={timeframe}
-                handleTimeframeChange={(timeframe) => setTimeframe(timeframe)}
+                handleTimeframeChange={setTimeframe}
+                lineWidth={4}
+                animationDuration={500}
               />
             </div>
 
             <div className="mt-8">
               <PositionsTable
-                data={[
-                  {
-                    ticker: "AAPL",
-                    shares: 1000,
-                    equity_value: 1000,
-                    return_percent: 0.1,
-                    return_value: 100,
-                    alpha_percent: 0.05,
-                    alpha_value: 50,
-                    realized_alpha: 0,
-                    realized_value: 0,
-                  },
-                  {
-                    ticker: "GOOGL",
-                    shares: 2000,
-                    equity_value: 2000,
-                    return_percent: 0.2,
-                    return_value: 400,
-                    alpha_percent: 0.1,
-                    alpha_value: 200,
-                    realized_alpha: 0,
-                    realized_value: 0,
-                  },
-                  {
-                    ticker: "MSFT",
-                    shares: 1500,
-                    equity_value: 1500,
-                    return_percent: 0.15,
-                    return_value: 225,
-                    alpha_percent: 0.075,
-                    alpha_value: 112.5,
-                    realized_alpha: 0,
-                    realized_value: 0,
-                  },
-                ]}
+                data={positionsData}
+                loading={positionsStatus === "loading"}
+              />
+            </div>
+
+            <div className="mt-8">
+              <ExercisedPositionsTable
+                data={positionsData}
+                loading={positionsStatus === "loading"}
+                className="mt-8"
               />
             </div>
           </div>

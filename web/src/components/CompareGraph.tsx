@@ -1,6 +1,7 @@
 "use client";
 
 import { getLineColor } from "@/lib/displayUtils";
+import { fmtLargeNumber } from "@/lib/utils";
 import { GraphData } from "@/types";
 import React from "react";
 import {
@@ -9,6 +10,7 @@ import {
   LineChart,
   ResponsiveContainer,
   Tooltip,
+  TooltipProps,
   XAxis,
   YAxis,
 } from "recharts";
@@ -32,6 +34,34 @@ function getVisuallyAppealingRange(data: GraphData[], stepCount: number) {
 
   return [newLow, newHigh];
 }
+
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}: TooltipProps<number, string>) => {
+  if (!active || !payload || payload.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="bg-white p-2 border border-gray-200 rounded-md shadow-md">
+      <p className="font-bold text-xl">{label}</p>
+      <p
+        className="text-xl"
+        style={{
+          color: payload[0].stroke,
+        }}
+      >{`${payload[0].name}: $${fmtLargeNumber(payload[0].value!!)}`}</p>
+      <p
+        className="text-xl"
+        style={{
+          color: payload[1].stroke,
+        }}
+      >{`${payload[1].name}: $${fmtLargeNumber(payload[1].value!!)}`}</p>
+    </div>
+  );
+};
 
 export interface CompareGraphProps {
   width: number | string;
@@ -98,7 +128,7 @@ export default function CompareGraph({
           axisLine={!hideLegend}
           width={hideLegend ? 0 : undefined}
         />
-        {!hideTooltip && <Tooltip />}
+        {!hideTooltip && <Tooltip content={CustomTooltip} />}
         {!hideLegend && <Legend />}
         <Line
           type="monotone"

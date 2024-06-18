@@ -13,7 +13,6 @@ from sqlalchemy.orm import Session
 from alpha_tracker.api_integrations.polygon_client import rest_client
 from alpha_tracker.api_integrations.yfinance_client import yf_download
 from alpha_tracker.db.engine import get_sqlalchemy_engine
-from alpha_tracker.db.models import IndexPriceHistory
 from alpha_tracker.db.models import Portfolio
 from alpha_tracker.db.models import Transaction
 from alpha_tracker.db.models import User
@@ -22,6 +21,8 @@ from alpha_tracker.modules.chart.models import CompareChartResponse
 from alpha_tracker.modules.chart.models import CompareDataPoint
 from alpha_tracker.modules.chart.models import DataPoint
 from alpha_tracker.modules.common import get_all_portfolio_transactions
+from alpha_tracker.modules.common import get_all_transactions
+from alpha_tracker.modules.common import get_spy_prices_for_dates
 from alpha_tracker.utils.auth import get_current_user
 from alpha_tracker.utils.polygon import timeframe_to_bar
 from alpha_tracker.utils.time import split_by_date
@@ -186,112 +187,115 @@ async def compare(
     left_data = []
     right_data = []
 
-    # try:
-    left_name = None
-    right_name = None
-    left_portfolio_id = None
-    right_portfolio_id = None
+    try:
+        left_name = None
+        right_name = None
+        left_portfolio_id = None
+        right_portfolio_id = None
 
-    timestamps = []
+        timestamps = []
 
-    left_is_stock = left_symbol_type == "STOCK"
-    right_is_stock = right_symbol_type == "STOCK"
+        left_is_stock = left_symbol_type == "STOCK"
+        right_is_stock = right_symbol_type == "STOCK"
 
-    tickers = set()
-    if left_is_stock:
-        tickers.add(left_symbol)
-        left_name = left_symbol
-    else:
-        left_portfolio_id = int(left_symbol)
-
-    if right_is_stock:
-        tickers.add(right_symbol)
-        right_name = right_symbol
-    else:
-        right_portfolio_id = int(right_symbol)
-
-    start_left, start_right = 0, 0
-
-    if tickers:
-        data = yf_download(
-            tickers=list(tickers),
-            period=period,
-            interval=interval,
-        )
-
-        if left_is_stock and right_is_stock and left_symbol == right_symbol:
-            left_data = data["Close"]
-            right_data = data["Close"]
+        tickers = set()
+        if left_is_stock:
+            tickers.add(left_symbol)
+            left_name = left_symbol
         else:
-            if left_is_stock:
-                left_data = data[left_symbol]["Close"]
-                timestamps = data[left_symbol].index
-            if right_is_stock:
-                right_data = data[right_symbol]["Close"]
-                timestamps = data[right_symbol].index
+            left_portfolio_id = int(left_symbol)
 
-    if left_portfolio_id is not None or right_portfolio_id is not None:
-        with Session(get_sqlalchemy_engine()) as db_session:
-            if left_portfolio_id is not None:
-                left_portfolio = db_session.query(Portfolio).get(left_portfolio_id)
-                left_transactions = get_all_portfolio_transactions(
-                    left_portfolio_id, left_portfolio.user
-                )
-                left_data, _, timestamps, _ = _get_chart_data_from_transactions(
-                    left_transactions, timeframe
-                )
-                start_left = left_data[0]
-                left_name = left_portfolio.name
-            if right_portfolio_id is not None:
-                right_portfolio = db_session.query(Portfolio).get(right_portfolio_id)
-                right_transactions = get_all_portfolio_transactions(
-                    right_portfolio_id, right_portfolio.user
-                )
-                right_data, _, timestamps, _ = _get_chart_data_from_transactions(
-                    right_transactions, timeframe
-                )
-                start_right = right_data[0]
-                right_name = right_portfolio.name
+        if right_is_stock:
+            tickers.add(right_symbol)
+            right_name = right_symbol
+        else:
+            right_portfolio_id = int(right_symbol)
 
-    if left_is_stock:
-        start_left = left_data.iloc[0]
-    if right_is_stock:
-        start_right = right_data.iloc[0]
+        start_left, start_right = 0, 0
 
-    print(start_left, start_right, left_data, right_data)
-
-    return CompareChartResponse.from_data_points(
-        data=[
-            CompareDataPoint.from_api(
-                left=left,
-                right=right,
-                timestamp=timestamp,
-                timeframe=timeframe,
-                start_left=start_left,
-                start_right=start_right,
+        if tickers:
+            data = yf_download(
+                tickers=list(tickers),
+                period=period,
+                interval=interval,
             )
-            for left, right, timestamp in zip(left_data, right_data, timestamps)
-        ],
-        timeframe=timeframe,
-        left_name=left_name,
-        right_name=right_name,
-    )
-    # except Exception as e:
-    #     print(e)
-    #     raise HTTPException(
-    #         status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-    #         detail="Request limit reached. Please try again later.",
-    #     )
+
+            if left_is_stock and right_is_stock and left_symbol == right_symbol:
+                left_data = data["Close"]
+                right_data = data["Close"]
+            else:
+                if left_is_stock:
+                    left_data = data[left_symbol]["Close"]
+                    timestamps = data[left_symbol].index
+                if right_is_stock:
+                    right_data = data[right_symbol]["Close"]
+                    timestamps = data[right_symbol].index
+
+        if left_portfolio_id is not None or right_portfolio_id is not None:
+            with Session(get_sqlalchemy_engine()) as db_session:
+                if left_portfolio_id is not None:
+                    left_portfolio = db_session.query(Portfolio).get(left_portfolio_id)
+                    left_transactions = get_all_portfolio_transactions(
+                        left_portfolio_id, left_portfolio.user
+                    )
+                    left_data, _, timestamps, _ = _get_chart_data_from_transactions(
+                        left_transactions, timeframe
+                    )
+                    start_left = left_data[0]
+                    left_name = left_portfolio.name
+                if right_portfolio_id is not None:
+                    right_portfolio = db_session.query(Portfolio).get(
+                        right_portfolio_id
+                    )
+                    right_transactions = get_all_portfolio_transactions(
+                        right_portfolio_id, right_portfolio.user
+                    )
+                    right_data, _, timestamps, _ = _get_chart_data_from_transactions(
+                        right_transactions, timeframe
+                    )
+                    start_right = right_data[0]
+                    right_name = right_portfolio.name
+
+        if left_is_stock:
+            start_left = left_data.iloc[0]
+        if right_is_stock:
+            start_right = right_data.iloc[0]
+
+        return CompareChartResponse.from_data_points(
+            data=[
+                CompareDataPoint.from_api(
+                    left=left,
+                    right=right,
+                    timestamp=timestamp,
+                    timeframe=timeframe,
+                    start_left=start_left,
+                    start_right=start_right,
+                )
+                for left, right, timestamp in zip(left_data, right_data, timestamps)
+            ],
+            timeframe=timeframe,
+            left_name=left_name,
+            right_name=right_name,
+        )
+    except Exception as e:
+        print(e)
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Request limit reached. Please try again later.",
+        )
 
 
 @router.get("/portfolio/{portfolio_id}")
 async def get_portfolio_chart(
     portfolio_id: int, timeframe: str, current_user: User = Depends(get_current_user)
 ):
+    """
+    Get portfolio chart.
+    """
     transactions = get_all_portfolio_transactions(portfolio_id, current_user)
 
     if not transactions:
-        return ChartResponse()
+        return ChartResponse.empty_response()
 
     portfolio_value, spy_value, timestamps, cost_basis_cents = (
         _get_chart_data_from_transactions(transactions, timeframe)
@@ -316,10 +320,37 @@ async def get_portfolio_chart(
 
 
 @router.get("/summary")
-async def get_summary_chart(_: User = Depends(get_current_user)):
+async def get_summary_chart(
+    timeframe: str, current_user: User = Depends(get_current_user)
+):
     """
     Get summary chart.
     """
+    transactions = get_all_transactions(current_user)
+
+    if not transactions:
+        return ChartResponse.empty_response()
+
+    portfolio_value, spy_value, timestamps, cost_basis_cents = (
+        _get_chart_data_from_transactions(transactions, timeframe)
+    )
+
+    return ChartResponse.from_data_points(
+        data=[
+            DataPoint.from_yahoo(
+                portfolio=portfolio,
+                spy=spy,
+                start_portfolio=cost_basis_cents,
+                start_spy=cost_basis_cents,
+                timeframe=timeframe,
+                timestamp=timestamp,
+                scale_spy_to_portfolio=False,
+            )
+            for portfolio, spy, timestamp in zip(portfolio_value, spy_value, timestamps)
+        ],
+        ticker="Portfolio",
+        timeframe=timeframe,
+    )
 
 
 def _get_chart_data_from_transactions(
@@ -329,11 +360,14 @@ def _get_chart_data_from_transactions(
     Get the chart data from the given transactions.
     """
 
-    # Step 1: Get all the data points for the timeframe
+    # Step 1: Get all tickers from the transactions
     tickers = list(set(["SPY"] + [transaction.ticker for transaction in transactions]))
 
-    # Step 2: Get all SPY data points for each transaction
-    spy_date_to_price = get_spy_prices(transactions)
+    # Step 2: Get all SPY prices for the transaction dates
+    transaction_dates = [
+        transaction.purchased_at.date() for transaction in transactions
+    ]
+    spy_date_to_price = get_spy_prices_for_dates(transaction_dates)
 
     # Step 3: Get pre- and in-timeframe transactions
     timeframe_start = get_start_from_timeframe(timeframe)
@@ -343,7 +377,7 @@ def _get_chart_data_from_transactions(
 
     # Step 3: Get all holdings from before the start of the timeframe
     initial_holdings, cash_holding_cents, initial_spy_shares, cost_basis_cents = (
-        get_initial_holdings(pre_timeframe_transactions, spy_date_to_price)
+        _get_initial_holdings(pre_timeframe_transactions, spy_date_to_price)
     )
 
     # Step 4: Get all the data points for the timeframe
@@ -352,7 +386,7 @@ def _get_chart_data_from_transactions(
     )
 
     # Step 5: Calculate the portfolio value for each data point in the timeframe
-    portfolio_value, spy_value = _calculate_portfolio_values(
+    portfolio_value, spy_value, cost_basis_cents = _calculate_portfolio_values(
         ticker_data,
         initial_holdings,
         cash_holding_cents,
@@ -369,25 +403,7 @@ def _get_chart_data_from_transactions(
     return portfolio_value, spy_value, timestamps, cost_basis_cents
 
 
-def get_spy_prices(transactions: List[Transaction]) -> Dict[datetime, int]:
-    """
-    Retrieves the SPY prices for the dates of the given transactions.
-    """
-    with Session(get_sqlalchemy_engine()) as db_session:
-        spy_prices = (
-            db_session.query(IndexPriceHistory)
-            .filter(IndexPriceHistory.ticker == "SPY")
-            .filter(
-                IndexPriceHistory.date.in_(
-                    [transaction.purchased_at.date() for transaction in transactions]
-                )
-            )
-            .all()
-        )
-    return {price.date.date(): price.open_price_cents for price in spy_prices}
-
-
-def get_initial_holdings(
+def _get_initial_holdings(
     transactions: List[Transaction], spy_date_to_price: Dict[datetime, int]
 ) -> Tuple[Dict[str, int], int, int, int]:
     """
@@ -414,7 +430,9 @@ def get_initial_holdings(
     return initial_holdings, cash_holding_cents, initial_spy_shares, cost_basis_cents
 
 
-def _get_ticker_data(tickers, timeframe, first_transaction_date):
+def _get_ticker_data(
+    tickers: List[str], timeframe: str, first_transaction_date: datetime
+) -> Tuple[List[Dict[str, int]], List[datetime]]:
     """
     Retrieves the ticker data for the given tickers and timeframe.
     """
@@ -524,4 +542,4 @@ def _calculate_portfolio_values(
             portfolio_value[idx] += cost_basis_diff
             spy_value[idx] += cost_basis_diff
 
-    return portfolio_value, spy_value
+    return portfolio_value, spy_value, cost_basis_cents

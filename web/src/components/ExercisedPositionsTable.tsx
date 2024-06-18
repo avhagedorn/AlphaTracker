@@ -6,7 +6,7 @@ import Table from "./Table";
 import { fmtDollars } from "@/lib/utils";
 
 interface ExercisedPositionsTableProps {
-  data: PositionRow[];
+  data?: PositionRow[];
   loading?: boolean;
   className?: string;
 }
@@ -16,11 +16,11 @@ export default function ExercisedPositionsTable({
   loading,
   className,
 }: ExercisedPositionsTableProps) {
-  const positionsWithRealizedPnL = data.filter(
+  const positionsWithRealizedPnL = data?.filter(
     (position) => position.realized_alpha !== 0,
   );
 
-  if (positionsWithRealizedPnL.length === 0) {
+  if (positionsWithRealizedPnL?.length === 0) {
     return null;
   }
 
