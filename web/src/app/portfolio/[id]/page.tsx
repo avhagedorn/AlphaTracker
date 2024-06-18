@@ -15,6 +15,7 @@ import DateGraph from "@/components/DateGraph";
 import PositionsTable from "@/components/PositionsTable";
 import ExercisedPositionsTable from "@/components/ExercisedPositionsTable";
 import { fmtDollars, timeframeToDisplayString } from "@/lib/utils";
+import { LuArrowRightLeft } from "react-icons/lu";
 
 export default function PortfolioDetail({
   params,
@@ -74,6 +75,17 @@ export default function PortfolioDetail({
             </div>
             <div>
               <div className="flex flex-col items-start">
+                <button
+                  onClick={() => {
+                    window.location.href = `/compare?left=portfolio:${data.name}:${params.id}`;
+                  }}
+                  className="mt-4"
+                >
+                  <div className="flex items-center justify-center text-lg">
+                    <LuArrowRightLeft className="mr-2" size={18} />
+                    Compare
+                  </div>
+                </button>
                 <button className="mt-4" onClick={() => setEditModalOpen(true)}>
                   <div className="flex items-center justify-center text-lg">
                     <FiEdit2 className="mr-2" size={18} />

@@ -17,7 +17,7 @@ import { DEFAULT_SEARCHABLE_SYMBOL } from "@/lib/search";
 const deconstructSymbol = (symbol: string): SearchableSymbol => {
   const parts = symbol.split(":");
 
-  // STOCK:AAPL
+  // STOCK:[ticker]
   if (parts.length === 2 && parts[0].toLowerCase() === "stock") {
     const ticker = parts[1].toUpperCase();
     return {
@@ -114,6 +114,8 @@ export default function Compare() {
 
     return "Enter two symbols to compare them.";
   };
+
+  console.log(leftSymbol);
 
   return (
     <ContentWrapper hideFooter>

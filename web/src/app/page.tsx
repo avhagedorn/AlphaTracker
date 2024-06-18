@@ -371,7 +371,7 @@ export default function Home() {
                 </p>
                 <span className="mx-2 text-3xl font-bold">vs</span>
                 <p className="text-3xl font-bold text-indigo-500 cursor-pointer">
-                  {demoCompareData.left_name}
+                  {demoCompareData.right_name}
                 </p>
               </div>
               <p>
