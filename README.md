@@ -53,7 +53,9 @@ You can also use the VS Code "Run + Debug" scripts if you prefer.
 ---
 
 Backend: FastAPI, Python, Alembic
+
 Frontend: React, Next, Tailwind
+
 DB: Postgres 🐘
 
 ---
