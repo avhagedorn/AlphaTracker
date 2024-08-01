@@ -5,7 +5,7 @@ import demoData from "../../../public/demoData/dummyGraph.json";
 import ContentWrapper from "@/components/ContentWrapper";
 import PriceChange from "@/components/PriceChange";
 import DateGraph from "@/components/DateGraph";
-import { Timeframe } from "@/types";
+import { Timeframe, TransactionItem } from "@/types";
 import TransactionsTable from "@/components/TransactionsTable";
 import Statistics from "@/components/Statistics";
 import { useQuery } from "react-query";
@@ -19,6 +19,45 @@ import StockPriceChart from "@/components/StockPriceChart";
 import TruncatedText from "@/components/TruncatedText";
 import { FiExternalLink } from "react-icons/fi";
 import { LuArrowRightLeft } from "react-icons/lu";
+import { ReferenceDot } from "recharts";
+import FadeIn from "@/components/FadeIn";
+
+const transactionsToDots = (
+  transactions: TransactionItem[],
+  timeframe: Timeframe,
+) => {
+  const transfromDate = (date: string) => {
+    // date format is YYYY-MM-DD
+    if (
+      timeframe === Timeframe.DAY &&
+      date === new Date().toISOString().slice(0, 10)
+    ) {
+      return "9:30 AM";
+    } else if (timeframe === Timeframe.WEEK || timeframe === Timeframe.MONTH) {
+      // Want MM-DD 9:30 AM
+      const [year, month, day] = date.split("-");
+      return `${month}/${day} 9:30 AM`;
+    } else {
+      // Want MM/DD/YYYY
+      const [year, month, day] = date.split("-");
+      return `${month}/${day}/${year}`;
+    }
+  };
+
+  return transactions.map((transaction) => (
+    <FadeIn key={transaction.id}>
+      <ReferenceDot
+        key={transaction.id}
+        x={transfromDate(transaction.date)}
+        y={transaction.price}
+        xAxisId={0}
+        r={4}
+        fill={transaction.type === "BUY" ? "#00C853" : "#FF1744"}
+        ifOverflow="discard"
+      />
+    </FadeIn>
+  ));
+};
 
 export default function Stock({
   params,
@@ -48,6 +87,14 @@ export default function Stock({
     error: statsError,
   } = useQuery(["stats", params.ticker], () =>
     fetchSS(`/statistics/stock/${params.ticker}`),
+  );
+
+  const {
+    data: transactionsData,
+    status: transactionsStatus,
+    error: transactionsError,
+  } = useQuery(["transactions", params.ticker], () =>
+    fetchSS(`/transactions/stock/${params.ticker}`),
   );
 
   return (
@@ -123,7 +170,12 @@ export default function Stock({
                 handleTimeframeChange={(timeframe) =>
                   setSelectedTimeframe(timeframe)
                 }
-              />
+              >
+                {...transactionsToDots(
+                  transactionsData?.transactions || [],
+                  selectedTimeframe,
+                )}
+              </DateGraph>
             )}
           </div>
           <div className="mt-8">
@@ -315,7 +367,12 @@ export default function Stock({
             </div>
           </div>
           <div className="mt-8">
-            <TransactionsTable ticker={params.ticker} displayDelete />
+            <TransactionsTable
+              isLoading={transactionsStatus === "loading"}
+              transactions={transactionsData?.transactions || []}
+              ticker={params.ticker}
+              displayDelete
+            />
           </div>
         </div>
       </div>

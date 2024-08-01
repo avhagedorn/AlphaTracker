@@ -100,7 +100,7 @@ async def get_stock_transactions(
 
         transactions = (
             db_session.query(Transaction)
-            .filter(Transaction.ticker == ticker)
+            .filter(Transaction.ticker == ticker.upper())
             .order_by(Transaction.purchased_at.desc())
             .offset(page * page_size)
             .limit(page_size)

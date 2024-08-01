@@ -26,10 +26,10 @@ from alpha_tracker.modules.common import get_spy_prices_for_dates
 from alpha_tracker.utils.auth import get_current_user
 from alpha_tracker.utils.polygon import timeframe_to_bar
 from alpha_tracker.utils.time import split_by_date
-from alpha_tracker.utils.validation import get_start_from_timeframe
 from alpha_tracker.utils.validation import is_valid_compare_symbol
 from alpha_tracker.utils.validation import is_valid_timeframe
 from alpha_tracker.utils.yfinance import convert_timeframe_to_period
+from alpha_tracker.utils.yfinance import get_start_from_timeframe
 from alpha_tracker.utils.yfinance import interval_from_start_date
 
 

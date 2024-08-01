@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import { GraphData, Timeframe } from "@/types";
+import { ReferenceDot, ReferenceLine } from "recharts";
 
 const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
   ssr: false,
@@ -14,6 +15,7 @@ interface DateGraphProps {
   lineWidth: number;
   leftLineName?: string;
   rightLineName?: string;
+  children?: React.ReactNode;
   selectedTimeframe: Timeframe;
   handleTimeframeChange: (timeframe: Timeframe) => void;
 }
@@ -28,6 +30,7 @@ export default function DateGraph({
   handleTimeframeChange,
   leftLineName,
   rightLineName,
+  children,
 }: DateGraphProps) {
   const getStyle = (timeframe: Timeframe) => {
     return timeframe === selectedTimeframe
@@ -47,7 +50,27 @@ export default function DateGraph({
         lineWidth={lineWidth}
         leftLineName={leftLineName}
         rightLineName={rightLineName}
-      />
+      >
+        <ReferenceLine
+          x="9:30 AM"
+          strokeDasharray="3 3"
+          strokeWidth={selectedTimeframe === Timeframe.DAY ? 2 : 0}
+        />
+        <ReferenceLine
+          x="4:00 PM"
+          strokeDasharray="3 3"
+          strokeWidth={selectedTimeframe === Timeframe.DAY ? 2 : 0}
+        />
+        {/* <ReferenceDot
+          x={"1:00 PM"}
+          y={37000}
+          // label={`waah`}
+          // r={10}
+          stroke="none"
+          fill={"#00C853"}
+        /> */}
+        {children}
+      </CompareGraph>
       <div className="flex space-x-4 w-full pt-2 pb-2 border-b-2 border-gray-300">
         {Object.values(Timeframe).map((timeframe, index) => (
           <div key={index} className="flex justify-center items-start text-xl">

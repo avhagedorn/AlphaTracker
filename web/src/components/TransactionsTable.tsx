@@ -5,7 +5,7 @@ import { FiPlus, FiTrash } from "react-icons/fi";
 import Button from "./Button";
 import { useState } from "react";
 import CreateTransactionModal from "./CreateTransactionModal";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { fetchSS } from "@/lib/fetch";
 import { toast } from "react-toastify";
 
@@ -15,6 +15,8 @@ interface TransactionsTableProps {
   className?: string;
   portfolioId?: number;
   ticker?: string;
+  transactions: TransactionItem[];
+  isLoading: boolean;
 }
 
 export default function TransactionsTable({
@@ -23,12 +25,10 @@ export default function TransactionsTable({
   className = "",
   portfolioId,
   ticker,
+  transactions,
+  isLoading,
 }: TransactionsTableProps) {
-  const url = portfolioId
-    ? `/transactions/portfolio/${portfolioId}`
-    : `/transactions/stock/${ticker?.toUpperCase()}`;
   const queryClient = useQueryClient();
-  const { data, status, error } = useQuery("transactions", () => fetchSS(url));
   const [createTransactionModalOpen, setCreateTransactionModalOpen] =
     useState(false);
 
@@ -93,8 +93,8 @@ export default function TransactionsTable({
       </div>
       <Table
         headers={headers}
-        loading={status === "loading"}
-        data={data?.transactions || []}
+        loading={isLoading}
+        data={transactions}
         itemToRow={(item: TransactionItem) => (
           <>
             <td className="px-4 py-2">{item.date}</td>

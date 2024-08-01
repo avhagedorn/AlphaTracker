@@ -80,6 +80,7 @@ export interface CompareGraphProps {
   hideTooltip?: boolean;
   leftLineName?: string;
   rightLineName?: string;
+  children?: React.ReactNode;
 }
 
 export default function CompareGraph({
@@ -88,6 +89,7 @@ export default function CompareGraph({
   height,
   margin,
   ticks,
+  children,
   lineWidth = 2,
   hideLegend = false,
   hideTooltip = false,
@@ -130,6 +132,7 @@ export default function CompareGraph({
         />
         {!hideTooltip && <Tooltip content={CustomTooltip} />}
         {!hideLegend && <Legend />}
+        {children}
         <Line
           type="monotone"
           dataKey="left"

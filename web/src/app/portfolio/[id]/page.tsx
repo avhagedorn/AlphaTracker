@@ -9,7 +9,6 @@ import { FiEdit2 } from "react-icons/fi";
 import TransactionsTable from "@/components/TransactionsTable";
 import PortfolioModal from "@/components/PortfolioModal";
 import { useState } from "react";
-import Statistics from "@/components/Statistics";
 import { Timeframe } from "@/types";
 import DateGraph from "@/components/DateGraph";
 import PositionsTable from "@/components/PositionsTable";
@@ -44,6 +43,14 @@ export default function PortfolioDetail({
     error: chartError,
   } = useQuery(["chart", selectedTimeframe], () =>
     fetchSS(`/chart/portfolio/${params.id}?timeframe=${selectedTimeframe}`),
+  );
+
+  const {
+    data: transactionsData,
+    status: transactionsStatus,
+    error: transactionsError,
+  } = useQuery("transactions", () =>
+    fetchSS(`/transactions/portfolio/${params.id}`),
   );
 
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -141,6 +148,8 @@ export default function PortfolioDetail({
           />
           <div className="mt-8">
             <TransactionsTable
+              isLoading={transactionsStatus === "loading"}
+              transactions={transactionsData?.transactions || []}
               portfolioId={params.id}
               displayTicker
               displayDelete
