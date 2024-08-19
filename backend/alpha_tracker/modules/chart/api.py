@@ -436,13 +436,12 @@ def _get_ticker_data(
     """
     Retrieves the ticker data for the given tickers and timeframe.
     """
-    period, _ = convert_timeframe_to_period(timeframe)
+    period, interval = convert_timeframe_to_period(timeframe)
     interval_start_timestamp = get_start_from_timeframe(timeframe)
 
     if period == "max":
-        interval_start_timestamp = first_transaction_date
+        interval = interval_from_start_date(first_transaction_date)
 
-    interval = interval_from_start_date(interval_start_timestamp)
     data = yf_download(
         tickers=tickers, interval=interval, start=interval_start_timestamp
     )

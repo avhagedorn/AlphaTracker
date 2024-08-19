@@ -48,7 +48,12 @@ def format_date(date: datetime, timeframe: str):
 
 def get_start_from_timeframe(timeframe: str) -> datetime:
     time = datetime.now() - _timeframe_to_timedelta(timeframe)
-    time.replace(hour=0, minute=0, second=0, microsecond=0)
+    time = time.replace(hour=0, minute=0, second=0, microsecond=0)
+
+    # If the start is a weekend, go back a day
+    if time.weekday() in [5, 6]:
+        time -= timedelta(days=1)
+
     return time
 
 
