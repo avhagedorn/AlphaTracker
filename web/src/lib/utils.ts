@@ -9,6 +9,18 @@ export const fmtDollars = (value: number) => {
   return `${isNegative ? "-" : ""}$${displayNumber}`;
 };
 
+export const prepNumber = (value: number) => {
+  const isNegative = value < 0;
+  const displayNumber = Math.abs(value).toFixed(2);
+  const [digits, remainder] = displayNumber.split(".");
+  const [digitList, remainderList] = [digits.split(""), remainder.split("")];
+  return {
+    isNegative,
+    digitList,
+    remainderList,
+  };
+};
+
 export const fmtPercent = (value: number) => {
   return `${value.toFixed(2)}%`;
 };
@@ -40,7 +52,11 @@ export const timeframeToHistoryString = (timeframe: Timeframe) => {
   return timeframeMap[timeframe] || "Invalid timeframe";
 };
 
-export const fmtLargeNumber = (value: number) => {
+export const fmtLargeNumber = (value?: number) => {
+  if (!value) {
+    return String();
+  }
+
   if (value >= 1_000_000_000_000) {
     return `${(value / 1_000_000_000_000).toFixed(2)}T`;
   } else if (value >= 1_000_000_000) {
@@ -50,5 +66,5 @@ export const fmtLargeNumber = (value: number) => {
   } else if (value >= 1_000) {
     return `${(value / 1_000).toFixed(2)}K`;
   }
-  return String(value);
+  return `${value?.toFixed(2)}`;
 };

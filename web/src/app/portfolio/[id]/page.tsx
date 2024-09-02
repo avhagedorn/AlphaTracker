@@ -8,7 +8,7 @@ import PriceChange from "@/components/PriceChange";
 import { FiEdit2 } from "react-icons/fi";
 import TransactionsTable from "@/components/TransactionsTable";
 import PortfolioModal from "@/components/PortfolioModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Timeframe } from "@/types";
 import DateGraph from "@/components/DateGraph";
 import PositionsTable from "@/components/PositionsTable";
@@ -23,6 +23,7 @@ export default function PortfolioDetail({
     id: number;
   };
 }) {
+  const [price, setPrice] = useState<number>(0);
   const [selectedTimeframe, setSelectedTimeframe] = useState<Timeframe>(
     Timeframe.DAY,
   );
@@ -53,6 +54,11 @@ export default function PortfolioDetail({
     fetchSS(`/transactions/portfolio/${params.id}`),
   );
 
+  useEffect(() => {
+    setPrice(chartData?.last_price ?? 0);
+    console.log(chartStatus, chartData?.last_price ?? 0, chartData);
+  }, [setPrice, chartStatus, chartData]);
+
   const [editModalOpen, setEditModalOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -75,9 +81,7 @@ export default function PortfolioDetail({
                 <div className="shimmer h-16 w-32 mb-4" />
               )}
               {chartStatus === "success" && (
-                <h1 className="text-6xl font-bold mb-4">
-                  {fmtDollars(chartData?.last_price || 0)}
-                </h1>
+                <h1 className="text-6xl font-bold mb-4">{fmtDollars(price)}</h1>
               )}
             </div>
             <div>
@@ -128,6 +132,9 @@ export default function PortfolioDetail({
               handleTimeframeChange={setSelectedTimeframe}
               lineWidth={3}
               animationDuration={500}
+              handleHoverChart={(hoverPrice) => {
+                setPrice(hoverPrice ?? chartData?.last_price ?? 0);
+              }}
             />
           </div>
           {data.description && (

@@ -32,7 +32,7 @@ export default function CompareSearch({
         <Search
           onSelect={onSelect}
           focusInput={focusInput}
-          className="w-[260px] text-3xl font-bold border-0 focus:outline-none focus:border-0 focus:ring-0"
+          className="w-[260px] text-3xl font-bold border-0 z-0 focus:outline-none focus:border-0 focus:ring-0"
           placeholder="Ticker or Portfolio"
           inline
         />

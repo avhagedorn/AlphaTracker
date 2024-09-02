@@ -25,16 +25,16 @@ def interval_from_start_date(start_date: datetime):
     today = datetime.now()
     delta = today - start_date
 
-    if delta.days < 2:
+    if delta.days <= 3:
         return "5m"
-    elif delta.days < 7:
+    elif delta.days <= 7:
         return "30m"
-    elif delta.days < 30:
+    elif delta.days <= 32:
         return "90m"
-    elif delta.days < 365:
+    elif delta.days <= 365:
         return "1d"
     else:
-        return "1w"
+        return "1wk"
 
 
 def format_date(date: datetime, timeframe: str):

@@ -1,16 +1,16 @@
 import React from "react";
 
-interface StockPriceChartProps {
+interface FiftyTwoWeekPriceChartProps {
   low: number;
   high: number;
   current: number;
 }
 
-export default function StockPriceChart({
+export default function FiftyTwoWeekPriceChart({
   low,
   high,
   current,
-}: StockPriceChartProps) {
+}: FiftyTwoWeekPriceChartProps) {
   const range = high - low;
   const percentCurrent = ((current - low) / range) * 80 + 10;
 

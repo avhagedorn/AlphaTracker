@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import demoData from "../../../public/demoData/dummyGraph.json";
 import ContentWrapper from "@/components/ContentWrapper";
 import PriceChange from "@/components/PriceChange";
@@ -15,7 +15,7 @@ import {
   fmtDollars,
   timeframeToDisplayString,
 } from "@/lib/utils";
-import StockPriceChart from "@/components/StockPriceChart";
+import FiftyTwoWeekPriceChart from "@/components/FiftyTwoWeekPriceChart";
 import TruncatedText from "@/components/TruncatedText";
 import { FiExternalLink } from "react-icons/fi";
 import { LuArrowRightLeft } from "react-icons/lu";
@@ -66,6 +66,7 @@ export default function Stock({
     ticker: string;
   };
 }) {
+  const [price, setPrice] = useState<number>(0);
   const [selectedTimeframe, setSelectedTimeframe] = useState<Timeframe>(
     Timeframe.DAY,
   );
@@ -97,6 +98,12 @@ export default function Stock({
     fetchSS(`/transactions/stock/${params.ticker}`),
   );
 
+  useEffect(() => {
+    if (status === "success") {
+      setPrice(data?.last_price || 0);
+    }
+  }, [setPrice, status, data]);
+
   return (
     <ContentWrapper hideFooter>
       <div className="flex flex-col items-center">
@@ -111,9 +118,7 @@ export default function Stock({
                 <div className="shimmer h-16 w-32 mb-4" />
               )}
               {status === "success" && (
-                <h1 className="text-6xl font-bold mb-4">
-                  {fmtDollars(data?.last_price || 0)}
-                </h1>
+                <h1 className="text-6xl font-bold mb-4">{fmtDollars(price)}</h1>
               )}
               {status === "error" && (
                 <h1 className="text-6xl font-bold mb-4">Error, please retry</h1>
@@ -170,6 +175,9 @@ export default function Stock({
                 handleTimeframeChange={(timeframe) =>
                   setSelectedTimeframe(timeframe)
                 }
+                handleHoverChart={(hoverPrice) => {
+                  setPrice(hoverPrice ?? data?.last_price ?? 0);
+                }}
               >
                 {...transactionsToDots(
                   transactionsData?.transactions || [],
@@ -252,7 +260,7 @@ export default function Stock({
                       {
                         title: "52W Range",
                         value: (
-                          <StockPriceChart
+                          <FiftyTwoWeekPriceChart
                             low={stats?.fifty_two_week_low}
                             high={stats?.fifty_two_week_high}
                             current={data?.last_price}

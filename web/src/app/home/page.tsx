@@ -2,7 +2,7 @@
 
 import PositionsTable from "@/components/PositionsTable";
 import PriceChange from "@/components/PriceChange";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import demoData from "../../public/demoData/dummyGraph.json";
 import DateGraph from "@/components/DateGraph";
 import { Timeframe } from "@/types";
@@ -14,10 +14,17 @@ import { fmtDollars, timeframeToDisplayString } from "@/lib/utils";
 import ExercisedPositionsTable from "@/components/ExercisedPositionsTable";
 
 export default function Home() {
+  const [price, setPrice] = useState<number>(0);
   const [timeframe, setTimeframe] = useState<Timeframe>(Timeframe.DAY);
   const { data, status, error } = useQuery(["summary", timeframe], () =>
     fetchSS(`/chart/summary?timeframe=${timeframe}`),
   );
+
+  useEffect(() => {
+    if (status === "success") {
+      setPrice(data?.last_price || 0);
+    }
+  }, [setPrice, status, data]);
 
   const {
     data: positionsData,
@@ -28,13 +35,11 @@ export default function Home() {
   return (
     <ContentWrapper hideFooter>
       <div className="flex min-h-screen flex-col items-center">
-        <div className="flex w-screen">
+        <div className="flex w-full">
           <div className="flex-1 p-8">
             {status === "loading" && <div className="shimmer h-16 w-32 mb-4" />}
             {status === "success" && (
-              <h1 className="text-6xl font-bold mb-4">
-                {fmtDollars(data?.last_price || 0)}
-              </h1>
+              <h1 className="text-6xl font-bold mb-4">{fmtDollars(price)}</h1>
             )}
             <PriceChange
               loading={status === "loading"}
@@ -59,6 +64,9 @@ export default function Home() {
                 handleTimeframeChange={setTimeframe}
                 lineWidth={4}
                 animationDuration={500}
+                handleHoverChart={(hoverPrice) => {
+                  setPrice(hoverPrice ?? data?.last_price ?? 0);
+                }}
               />
             </div>
 

@@ -10,7 +10,7 @@ import ContentWrapper from "@/components/ContentWrapper";
 import PositionsTable from "@/components/PositionsTable";
 import PriceChange from "@/components/PriceChange";
 import CompareGraphWrapper from "@/components/CompareGraphWrapper";
-import StockPriceChart from "@/components/StockPriceChart";
+import FiftyTwoWeekPriceChart from "@/components/FiftyTwoWeekPriceChart";
 import Statistics from "@/components/Statistics";
 import DateGraph from "@/components/DateGraph";
 import { Timeframe } from "@/types";
@@ -226,7 +226,7 @@ export default function Home() {
                           {
                             title: "52W Range",
                             value: (
-                              <StockPriceChart
+                              <FiftyTwoWeekPriceChart
                                 low={demoGoogData.stats.fifty_two_week_low}
                                 high={demoGoogData.stats.fifty_two_week_high}
                                 current={demoGoogData.last_price}

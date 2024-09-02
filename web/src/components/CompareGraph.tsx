@@ -3,7 +3,7 @@
 import { getLineColor } from "@/lib/displayUtils";
 import { fmtLargeNumber } from "@/lib/utils";
 import { GraphData } from "@/types";
-import React from "react";
+import React, { useState } from "react";
 import {
   Legend,
   Line,
@@ -14,6 +14,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { CategoricalChartState } from "recharts/types/chart/types";
 
 function getVisuallyAppealingRange(data: GraphData[], stepCount: number) {
   const low = Math.min(...data.map((d) => d.left), ...data.map((d) => d.right));
@@ -45,14 +46,14 @@ const CustomTooltip = ({
   }
 
   return (
-    <div className="bg-white p-2 border border-gray-200 rounded-md shadow-md">
+    <div className="backdrop-blur-sm bg-white/70 p-2 border border-gray-200 rounded-md shadow-md">
       <p className="font-bold text-xl">{label}</p>
       <p
         className="text-xl"
         style={{
           color: payload[0].stroke,
         }}
-      >{`${payload[0].name}: $${fmtLargeNumber(payload[0].value!!)}`}</p>
+      >{`${payload[0].name}: ${fmtLargeNumber(payload[0].value!!)}`}</p>
       <p
         className="text-xl"
         style={{
@@ -81,6 +82,7 @@ export interface CompareGraphProps {
   leftLineName?: string;
   rightLineName?: string;
   children?: React.ReactNode;
+  handleHoverChart?: (x?: number) => void;
 }
 
 export default function CompareGraph({
@@ -96,8 +98,19 @@ export default function CompareGraph({
   animationDuration = 1500,
   leftLineName = "Your Portfolio",
   rightLineName = "S&P 500",
+  handleHoverChart = () => {},
 }: CompareGraphProps) {
   const domain = getVisuallyAppealingRange(data, ticks);
+
+  const handleMouseMove = (props: CategoricalChartState) => {
+    const leftPayloadItem = props.activePayload?.find(
+      (item) => item.name === leftLineName,
+    );
+
+    if (leftPayloadItem) {
+      handleHoverChart(leftPayloadItem.value);
+    }
+  };
 
   if (data.length === 0) {
     return (
@@ -112,7 +125,12 @@ export default function CompareGraph({
 
   return (
     <ResponsiveContainer width={width} height={height}>
-      <LineChart data={data} margin={margin}>
+      <LineChart
+        data={data}
+        margin={margin}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={() => handleHoverChart(undefined)}
+      >
         <XAxis
           dataKey="date"
           className="text-sm"

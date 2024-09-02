@@ -118,7 +118,7 @@ export default function Compare() {
   console.log(leftSymbol);
 
   return (
-    <ContentWrapper hideFooter>
+    <ContentWrapper hideFooter className="z-0">
       <div className="flex flex-col items-center">
         <div className="w-1/2">
           <div className="h-10 flex flex-row items-end">

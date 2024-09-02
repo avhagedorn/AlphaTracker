@@ -33,7 +33,7 @@ export default function Navbar({ hideFooter }: NavbarProps) {
               [⍺T]
             </a>
           </div>
-          <div className="absolute w-1/5 left-1/2 transform -translate-x-1/2 font-normal">
+          <div className="absolute w-1/5 left-1/2 transform -translate-x-1/2 font-normal z-10">
             <StockSearch />
           </div>
           <div className="py-4">

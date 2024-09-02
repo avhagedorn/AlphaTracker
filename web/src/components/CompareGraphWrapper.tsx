@@ -15,6 +15,7 @@ export default function CompareGraphWrapper({
   leftLineName,
   rightLineName,
   children,
+  handleHoverChart,
 }: CompareGraphProps) {
   const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
     ssr: false,
@@ -36,6 +37,7 @@ export default function CompareGraphWrapper({
       animationDuration={animationDuration}
       lineWidth={lineWidth}
       hideTooltip={hideTooltip}
+      handleHoverChart={handleHoverChart}
     >
       {children}
     </CompareGraph>

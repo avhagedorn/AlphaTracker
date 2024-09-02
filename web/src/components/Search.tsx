@@ -125,7 +125,7 @@ export default function Search({
         ref={componentRef}
       />
       {(stockResults.length > 0 || portfolioResults.length > 0) && (
-        <div className="absolute w-full text-center z-10 mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
+        <div className="absolute w-full text-center mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
           {stockResults.length > 0 && (
             <>
               <div className="text-left text-sm text-gray-600 px-4 py-2 border-b border-gray-300">

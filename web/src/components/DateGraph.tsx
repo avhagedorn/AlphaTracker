@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { GraphData, Timeframe } from "@/types";
-import { ReferenceDot, ReferenceLine } from "recharts";
+import { ReferenceLine } from "recharts";
 
 const CompareGraph = dynamic(() => import("@/components/CompareGraph"), {
   ssr: false,
@@ -18,6 +18,7 @@ interface DateGraphProps {
   children?: React.ReactNode;
   selectedTimeframe: Timeframe;
   handleTimeframeChange: (timeframe: Timeframe) => void;
+  handleHoverChart?: (x?: number) => void;
 }
 
 export default function DateGraph({
@@ -31,6 +32,7 @@ export default function DateGraph({
   leftLineName,
   rightLineName,
   children,
+  handleHoverChart,
 }: DateGraphProps) {
   const getStyle = (timeframe: Timeframe) => {
     return timeframe === selectedTimeframe
@@ -50,6 +52,7 @@ export default function DateGraph({
         lineWidth={lineWidth}
         leftLineName={leftLineName}
         rightLineName={rightLineName}
+        handleHoverChart={handleHoverChart}
       >
         <ReferenceLine
           x="9:30 AM"
@@ -61,14 +64,6 @@ export default function DateGraph({
           strokeDasharray="3 3"
           strokeWidth={selectedTimeframe === Timeframe.DAY ? 2 : 0}
         />
-        {/* <ReferenceDot
-          x={"1:00 PM"}
-          y={37000}
-          // label={`waah`}
-          // r={10}
-          stroke="none"
-          fill={"#00C853"}
-        /> */}
         {children}
       </CompareGraph>
       <div className="flex space-x-4 w-full pt-2 pb-2 border-b-2 border-gray-300">
