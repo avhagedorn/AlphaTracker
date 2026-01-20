@@ -2,8 +2,7 @@
 
 Your platform to track your alpha in the markets.
 
-https://github.com/user-attachments/assets/9fb7f7b9-4562-44c7-b1ab-24bb65e4a633
-
+![354065147-9fb7f7b9-4562-44c7-b1ab-24bb65e4a633](https://github.com/user-attachments/assets/f555245a-7b9d-49ac-8534-3f77ea1e0e66)
 
 <table>
   <tr>
